@@ -1,0 +1,12 @@
+[package]
+name = "gmsh"
+version = "0.1.0"
+authors = ["Max Orok <morok@mevex.com>"]
+edition = "2018"
+
+[lib]
+name = "gmsh"
+path = "src/lib.rs"
+
+[dependencies]
+gmsh-sys = { path = "../gmsh-sys" }
