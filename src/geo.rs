@@ -1,7 +1,9 @@
-/// Gmsh geometry crate
+/// Gmsh native geometry model crate
 use crate::Gmsh;
 
-impl Gmsh {
+pub struct Geo;
+
+impl Geo {
     pub fn add_point(
         &mut self,
         x: f64,
@@ -10,6 +12,6 @@ impl Gmsh {
         mesh_size: Option<f64>,
         tag: Option<i32>,
     ) -> i32 {
-        1
+        unimplemented!();
     }
 }

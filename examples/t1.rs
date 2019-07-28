@@ -1,6 +1,5 @@
 /// This file reimplements gmsh/tutorial/t1.geo in Rust
 extern crate gmsh;
-//use gmsh::geo;
 use gmsh::Gmsh;
 
 use std::env;
@@ -12,7 +11,7 @@ fn main() -> io::Result<()> {
 
     {
         let mut g = Gmsh::initialize(env::args(), read_configs)?;
-        g.add_point(1.0, 1.0, 1.0, None, None);
+        g.geo.add_point(1.0, 1.0, 1.0, None, None);
     }
 
     //Gmsh::add_point(1.0, 1.0, 1.0, None, None);
