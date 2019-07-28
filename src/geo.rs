@@ -1,12 +1,15 @@
-fn addPoint(x: f64, y: f64, z: f64, mesh_size: Option<f64>, tag: Option<i32>) -> i32 {
-    1
-}
+/// Gmsh geometry crate
+use crate::Gmsh;
 
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
+impl Gmsh {
+    pub fn add_point(
+        &mut self,
+        x: f64,
+        y: f64,
+        z: f64,
+        mesh_size: Option<f64>,
+        tag: Option<i32>,
+    ) -> i32 {
+        1
     }
 }
