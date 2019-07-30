@@ -3,10 +3,18 @@ extern crate gmsh_sys;
 use std::env::Args;
 use std::io;
 use std::os::raw::{c_char, c_int, c_void};
+//use std::Box;
 
 use std::ffi::CString;
 
+
 pub mod geo;
+pub mod model;
+
+use model::Model;
+use model::KernelType;
+// use model::GeometryKernel;
+
 use geo::Geo;
 
 /// Geometrical entities have a dimension and a tag
@@ -14,7 +22,10 @@ pub struct VectorPair(Vec<(i32, i32)>);
 
 /// Gmsh context object
 pub struct Gmsh {
-    pub geo: Geo,
+    pub models: Vec<Model>,
+    // current_model: Option<&'a mut Model<'b>>,
+    // pub models: Vec<View>,
+    //pub geo: Geo,
 }
 
 
@@ -69,7 +80,8 @@ impl Gmsh {
 
         Ok(
             Gmsh {
-               geo: Geo,
+               models: Vec::new(),
+               // current_model: None,
             }
         )
     }
@@ -82,6 +94,13 @@ impl Gmsh {
      fn gmsh_free(ptr: *mut c_void) {
         unimplemented!();
      }
+
+    pub fn add_model(&mut self, name: &'static str, kernel_type: KernelType) {
+        self.models.push(Model::new(name, kernel_type));
+        //self.current_model = self.models.last_mut();
+        println!("added model {} ", name);
+    }
+
 
 }
 
