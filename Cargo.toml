@@ -10,3 +10,4 @@ path = "src/lib.rs"
 
 [dependencies]
 gmsh-sys = { path = "../gmsh-sys" }
+gmsh-macros = { path = "gmsh-macros" }
