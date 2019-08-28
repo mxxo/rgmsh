@@ -47,9 +47,11 @@ pub struct Geo<'a> {
     phantom: PhantomData<&'a Gmsh>,
 }
 
+type ModelResult<T> = Result<T, ModelError>;
+
 impl<'a> Geo<'a> {
 
-    pub fn new(_: &'a Gmsh, name: &'static str) -> Result<Geo<'a>, ModelError> {
+    pub fn new(_: &'a Gmsh, name: &'static str) -> ModelResult<Geo<'a>> {
         Ok(
             Geo {
                 name,
@@ -65,7 +67,7 @@ impl<'a> Geo<'a> {
         z: f64,
         mesh_size: Option<f64>,
         tag: Option<i32>,
-    ) -> Result<PointTag, ModelError> {
+    ) -> ModelResult<PointTag> {
         Ok(PointTag(1))
     }
 
@@ -75,8 +77,8 @@ impl<'a> Geo<'a> {
     }
 
     // add a straight line between two points
-    pub fn add_line(&mut self, p1: PointTag, p2: PointTag) -> CurveTag {
-        CurveTag(1)
+    pub fn add_line(&mut self, p1: PointTag, p2: PointTag) -> ModelResult<CurveTag> {
+        Ok(CurveTag(1))
     }
 
 }

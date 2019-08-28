@@ -45,7 +45,7 @@ fn main() -> GmshResult<()> {
     let p1 = geom.add_point(0., 0., 0., None, None)?;
     let p2 = geom.add_point(1., 1., 0., None, None)?;
 
-    let l = geom.add_line(p1, p2);
+    let l = geom.add_line(p1, p2)?;
     println!("{:?}", l);
 
     // lines (curves) have a direction, from start to end.
