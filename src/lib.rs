@@ -1,4 +1,6 @@
 extern crate gmsh_sys;
+// extern crate gmsh_kernel;
+// use gmsh_kernel::geometry;
 
 use std::env::Args;
 use std::io;
@@ -7,9 +9,9 @@ use std::os::raw::{c_char, c_int, c_void};
 
 use std::ffi::CString;
 
-
 pub mod geo;
 pub mod model;
+// pub mod open_cascade;
 
 use model::Model;
 use model::KernelType;
@@ -17,17 +19,28 @@ use model::KernelType;
 
 use geo::Geo;
 
+// mesh
+struct FieldTag(i64);
+
+// post-processing
+struct ViewTag(i64);
+
 /// Geometrical entities have a dimension and a tag
-pub struct VectorPair(Vec<(i32, i32)>);
+pub struct VectorPair<A, B>(Vec<(A, B)>);
+
+// type vector_points = VectorPair<Dimension::Point, PointTag>;
 
 /// Gmsh context object
 pub struct Gmsh {
-    pub models: Vec<Model>,
+    // pub models: Vec<Model>,
     // current_model: Option<&'a mut Model<'b>>,
     // pub models: Vec<View>,
     //pub geo: Geo,
 }
 
+
+// #[geometry(native)]
+// pub fn test() {}
 
 /// gmsh {
 ///
@@ -64,6 +77,9 @@ impl Gmsh {
 
         let mut ierr: c_int = 0;
 
+        // causes segfault when bad options are passed in
+        // e.g. "-v", verbosity level without a number afterwards.
+        // The executable prints an error, this api segfaults
         unsafe {
             gmsh_sys::gmshInitialize(
                 argv.len() as c_int,
@@ -71,35 +87,30 @@ impl Gmsh {
                 iread_configs,
                 &mut ierr,
             );
+        }
 
-            // retake vector pointers to free them
-            for arg_str in &argv {
-                let _ = CString::from_raw(*arg_str);
-            }
+        if ierr != 0 {
+            eprintln!("error initializing Gmsh, exiting");
+            panic!();
         }
 
         Ok(
             Gmsh {
-               models: Vec::new(),
+       //        models: Vec::new(),
                // current_model: None,
             }
         )
     }
 
-     /// Allocate memory through Gmsh
-     fn gmsh_malloc(n: usize) {
-        unimplemented!();
-     }
-
-     fn gmsh_free(ptr: *mut c_void) {
-        unimplemented!();
-     }
-
-    pub fn add_model(&mut self, name: &'static str, kernel_type: KernelType) {
-        self.models.push(Model::new(name, kernel_type));
+    pub fn new_native_model(&mut self, name: &'static str) -> Geo {
+      //  self.models.push(Model::new(name, kernel_type));
         //self.current_model = self.models.last_mut();
         println!("added model {} ", name);
+        Geo::new(self, name)
     }
+
+    // pub fn new_occ_model(&mut self, name: &'static str) -> OCC {
+    // }
 
 
 }
