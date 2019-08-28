@@ -1,6 +1,8 @@
 /// Gmsh native geometry kernel
-use crate::Gmsh;
+use crate::{Gmsh, GmshError, ModelError, OptionError};
+
 use std::ops::Neg;
+use std::marker::PhantomData;
 
 enum Dimension {
     Point,
@@ -34,28 +36,26 @@ impl PointTag {
     // no public constructor, so only our methods can make valid point tags
 }
 
-#[derive(Debug)]
-pub enum GeoKernelError {
-    GmshContext,
-    Constructor, // tag collision, not enough points
-}
-
 // associated geometry information
 struct PhysicalGroupTag(i64);
 
 // type aliases for vector methods
 type points = Vec<PointTag>;
 
-pub struct Geo {
+pub struct Geo<'a> {
     name: &'static str,
+    phantom: PhantomData<&'a Gmsh>,
 }
 
-impl Geo {
+impl<'a> Geo<'a> {
 
-    pub fn new(gmsh: &mut Gmsh, name: &'static str) -> Geo {
-        Geo {
-            name
-        }
+    pub fn new(_: &'a Gmsh, name: &'static str) -> Result<Geo<'a>, ModelError> {
+        Ok(
+            Geo {
+                name,
+                phantom: PhantomData,
+            }
+        )
     }
 
     pub fn add_point(
@@ -65,7 +65,7 @@ impl Geo {
         z: f64,
         mesh_size: Option<f64>,
         tag: Option<i32>,
-    ) -> Result<PointTag, GeoKernelError> {
+    ) -> Result<PointTag, ModelError> {
         Ok(PointTag(1))
     }
 
