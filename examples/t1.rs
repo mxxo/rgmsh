@@ -18,7 +18,7 @@ fn main() -> io::Result<()> {
     let mut geom = g.new_native_model("hal");
 
     // only way to get PointTags is through geometry construction methods
-    let p: PointTag = geom.add_point(0., 0., 0., None, None);
+    let p: PointTag = geom.add_point(0., 0., 0., None, None).unwrap();
 
     // won't compile
     // let p = PointTag(1);
@@ -37,6 +37,22 @@ fn main() -> io::Result<()> {
 
     // You could also get around the safety checks by using PointTags from one geometry
     // on another, but why would you do that ;)?
+
+    // To make a line, you need at least two points
+    let p1 = geom.add_point(0., 0., 0., None, None).unwrap();
+    let p2 = geom.add_point(1., 1., 0., None, None).unwrap();
+
+    let l = geom.add_line(p1, p2);
+    println!("{:?}", l);
+
+    // lines (curves) have a direction, from start to end.
+    // you can reverse that direction of a given CurveTag using a negative sign.
+    // This is useful for making line loops, because Gmsh requires a
+    // directed path for line loops
+    let rev_l = -l;
+    println!("{:?}", rev_l);
+
+    // let ll = geom.add_curve_loop(1, -2, 3, 4);
 
     Ok(())
 

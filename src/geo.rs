@@ -34,6 +34,12 @@ impl PointTag {
     // no public constructor, so only our methods can make valid point tags
 }
 
+#[derive(Debug)]
+pub enum GeoKernelError {
+    GmshContext,
+    Constructor, // tag collision, not enough points
+}
+
 // associated geometry information
 struct PhysicalGroupTag(i64);
 
@@ -59,12 +65,18 @@ impl Geo {
         z: f64,
         mesh_size: Option<f64>,
         tag: Option<i32>,
-    ) -> PointTag {
-        PointTag(1)
+    ) -> Result<PointTag, GeoKernelError> {
+        Ok(PointTag(1))
     }
 
-    // take ownership of the PointTag
+    // delete a point from the Gmsh model.
     pub fn remove_point(&mut self, p: PointTag) {
 
     }
+
+    // add a straight line between two points
+    pub fn add_line(&mut self, p1: PointTag, p2: PointTag) -> CurveTag {
+        CurveTag(1)
+    }
+
 }
