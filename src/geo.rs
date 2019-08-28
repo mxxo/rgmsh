@@ -1,5 +1,6 @@
-/// Gmsh native geometry model crate
+/// Gmsh native geometry kernel
 use crate::Gmsh;
+use std::ops::Neg;
 
 enum Dimension {
     Point,
@@ -8,13 +9,26 @@ enum Dimension {
     Volume,
 }
 
-// all the different kinds of tags
 // basic geometry shapes
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct PointTag(i64);
+#[derive(Debug, Copy, Clone)]
 pub struct CurveTag(i64);
+#[derive(Debug, Copy, Clone)]
 pub struct SurfaceTag(i64);
+#[derive(Debug, Copy, Clone)]
 pub struct VolumeTag(i64);
+
+// curves have a direction and can be reversed
+impl Neg for CurveTag {
+    type Output = CurveTag;
+
+    fn neg(self) -> CurveTag {
+        match self {
+            CurveTag(i) => CurveTag(-i)
+        }
+    }
+}
 
 impl PointTag {
     // no public constructor, so only our methods can make valid point tags

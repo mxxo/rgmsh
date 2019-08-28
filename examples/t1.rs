@@ -25,13 +25,17 @@ fn main() -> io::Result<()> {
 
     println!("{:?}", p);
 
-    // destructor takes ownership, so you can't use a PointTag after removing it
+    // Destructor doesn't take ownership, so you can use a PointTag after removing it
+    // This will remove it in the internal Gmsh model however.
     geom.remove_point(p);
 
-    // won't compile
-    // println!("{:?}", p);
+    // If you remove a point (line, surface, volume), you are in charge of making
+    // sure you don't use that tag later on
 
-    // You could get around the safety checks by using PointTags from one geometry
+    // will compile
+    println!("{:?}", p);
+
+    // You could also get around the safety checks by using PointTags from one geometry
     // on another, but why would you do that ;)?
 
     Ok(())
