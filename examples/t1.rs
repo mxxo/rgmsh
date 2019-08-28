@@ -21,7 +21,7 @@ fn main() -> GmshResult<()> {
     let mut geom2 = g.new_native_model("bella")?;
 
     // only way to get PointTags is through geometry construction methods
-    let p: PointTag = geom.add_point(0., 0., 0., None, None)?;
+    let p: PointTag = geom.add_point((0., 0., 0.), None, None)?;
 
     // won't compile
     // let p = PointTag(1);
@@ -42,8 +42,11 @@ fn main() -> GmshResult<()> {
     // on another, but why would you do that ;)?
 
     // To make a line, you need at least two points
-    let p1 = geom.add_point(0., 0., 0., None, None)?;
-    let p2 = geom.add_point(1., 1., 0., None, None)?;
+    let p1 = geom.add_point((0., 0., 0.), None, None)?;
+    let p2 = geom.add_point((1., 1., 0.), None, None)?;
+
+    println!("p1 = {:?}", p1);
+    println!("p2 = {:?}", p2);
 
     let l = geom.add_line(p1, p2)?;
     println!("{:?}", l);

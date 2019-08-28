@@ -1,7 +1,6 @@
 extern crate gmsh_sys;
 
 use std::env::Args;
-use std::io;
 use std::os::raw::{c_char, c_int, c_void};
 
 use std::ffi::CString;
