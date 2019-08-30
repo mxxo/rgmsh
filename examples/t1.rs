@@ -82,6 +82,12 @@ fn main() -> GmshResult<()> {
 
     // let ll = geom.add_curve_loop(1, -2, 3, 4);
 
+    // when you're ready to mesh, make sure the geometry kernel is synchronized
+    geom.synchronize()?;
+
+    // ? you'll get a handle to a new mesh object
+    geom.generate_mesh(1)?;
+
     // You could also get around the safety checks by using PointTags from one geometry
     // on another, but why would you do that ;)?
 

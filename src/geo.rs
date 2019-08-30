@@ -216,7 +216,20 @@ impl<'a> Geo<'a> {
     // add a straight line between two points
     #[must_use]
     pub fn add_line(&mut self, p1: PointTag, p2: PointTag) -> ModelResult<CurveTag> {
-        Ok(CurveTag(1))
+        let auto_number = -1;
+        unsafe {
+            let mut ierr: c_int = 0;
+            let out_tag = gmsh_sys::gmshModelGeoAddLine(p1.to_raw(), p2.to_raw(), auto_number, &mut ierr);
+            match ierr {
+                0 => Ok(CurveTag(out_tag)),
+                -1 => Err(ModelError::Initialization),
+                1  => Err(ModelError::Mutation),
+                2  => Err(ModelError::Lookup),
+                3  => Err(ModelError::BadInput),
+                4  => Err(ModelError::MeshQuery),
+                _  => Err(ModelError::Unknown),
+            }
+        }
     }
 
     #[must_use]
@@ -227,5 +240,38 @@ impl<'a> Geo<'a> {
         Ok(SurfaceTag(1))
     }
 
+    pub fn synchronize(&self) -> ModelResult<()> {
+        unsafe {
+            let mut ierr: c_int = 0;
+            gmsh_sys::gmshModelGeoSynchronize(&mut ierr);
+            match ierr {
+                0 => Ok(()),
+                -1 => Err(ModelError::Initialization),
+                1  => Err(ModelError::Mutation),
+                2  => Err(ModelError::Lookup),
+                3  => Err(ModelError::BadInput),
+                4  => Err(ModelError::MeshQuery),
+                _  => Err(ModelError::Unknown),
+            }
+        }
+    }
+
+    // probably should move this to a dedicated model class
+    // with an inner Option(Mesh) and Option(Geo)
+    pub fn generate_mesh(&self, dim: i32) -> ModelResult<()> {
+        unsafe {
+            let mut ierr: c_int = 0;
+            gmsh_sys::gmshModelMeshGenerate(dim, &mut ierr);
+            match ierr {
+                0 => Ok(()),
+                -1 => Err(ModelError::Initialization),
+                1  => Err(ModelError::Mutation),
+                2  => Err(ModelError::Lookup),
+                3  => Err(ModelError::BadInput),
+                4  => Err(ModelError::MeshQuery),
+                _  => Err(ModelError::Unknown),
+            }
+        }
+    }
 
 }
