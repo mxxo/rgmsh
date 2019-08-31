@@ -4,24 +4,23 @@ extern crate gmsh;
 use gmsh::{Gmsh, GmshResult};
 
 use gmsh::geo::PointTag;
-use gmsh::geo::curve_or_surface_op;
+// use gmsh::geo::curve_or_surface_op;
 
 use std::env;
 
 fn main() -> GmshResult<()> {
-    let read_configs = true;
 
     // spin up Gmsh
-    let mut g = Gmsh::initialize(env::args(), read_configs)?;
+    let mut gmsh = Gmsh::initialize()?;
 
     // ask for a new native geometry instance
-    let mut geom = g.new_native_model("hal")?;
+    let mut geom = gmsh.new_native_model("hal")?;
 
     // ask for another model
-    let mut geom2 = g.new_native_model("bella")?;
+    let mut geom2 = gmsh.new_native_model("bella")?;
 
     // only way to get PointTags is through geometry construction methods
-    let p: PointTag = geom.add_point((0., 0., 0.))?;
+    let p: PointTag = geom.add_point(0., 0., 0.)?;
 
     // won't compile
     //let p = PointTag(1);
@@ -39,9 +38,8 @@ fn main() -> GmshResult<()> {
     println!("{:?}", p);
 
     // To make a line, you need at least two points
-    let p1 = geom.add_point((0., 0., 0.))?;
-    let xyz = (1., 1., 0.);
-    let p2 = geom.add_point(xyz)?;
+    let p1 = geom.add_point(0., 0., 0.)?;
+    let p2 = geom.add_point(1., 1., 0.)?;
 
     println!("p1 = {:?}", p1);
     println!("p2 = {:?}", p2);
@@ -63,7 +61,7 @@ fn main() -> GmshResult<()> {
     // the caller for an explicit conversion into the right type that we
     // use behind the scenes
 
-    curve_or_surface_op(line);
+    geom.curve_or_surface_op(line);
 
     let l1 = geom.add_line(p1, p2)?;
     let l2 = geom.add_line(p1, p2)?;
@@ -71,7 +69,7 @@ fn main() -> GmshResult<()> {
     let l4 = geom.add_line(p1, p2)?;
 
     let s = geom.add_surface(&[l1, -l2, l3, l4])?;
-    curve_or_surface_op(s);
+    geom.curve_or_surface_op(s);
 
     // lines (curves) have a direction, from start to end.
     // you can reverse that direction of a given CurveTag using a negative sign.
@@ -83,7 +81,7 @@ fn main() -> GmshResult<()> {
     // let ll = geom.add_curve_loop(1, -2, 3, 4);
 
     // when you're ready to mesh, make sure the geometry kernel is synchronized
-    geom.synchronize()?;
+    // geom.synchronize()?;
 
     // ? you'll get a handle to a new mesh object
     geom.generate_mesh(1)?;
@@ -91,7 +89,18 @@ fn main() -> GmshResult<()> {
     // You could also get around the safety checks by using PointTags from one geometry
     // on another, but why would you do that ;)?
 
+    // Ok(())
+
+    // models can't be used after their context is dropped
+    // won't compile
+    // std::mem::drop(gmsh);
+    // geom.generate_mesh(2);
+
+    // but this is fine
+    geom.generate_mesh(2);
+    std::mem::drop(gmsh);
+
     Ok(())
 
-    // Gmsh context is dropped here, no more gmsh::finalize
+    // Gmsh context is automatically dropped here, no more gmsh::finalize
 }
