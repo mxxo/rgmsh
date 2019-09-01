@@ -90,7 +90,17 @@ fn main() -> GmshResult<()> {
     // You could also get around the safety checks by using PointTags from one geometry
     // on another, but why would you do that ;)?
 
-    // Ok(())
+    // compare points from different models
+    let mut geom_a = gmsh.new_native_model("jimbo")?;
+    let mut geom_b = gmsh.new_native_model("aircraft-carrier")?;
+    let p_a = geom_a.add_point(0., 0., 0.)?;
+    let p_b = geom_b.add_point(0., 1., 1.)?;
+    let p_c = geom_b.add_point(0., 1., 1.)?;
+
+    assert!(p_a == p_b, "Point tags are different!");
+
+    let line = geom_a.add_line(p_a, p_c)?;
+    println!("{:?}", line);
 
     // models can't be used after their context is dropped
     // won't compile

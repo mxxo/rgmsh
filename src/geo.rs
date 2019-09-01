@@ -84,7 +84,7 @@
 //!
 //! This design differs from other Gmsh API
 //! implementations. For example, using the `C++` API, the following example will compile and run without errors
-//! (using this `Line` will probably cause runtime errors later on).
+//! (though this `Line` will probably cause a runtime error later on).
 //! ```cpp
 //! #include "gmsh.h"
 //! int main() {
@@ -92,6 +92,37 @@
 //!     gmsh::model::geo::addLine(1, 2); // (!)
 //!     gmsh::finalize();
 //! }
+//! ```
+//! The Rust API avoids such bugs for a single model by only making tags available through API functions.
+//! However, the Rust API has a similar issue if there are two or more models.
+//! Since two models can have identical point tag values, tags from one can be used on the other.
+//!
+//! The root of this problem is that Gmsh tries very hard to keep going after errors.
+//! This has a direct impact on our API's error handling capabilities, since some errors are only logged, not handled in code.
+//!
+//! It's your responsibility to make sure tags are used with the right model.
+//! ```
+//! # use gmsh::{Gmsh, GmshResult};
+//! # fn main() -> GmshResult<()> {
+//! #  let gmsh = Gmsh::initialize()?;
+//! let mut geom_a = gmsh.new_native_model("jimbo")?;
+//! let mut geom_b = gmsh.new_native_model("aircraft-carrier")?;
+//!
+//! let p_a = geom_a.add_point(0., 0., 0.)?;
+//!
+//! let p_b = geom_b.add_point(0., 1., 1.)?;
+//! let p_c = geom_b.add_point(0., 1., 1.)?;
+//!
+//! // points from different models can have the same value
+//! assert!(p_a == p_b, "Point tags are different!");
+//!
+//! // Very bad!
+//! let line = geom_b.add_line(p_a, p_c)?;
+//! // Will succeed! Gmsh will print an error message to console and try to keep going.
+//! println!("Nonsense curve tag is {:?}", line);
+//!
+//! #  Ok(())
+//! # }
 //! ```
 //!
 //! Nearly all geometry functions can fail. Fallible functions will result a `GmshResult`.
@@ -132,10 +163,10 @@ use std::marker::PhantomData;
 // }
 
 // basic geometry shapes
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 /// A point tag. Points are used to build larger shapes. 0D.
 pub struct PointTag(i32);
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 /// A curve tag, built from points. The curve type includes straight lines. 1D.
 pub struct CurveTag(i32);
 
@@ -151,16 +182,16 @@ impl Neg for CurveTag {
     }
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 /// A wire tag. Wires are built from curves. Wires are a path of multiple curves. 1.5D.
 pub struct WireTag(i32);
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 /// A surface tag. Surfaces are built from closed wires. 2D.
 pub struct SurfaceTag(i32);
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 /// A shell tag. Shells are built from surface loops. 2.5D.
 pub struct ShellTag(i32);
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 /// A volume tag. Volumes are built from closed shells. 3D.
 pub struct VolumeTag(i32);
 
@@ -241,7 +272,8 @@ impl From<SurfaceTag> for CurveOrSurface {
 }
 
 
-// associated geometry information
+/// Associated geometry information.
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 struct PhysicalGroupTag(i32);
 
 /// The native Gmsh geometry kernel.

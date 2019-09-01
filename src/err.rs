@@ -1,5 +1,4 @@
-//! The different error types from Gmsh
-//!
+//! The Gmsh different error types
 
 #[derive(Debug)]
 pub enum GmshError {

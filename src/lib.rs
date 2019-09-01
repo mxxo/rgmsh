@@ -5,7 +5,7 @@
 //!
 //! Gmsh is copyright (C) 1997-2019 by C. Geuzaine and J.-F. Remacle
 //!
-//! The full Gmsh reference manual is located at: [http://gmsh.info/doc/texinfo/gmsh.html](http://gmsh.info/doc/texinfo/gmsh.html)
+//! The full Gmsh reference manual is available at: [http://gmsh.info/doc/texinfo/gmsh.html](http://gmsh.info/doc/texinfo/gmsh.html)
 //!
 //! ## The Gmsh API
 //!
