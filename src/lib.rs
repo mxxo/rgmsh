@@ -1,4 +1,4 @@
-//! Rust bindings to the Gmsh API.
+//! Unofficial Rust bindings to the Gmsh API.
 //!
 //! From the [Gmsh website](http://gmsh.info/):
 //! > Gmsh is a free 3D finite element mesh generator with a built-in CAD engine and post-processor.

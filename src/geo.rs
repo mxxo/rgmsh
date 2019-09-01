@@ -83,8 +83,8 @@
 //! ```
 //!
 //! This design differs from other Gmsh API
-//! implementations. For example, using the `C++` API, the following example will compile and run without errors
-//! (though this `Line` will probably cause a runtime error later on).
+//! implementations. For example, using the `C++` API, the following example will
+//! compile but cause a runtime error.
 //! ```cpp
 //! #include "gmsh.h"
 //! int main() {
@@ -225,37 +225,56 @@ impl GmshTag for SurfaceTag {
     }
 }
 
-// idea of a geometry group => gmsh operations can be on multiple known types,
-// => use an enum to group those types
-
-#[derive(Debug, Copy, Clone)]
-enum BasicGeometry {
-    Point(PointTag),
-    Curve(CurveTag),
-    // Wire(WireTag),
-    Surface(SurfaceTag),
-    // Shell(ShellTag),
-    Volume(VolumeTag),
-}
-
-impl From<PointTag> for BasicGeometry {
-    fn from(t: PointTag) -> BasicGeometry {
-        BasicGeometry::Point(t)
+impl From<PointTag> for BasicShape {
+    fn from(t: PointTag) -> BasicShape {
+        BasicShape::Point(t)
     }
 }
 
-impl From<CurveTag> for BasicGeometry {
-    fn from(t: CurveTag) -> BasicGeometry {
-        BasicGeometry::Curve(t)
+impl From<CurveTag> for BasicShape {
+    fn from(t: CurveTag) -> BasicShape {
+        BasicShape::Curve(t)
     }
 }
 
 
-#[derive(Debug, Copy, Clone)]
-enum CurveOrSurface {
-    Curve(CurveTag),
-    Surface(SurfaceTag),
+/// Private module for sets of geometries passed and returned from functions.
+///
+/// Gmsh operations can be on multiple known types. We use enums for a compile-time
+/// check that the type is OK to use with that function.
+mod geometry_groups {
+    use super::*;
+
+    #[derive(Debug, Copy, Clone)]
+    /// The basic geometry types (points, curves, surfaces, and volumes).
+    pub enum BasicShape {
+        Point(PointTag),
+        Curve(CurveTag),
+        Surface(SurfaceTag),
+        Volume(VolumeTag),
+    }
+
+    #[derive(Debug, Copy, Clone)]
+    /// The full set of geometry types (`BasicGeometries` + wires + shells).
+    pub enum GeneralShape {
+        Point(PointTag),
+        Curve(CurveTag),
+        Wire(WireTag),
+        Surface(SurfaceTag),
+        Shell(ShellTag),
+        Volume(VolumeTag),
+    }
+
+    #[derive(Debug, Copy, Clone)]
+    /// Only curves or surfaces.
+    pub enum CurveOrSurface {
+        Curve(CurveTag),
+        Surface(SurfaceTag),
+    }
 }
+
+use geometry_groups::BasicShape;
+use geometry_groups::CurveOrSurface;
 
 type c_or_s = CurveOrSurface;
 
