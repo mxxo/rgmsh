@@ -33,11 +33,9 @@ use std::os::raw::{c_char, c_int, c_void};
 use std::ffi::CString;
 
 pub mod err;
-pub use err::{GmshError, ModelError, OptionError};
+pub use err::{GmshError};
 
 pub type GmshResult<T> = Result<T, GmshError>;
-pub type ModelResult<T> = Result<T, ModelError>;
-pub type OptionResult<T> = Result<T, OptionError>;
 
 pub mod geo;
 use geo::Geo;
@@ -50,9 +48,6 @@ struct FieldTag(i64);
 
 // post-processing
 struct ViewTag(i64);
-
-// /// Geometrical entities have a dimension and a tag
-// pub struct VectorPair<A, B>(Vec<(A, B)>);
 
 /// Gmsh context object
 pub struct Gmsh {}
@@ -88,44 +83,45 @@ pub fn get_cstring(istr: &str) -> GmshResult<CString> {
 //    }
 
 impl Gmsh {
-    pub fn initialize() -> /*args: Args, read_configs: bool) ->*/ GmshResult<Gmsh> {
+    pub fn initialize() -> GmshResult<Gmsh> {
         println!("opening Gmsh...");
 
-        // memory leak (?)
-        // let mut argv: Vec<*mut c_char> = args
-        //     .map(|arg| CString::new(arg).unwrap().into_raw())
-        //     .collect();
-
-        // let iread_configs = read_configs as c_int;
-
-        // causes segfault when bad options are passed in
-        // e.g. "-v", verbosity level without a number afterwards.
-        // The executable prints an error, this api segfaults
         unsafe {
             let mut ierr: c_int = 0;
             gmsh_sys::gmshInitialize(
-                1 as c_int, // argc is 1
-                [CString::new("gmsh").unwrap().into_raw()].as_mut_ptr(), // just the exe name
-                0,                 // don't read configuration files
+                // argc
+                1 as c_int,
+                // argv
+                [CString::new("gmsh").unwrap().into_raw()].as_mut_ptr(),
+                // don't read configuration files
+                0,
+                // error out-parameter
                 &mut ierr,
             );
 
             if ierr == 0 {
-                // start logging to terminal
-                Gmsh::set_number_option("General.Terminal", 1.);
-                Ok( Gmsh {})
+                // send logs to terminal
+                Gmsh::set_number_option("General.Terminal", 1.)?;
+                Ok( Gmsh{} )
             } else {
                 Err(GmshError::Initialization)
             }
         }
     }
 
-    /// Make a new model named `name` using the default geometry kernel
+    /// Make a new model using the built-in Gmsh geometry kernel
     pub fn new_native_model(&self, name: &'static str) -> GmshResult<Geo> {
-        println!("added model {} ", name);
+        println!("added built-in geometry model {} ", name);
         Geo::new(self, name)
     }
 
+    // /// Make a new model using the OpenCASCADE geometry kernel
+    // pub fn new_occ_model(&mut self, name: &'static str) -> GmshResult<Occ> {
+    //     println!("added OpenCASCADE model {} ", name);
+    //     Occ::new(self, name)
+    // }
+
+    /// Set a numeric option
     pub fn set_number_option(name: &str, value: f64) -> GmshResult<()> {
         let cname = get_cstring(name)?;
         unsafe {
@@ -133,13 +129,14 @@ impl Gmsh {
             gmsh_sys::gmshOptionSetNumber(cname.as_ptr(), value, &mut ierr);
             match ierr {
                 0 => Ok(()),
-               -1 => Err(GmshError::from(OptionError::Initialization)),
-                1 => Err(GmshError::from(OptionError::UnknownOption)),
+               -1 => Err(GmshError::from(GmshError::Initialization)),
+                1 => Err(GmshError::from(GmshError::UnknownOption)),
                 _ => Err(GmshError::Execution),
             }
         }
     }
 
+    /// Set a string option
     pub fn set_string_option(name: &str, value: &str) -> GmshResult<()> {
         let cname = get_cstring(name)?;
         let cvalue = get_cstring(value)?;
@@ -148,12 +145,12 @@ impl Gmsh {
             gmsh_sys::gmshOptionSetString(cname.as_ptr(), cvalue.as_ptr(), &mut ierr);
             match ierr {
                 0 => Ok(()),
-                _ => Err(GmshError::from(OptionError::UnknownOption)),
+                _ => Err(GmshError::from(GmshError::UnknownOption)),
             }
         }
     }
-    // pub fn new_occ_model(&mut self, name: &'static str) -> OCC {
-    // }
+
+
 }
 
 impl Drop for Gmsh {

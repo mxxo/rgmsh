@@ -116,7 +116,7 @@
 //!   using tags from one model in another.
 //!
 
-use crate::{Gmsh, GmshError, ModelError, GmshResult, ModelResult, get_cstring};
+use crate::{Gmsh, GmshError, GmshResult, get_cstring};
 
 use std::os::raw::c_int;
 use std::ffi::{CString, CStr};
@@ -138,6 +138,19 @@ pub struct PointTag(i32);
 #[derive(Debug, Copy, Clone)]
 /// A curve tag, built from points. The curve type includes straight lines. 1D.
 pub struct CurveTag(i32);
+
+/// Curves have a direction from start to end.
+impl Neg for CurveTag {
+    type Output = CurveTag;
+
+    /// Reverse the curve's direction.
+    fn neg(self) -> CurveTag {
+        match self {
+            CurveTag(i) => CurveTag(-i)
+        }
+    }
+}
+
 #[derive(Debug, Copy, Clone)]
 /// A wire tag. Wires are built from curves. Wires are a path of multiple curves. 1.5D.
 pub struct WireTag(i32);
@@ -185,6 +198,29 @@ impl GmshTag for SurfaceTag {
 // => use an enum to group those types
 
 #[derive(Debug, Copy, Clone)]
+enum BasicGeometry {
+    Point(PointTag),
+    Curve(CurveTag),
+    // Wire(WireTag),
+    Surface(SurfaceTag),
+    // Shell(ShellTag),
+    Volume(VolumeTag),
+}
+
+impl From<PointTag> for BasicGeometry {
+    fn from(t: PointTag) -> BasicGeometry {
+        BasicGeometry::Point(t)
+    }
+}
+
+impl From<CurveTag> for BasicGeometry {
+    fn from(t: CurveTag) -> BasicGeometry {
+        BasicGeometry::Curve(t)
+    }
+}
+
+
+#[derive(Debug, Copy, Clone)]
 enum CurveOrSurface {
     Curve(CurveTag),
     Surface(SurfaceTag),
@@ -193,27 +229,17 @@ enum CurveOrSurface {
 type c_or_s = CurveOrSurface;
 
 impl From<CurveTag> for c_or_s {
-    fn from(ct: CurveTag) -> c_or_s {
-        CurveOrSurface::Curve(ct)
+    fn from(t: CurveTag) -> c_or_s {
+        CurveOrSurface::Curve(t)
     }
 }
 
 impl From<SurfaceTag> for CurveOrSurface {
-    fn from(ct: SurfaceTag) -> CurveOrSurface {
-        CurveOrSurface::Surface(ct)
+    fn from(t: SurfaceTag) -> CurveOrSurface {
+        CurveOrSurface::Surface(t)
     }
 }
 
-impl Neg for CurveTag {
-    type Output = CurveTag;
-
-    /// Reverse the curve's direction.
-    fn neg(self) -> CurveTag {
-        match self {
-            CurveTag(i) => CurveTag(-i)
-        }
-    }
-}
 
 // associated geometry information
 struct PhysicalGroupTag(i32);
@@ -221,35 +247,71 @@ struct PhysicalGroupTag(i32);
 /// The native Gmsh geometry kernel.
 pub struct Geo<'a> {
     name: &'static str,
+    c_name: CString,
     phantom: PhantomData<&'a Gmsh>,
 }
 
 impl<'a> Geo<'a> {
 
     /// Make a new native geometry kernel named `name`.
+    // todo: fix me for setting which model is the current one.
+    // idea: keep a list of already used model names and only allow one at once
     #[must_use]
     pub fn new(_: &'a Gmsh, name: &'static str) -> GmshResult<Geo<'a>> {
         let c_name = get_cstring(name)?;
         unsafe {
             let mut ierr: c_int = 0;
+            // also sets the added model as the current model
             gmsh_sys::gmshModelAdd(c_name.as_ptr(), &mut ierr);
             match ierr {
-                0 => Ok( Geo { name, phantom: PhantomData, } ),
+                0 => Ok( Geo { name, c_name, phantom: PhantomData, } ),
                 -1 => Err(GmshError::Initialization),
-                _ => Err(GmshError::from(ModelError::Unknown)),
+                _ => Err(GmshError::Execution),
+            }
+        }
+    }
+
+    /// Set this model to be the current Gmsh model.
+    fn set_to_current(&self) -> GmshResult<()> {
+        unsafe {
+            let mut ierr: c_int = 0;
+            gmsh_sys::gmshModelSetCurrent(self.c_name.as_ptr(), &mut ierr);
+            match ierr {
+                0 => Ok(()),
+                _ => Err(GmshError::Execution),
+            }
+        }
+    }
+
+    /// Remove this model from the Gmsh context.
+    // todo: fix this for multiple models.
+    // one name may be shared among many, so this will actually remove the first
+    // model named whatever this name is.
+    pub fn remove(self) -> GmshResult<()> {
+        // first set this model to the current model.
+        self.set_to_current()?;
+        // now, remove the current model
+        unsafe {
+            let mut ierr: c_int = 0;
+            gmsh_sys::gmshModelRemove(&mut ierr);
+            match ierr {
+                0 => Ok(()),
+                _ => Err(GmshError::Execution),
             }
         }
     }
 
     /// Add a point to the model by specifying its coordinates.
     #[must_use]
-    pub fn add_point(&mut self,  x: f64, y: f64, z: f64) -> ModelResult<PointTag> {
+    pub fn add_point(&mut self,  x: f64, y: f64, z: f64) -> GmshResult<PointTag> {
+        self.set_to_current()?;
         self.add_point_gen((x,y,z), None)
     }
 
     /// Add a point to the model and specify a target mesh size `lc` there.
     #[must_use]
-    pub fn add_point_with_lc(&mut self, x: f64, y: f64, z: f64, lc: f64) -> ModelResult<PointTag> {
+    pub fn add_point_with_lc(&mut self, x: f64, y: f64, z: f64, lc: f64) -> GmshResult<PointTag> {
+        self.set_to_current()?;
         self.add_point_gen((x,y,z), Some(lc))
     }
 
@@ -258,7 +320,7 @@ impl<'a> Geo<'a> {
         coords: (f64, f64, f64),
         mesh_size: Option<f64>,
         //tag: Option<i32>,
-    ) -> ModelResult<PointTag> {
+    ) -> GmshResult<PointTag> {
 
         let (x, y, z) = coords;
         let out_tag: i32 = 0;
@@ -272,19 +334,22 @@ impl<'a> Geo<'a> {
             let out_tag = gmsh_sys::gmshModelGeoAddPoint(x, y, z, lc, auto_number, &mut ierr);
             match ierr {
                 0 => Ok(PointTag(out_tag)),
-                -1 => Err(ModelError::Initialization),
-                1  => Err(ModelError::Mutation),
-                2  => Err(ModelError::Lookup),
-                3  => Err(ModelError::BadInput),
-                4  => Err(ModelError::MeshQuery),
-                _  => Err(ModelError::Unknown),
+                -1 => Err(GmshError::Initialization),
+                1  => Err(GmshError::ModelMutation),
+                2  => Err(GmshError::ModelLookup),
+                3  => Err(GmshError::ModelBadInput),
+                4  => Err(GmshError::ModelParallelMeshQuery),
+                _  => Err(GmshError::Execution),
             }
         }
     }
 
+
+
     /// Delete a point from the Gmsh model.
     // todo: Genericize this for all GeometryTags
-    pub fn remove_point(&mut self, p: PointTag) -> ModelResult<()> {
+    pub fn remove_point(&mut self, p: PointTag) -> GmshResult<()> {
+        self.set_to_current()?;
 
         let raw_tag = p.0;
 
@@ -295,38 +360,41 @@ impl<'a> Geo<'a> {
             gmsh_sys::gmshModelGeoRemove([raw_tag].as_mut_ptr(), vec_len, is_recursive, &mut ierr);
             match ierr {
                 0 => Ok(()),
-                -1 => Err(ModelError::Initialization),
-                1  => Err(ModelError::Mutation),
-                2  => Err(ModelError::Lookup),
-                3  => Err(ModelError::BadInput),
-                4  => Err(ModelError::MeshQuery),
-                _  => Err(ModelError::Unknown),
+                -1 => Err(GmshError::Initialization),
+                1  => Err(GmshError::ModelMutation),
+                2  => Err(GmshError::ModelLookup),
+                3  => Err(GmshError::ModelBadInput),
+                4  => Err(GmshError::ModelParallelMeshQuery),
+                _  => Err(GmshError::Execution),
             }
         }
     }
 
     /// Add a straight line between two points.
     #[must_use]
-    pub fn add_line(&mut self, p1: PointTag, p2: PointTag) -> ModelResult<CurveTag> {
+    pub fn add_line(&mut self, p1: PointTag, p2: PointTag) -> GmshResult<CurveTag> {
+        self.set_to_current()?;
+
         let auto_number = -1;
         unsafe {
             let mut ierr: c_int = 0;
             let out_tag = gmsh_sys::gmshModelGeoAddLine(p1.to_raw(), p2.to_raw(), auto_number, &mut ierr);
             match ierr {
                 0 => Ok(CurveTag(out_tag)),
-                -1 => Err(ModelError::Initialization),
-                1  => Err(ModelError::Mutation),
-                2  => Err(ModelError::Lookup),
-                3  => Err(ModelError::BadInput),
-                4  => Err(ModelError::MeshQuery),
-                _  => Err(ModelError::Unknown),
+                -1 => Err(GmshError::Initialization),
+                1  => Err(GmshError::ModelMutation),
+                2  => Err(GmshError::ModelLookup),
+                3  => Err(GmshError::ModelBadInput),
+                4  => Err(GmshError::ModelParallelMeshQuery),
+                _  => Err(GmshError::Execution),
             }
         }
     }
 
     /// Add a surface from a set of closed, directed curves.
     #[must_use]
-    pub fn add_surface(&mut self, curves: &[CurveTag]) -> ModelResult<SurfaceTag> {
+    pub fn add_surface(&mut self, curves: &[CurveTag]) -> GmshResult<SurfaceTag> {
+        self.set_to_current()?;
         for CurveTag(i) in curves {
             println!("{:?}", i);
         }
@@ -343,25 +411,27 @@ impl<'a> Geo<'a> {
     }
 
     /// Synchronize the geometry model.
-    pub fn synchronize(&self) -> ModelResult<()> {
+    pub fn synchronize(&self) -> GmshResult<()> {
+        self.set_to_current()?;
         unsafe {
             let mut ierr: c_int = 0;
             gmsh_sys::gmshModelGeoSynchronize(&mut ierr);
             match ierr {
                 0 => Ok(()),
-                -1 => Err(ModelError::Initialization),
-                1  => Err(ModelError::Mutation),
-                2  => Err(ModelError::Lookup),
-                3  => Err(ModelError::BadInput),
-                4  => Err(ModelError::MeshQuery),
-                _  => Err(ModelError::Unknown),
+                -1 => Err(GmshError::Initialization),
+                1  => Err(GmshError::ModelMutation),
+                2  => Err(GmshError::ModelLookup),
+                3  => Err(GmshError::ModelBadInput),
+                4  => Err(GmshError::ModelParallelMeshQuery),
+                _  => Err(GmshError::Execution),
             }
         }
     }
 
     // probably should move this to a dedicated model class
     // with an inner Option(Mesh) and Option(Geo)
-    pub fn generate_mesh(&self, dim: i32) -> ModelResult<()> {
+    pub fn generate_mesh(&self, dim: i32) -> GmshResult<()> {
+        self.set_to_current()?;
         // synchronize by default?
         self.synchronize()?;
         unsafe {
@@ -369,14 +439,13 @@ impl<'a> Geo<'a> {
             gmsh_sys::gmshModelMeshGenerate(dim, &mut ierr);
             match ierr {
                 0 => Ok(()),
-                -1 => Err(ModelError::Initialization),
-                1  => Err(ModelError::Mutation),
-                2  => Err(ModelError::Lookup),
-                3  => Err(ModelError::BadInput),
-                4  => Err(ModelError::MeshQuery),
-                _  => Err(ModelError::Unknown),
+                -1 => Err(GmshError::Initialization),
+                1  => Err(GmshError::ModelMutation),
+                2  => Err(GmshError::ModelLookup),
+                3  => Err(GmshError::ModelBadInput),
+                4  => Err(GmshError::ModelParallelMeshQuery),
+                _  => Err(GmshError::Execution),
             }
         }
     }
-
 }

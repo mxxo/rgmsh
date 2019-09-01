@@ -15,17 +15,18 @@ fn main() -> GmshResult<()> {
 
     // ask for a new native geometry instance
     let mut geom = gmsh.new_native_model("hal")?;
+    let p: PointTag = geom.add_point(0., 0., 0.)?;
+    println!("{:?}", p);
 
     // ask for another model
     let mut geom2 = gmsh.new_native_model("bella")?;
+    let p2: PointTag = geom2.add_point(0., 0., 0.)?;
+    println!("{:?}", p2);
 
     // only way to get PointTags is through geometry construction methods
-    let p: PointTag = geom.add_point(0., 0., 0.)?;
 
     // won't compile
     //let p = PointTag(1);
-
-    println!("{:?}", p);
 
     // Destructor doesn't take ownership, so you can use a PointTag after removing it
     // This will remove it in the internal Gmsh model however.
@@ -35,7 +36,7 @@ fn main() -> GmshResult<()> {
     // sure you don't use that tag later on
 
     // will compile
-    println!("{:?}", p);
+    println!("Point tag from deleted model is {:?}", p);
 
     // To make a line, you need at least two points
     let p1 = geom.add_point(0., 0., 0.)?;
