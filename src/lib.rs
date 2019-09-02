@@ -1,3 +1,5 @@
+#![doc(html_logo_url = "https://gitlab.onelab.info/gmsh/gmsh/blob/master/utils/icons/gmsh.svg")]
+//!
 //! Unofficial Rust bindings to the Gmsh API.
 //!
 //! From the [Gmsh website](http://gmsh.info/):
@@ -37,8 +39,8 @@ pub use err::{GmshError};
 
 pub type GmshResult<T> = Result<T, GmshError>;
 
-pub mod geo;
-use geo::Geo;
+pub mod model;
+use model::Geo;
 
 mod log;
 use log::GmshLog;

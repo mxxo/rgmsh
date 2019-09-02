@@ -1,10 +1,26 @@
-//! The Gmsh geometry module
+//!
+//! Gmsh geometry models.
 //!
 //! There are two CAD engines you can use:
 //! 1. The built-in Gmsh geometry kernel.
 //! 2. The OpenCASCADE geometry kernel.
 //!
-//! The only way to get a geometry kernel is through a `Gmsh` context object.
+//! The relevant [Gmsh manual section](http://gmsh.info/doc/texinfo/gmsh.html#Geometry-module)
+//! explains the differences between the two kernels:
+//!
+//! > The built-in CAD kernel provides a simple CAD engine based on a bottom-up boundary representation approach:
+//! > you need to first define points, then curves, then surfaces and finally volumes.
+//!
+//! > The OpenCASCADE kernel allows one to build models in the same bottom-up manner, or by using a
+//! > constructive solid geometry approach where solids are defined first.
+//! > Boolean operations can then be performed to modify them.
+//!
+//! Either kernel should suffice for most projects.
+//!
+//! OpenCASCADE is a widely-used CAD engine, so it's a good default choice. You can directly define larger shapes without making their smaller components first.
+//! You also get access to powerful Boolean geometry operations for making complex shapes.
+//!
+//! The only way to get a model is through a `Gmsh` context object.
 //! ```
 //! # use gmsh::{Gmsh, GmshResult};
 //! # fn main() -> GmshResult<()> {
@@ -14,7 +30,7 @@
 //! # }
 //! ```
 //!
-//! The geometry kernel is only valid for the lifetime of `Gmsh`.
+//! The model is only valid for the lifetime of `Gmsh`.
 //! ```compile_fail
 //! # use gmsh::{Gmsh, GmshResult};
 //! # fn main() -> GmshResult<()> {
@@ -25,19 +41,18 @@
 //!
 //! // drop the Gmsh context
 //! std::mem::drop(gmsh);
-//! // try to use the kernel afterwards
+//! // try to use the model afterwards
 //! geom.add_point(0., 0., 0.)?; // won't compile
 //! # Ok(())
 //! # }
 //! ```
 //!
 //! ## Create, modify and delete shapes
-//! You can define points, lines, 2D surfaces
-//! and 3D volumes.  After defining a shape, you'll get a geometry tag to
-//! identify[^unique] it.
+//! You can define points, lines, 2D surfaces and 3D volumes.
+//! After defining a shape, you'll get a geometry tag to identify[^unique] it.
 //! ```
 //! # use gmsh::{Gmsh, GmshResult};
-//! # use gmsh::geo::{PointTag, CurveTag};
+//! # use gmsh::model::{PointTag, CurveTag};
 //! # fn main() -> GmshResult<()> {
 //! # let gmsh = Gmsh::initialize()?;
 //! // make a model using the default geometry kernel and call it `model`.
@@ -70,7 +85,7 @@
 //! use raw integers for tags.
 //! ```compile_fail
 //! # use gmsh::{Gmsh, GmshResult};
-//! # use gmsh::geo::{PointTag, CurveTag};
+//! # use gmsh::model::{PointTag, CurveTag};
 //! # fn main() -> GmshResult<()> {
 //! # let gmsh = Gmsh::initialize()?;
 //! # let geom = gmsh.new_native_model("model")?;
@@ -97,9 +112,6 @@
 //! However, the Rust API has a similar issue if there are two or more models.
 //! Since two models can have identical point tag values, tags from one can be used on the other.
 //!
-//! The root of this problem is that Gmsh tries very hard to keep going after errors.
-//! This has a direct impact on our API's error handling capabilities, since some errors are only logged, not handled in code.
-//!
 //! It's your responsibility to make sure tags are used with the right model.
 //! ```
 //! # use gmsh::{Gmsh, GmshResult};
@@ -110,16 +122,18 @@
 //!
 //! let p_a = geom_a.add_point(0., 0., 0.)?;
 //!
-//! let p_b = geom_b.add_point(0., 1., 1.)?;
-//! let p_c = geom_b.add_point(0., 1., 1.)?;
+//! let p_b1 = geom_b.add_point(0., 1., 1.)?;
+//! let p_b2 = geom_b.add_point(0., 1., 1.)?;
 //!
 //! // points from different models can have the same value
-//! assert!(p_a == p_b, "Point tags are different!");
+//! assert!(p_a == p_b1, "Point tags are different!");
 //!
-//! // Very bad!
-//! let line = geom_b.add_line(p_a, p_c)?;
-//! // Will succeed! Gmsh will print an error message to console and try to keep going.
-//! println!("Nonsense curve tag is {:?}", line);
+//! // Very bad! Using tags from one model on another.
+//! let line = geom_a.add_line(p_b1, p_b2)?;
+//!
+//! // In this case, the program will fail with a runtime error.
+//!
+//!
 //!
 //! #  Ok(())
 //! # }

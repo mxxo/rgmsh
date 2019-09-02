@@ -3,10 +3,7 @@
 extern crate gmsh;
 use gmsh::{Gmsh, GmshResult};
 
-use gmsh::geo::PointTag;
-// use gmsh::geo::curve_or_surface_op;
-
-use std::env;
+use gmsh::model::PointTag;
 
 fn main() -> GmshResult<()> {
 
