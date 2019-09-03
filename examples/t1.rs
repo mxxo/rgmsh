@@ -45,6 +45,8 @@ fn main() -> GmshResult<()> {
     let line = geom.add_line(p1, p2)?;
     println!("{:?}", line);
 
+    let line1 = geom2.add_line(p1, p2)?;
+
     // You can't use LineTags (SurfaceTags, VolumeTags,...) for PointTag methods
     // won't compile
     //geom.remove_point(line);

@@ -12,9 +12,9 @@
 //! ## The Gmsh API
 //!
 //! Gmsh has four main modules:
-//! 1. CAD geometry
-//! 2. Mesh generation
-//! 3. External solver interfacing
+//! 1. Geometry
+//! 2. Mesh
+//! 3. Solvers
 //! 4. Post-processing
 //!
 //! ## Rust API design
@@ -29,7 +29,6 @@
 
 extern crate gmsh_sys;
 
-use std::env::Args;
 use std::os::raw::{c_char, c_int, c_void};
 
 use std::ffi::CString;
@@ -40,10 +39,8 @@ pub use err::{GmshError};
 pub type GmshResult<T> = Result<T, GmshError>;
 
 pub mod model;
-use model::Geo;
-
-mod log;
-use log::GmshLog;
+use model::geo::Geo;
+use model::occ::Occ;
 
 // mesh
 struct FieldTag(i64);
@@ -52,7 +49,9 @@ struct FieldTag(i64);
 struct ViewTag(i64);
 
 /// Gmsh context object
-pub struct Gmsh {}
+pub struct Gmsh {
+    // todo add a log for used-model names
+}
 
 pub fn get_cstring(istr: &str) -> GmshResult<CString> {
     let c_str = CString::new(String::from(istr));
@@ -117,11 +116,11 @@ impl Gmsh {
         Geo::new(self, name)
     }
 
-    // /// Make a new model using the OpenCASCADE geometry kernel
-    // pub fn new_occ_model(&mut self, name: &'static str) -> GmshResult<Occ> {
-    //     println!("added OpenCASCADE model {} ", name);
-    //     Occ::new(self, name)
-    // }
+    /// Make a new model using the OpenCASCADE geometry kernel
+    pub fn new_occ_model(&mut self, name: &'static str) -> GmshResult<Occ> {
+        println!("added OpenCASCADE model {} ", name);
+        Occ::new(self, name)
+    }
 
     /// Set a numeric option
     pub fn set_number_option(name: &str, value: f64) -> GmshResult<()> {
@@ -147,12 +146,10 @@ impl Gmsh {
             gmsh_sys::gmshOptionSetString(cname.as_ptr(), cvalue.as_ptr(), &mut ierr);
             match ierr {
                 0 => Ok(()),
-                _ => Err(GmshError::from(GmshError::UnknownOption)),
+                _ => Err(GmshError::UnknownOption),
             }
         }
     }
-
-
 }
 
 impl Drop for Gmsh {
@@ -173,9 +170,4 @@ mod tests {
     // import all names from the outer scope
     use super::*;
 
-    #[test]
-    // #[should_panic]
-    pub fn dangling_geo() {
-
-    }
 }
