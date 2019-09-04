@@ -3,15 +3,15 @@
 extern crate gmsh;
 use gmsh::{Gmsh, GmshResult};
 
-use gmsh::model::PointTag;
+use gmsh::model::{Kernel, PointTag};
 
 fn main() -> GmshResult<()> {
 
     // spin up Gmsh
-    let mut gmsh = Gmsh::initialize()?;
+    let gmsh = Gmsh::initialize()?;
 
     // ask for a new native geometry instance
-    let mut geom = gmsh.new_native_model("hal")?;
+    let mut geom = gmsh.new_occ_model("hal")?;
     let p: PointTag = geom.add_point(0., 0., 0.)?;
     println!("{:?}", p);
 
@@ -45,7 +45,7 @@ fn main() -> GmshResult<()> {
     let line = geom.add_line(p1, p2)?;
     println!("{:?}", line);
 
-    let line1 = geom2.add_line(p1, p2)?;
+    // let line1 = geom2.add_line(p1, p2)?;
 
     // You can't use LineTags (SurfaceTags, VolumeTags,...) for PointTag methods
     // won't compile
@@ -86,6 +86,14 @@ fn main() -> GmshResult<()> {
     // ? you'll get a handle to a new mesh object
     geom.generate_mesh(1)?;
 
+    let mut occ_geom = gmsh.new_occ_model("box")?;
+    let b = occ_geom.add_box(0., 0., 0., 1., 1., 1.)?;
+
+    println!("{:?}", b);
+
+    occ_geom.synchronize()?;
+    occ_geom.generate_mesh(3)?;
+
     // You could also get around the safety checks by using PointTags from one geometry
     // on another, but why would you do that ;)?
 
@@ -98,7 +106,7 @@ fn main() -> GmshResult<()> {
 
     assert!(p_a == p_b, "Point tags are different!");
 
-    let line = geom_a.add_line(p_a, p_c)?;
+    // let line = geom_a.add_line(p_a, p_c)?;
     println!("{:?}", line);
 
     // models can't be used after their context is dropped

@@ -27,16 +27,20 @@
 //! * Post-processing data sets,
 //! * Mesh refinement fields.
 
+
+// todo figure out where this import belongs
 extern crate gmsh_sys;
 
-use std::os::raw::{c_char, c_int, c_void};
+use std::os::raw::c_int;
 
-use std::ffi::CString;
+use std::ffi::{CString};
 
 pub mod err;
 pub use err::{GmshError};
 
 pub type GmshResult<T> = Result<T, GmshError>;
+
+pub mod interface;
 
 pub mod model;
 use model::geo::Geo;
@@ -117,7 +121,7 @@ impl Gmsh {
     }
 
     /// Make a new model using the OpenCASCADE geometry kernel
-    pub fn new_occ_model(&mut self, name: &'static str) -> GmshResult<Occ> {
+    pub fn new_occ_model(&self, name: &'static str) -> GmshResult<Occ> {
         println!("added OpenCASCADE model {} ", name);
         Occ::new(self, name)
     }
@@ -130,8 +134,8 @@ impl Gmsh {
             gmsh_sys::gmshOptionSetNumber(cname.as_ptr(), value, &mut ierr);
             match ierr {
                 0 => Ok(()),
-               -1 => Err(GmshError::from(GmshError::Initialization)),
-                1 => Err(GmshError::from(GmshError::UnknownOption)),
+               -1 => Err(GmshError::Initialization),
+                1 => Err(GmshError::UnknownOption),
                 _ => Err(GmshError::Execution),
             }
         }

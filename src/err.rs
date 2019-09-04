@@ -1,5 +1,4 @@
-//! The Gmsh different error types
-
+//! The error type for all Gmsh API functions.
 #[derive(Debug)]
 pub enum GmshError {
     Initialization, // -1: Gmsh wasn't initialized, or a required library component is missing
