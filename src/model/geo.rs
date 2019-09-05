@@ -36,11 +36,8 @@ impl<'a> Geo<'a> {
             let mut ierr: c_int = 0;
             // also sets the added model as the current model
             gmsh_sys::gmshModelAdd(c_name.as_ptr(), &mut ierr);
-            match ierr {
-                0 => Ok( Geo { name, c_name, phantom: PhantomData, } ),
-                -1 => Err(GmshError::Initialization),
-                _ => Err(GmshError::Execution),
-            }
+            let geo = Geo { name, c_name, phantom: PhantomData };
+            check_main_error!(ierr, geo)
         }
     }
 

@@ -1,4 +1,6 @@
 #![doc(html_logo_url = "https://gitlab.onelab.info/gmsh/gmsh/blob/master/utils/icons/gmsh.svg")]
+// #![deny(missing_docs)]
+//!
 //!
 //! Unofficial Rust bindings to the Gmsh API.
 //!
@@ -33,12 +35,10 @@ extern crate gmsh_sys;
 
 use std::os::raw::c_int;
 
-use std::ffi::{CString};
+use std::ffi::{CStr, CString};
 
 pub mod err;
-pub use err::{GmshError};
-
-pub type GmshResult<T> = Result<T, GmshError>;
+pub use err::{GmshError, GmshResult};
 
 pub mod interface;
 
@@ -89,7 +89,7 @@ pub fn get_cstring(istr: &str) -> GmshResult<CString> {
 
 impl Gmsh {
     pub fn initialize() -> GmshResult<Gmsh> {
-        println!("opening Gmsh...");
+        // println!("opening Gmsh...");
 
         unsafe {
             let mut ierr: c_int = 0;
@@ -106,8 +106,12 @@ impl Gmsh {
 
             if ierr == 0 {
                 // send logs to terminal
-                Gmsh::set_number_option("General.Terminal", 1.)?;
-                Ok( Gmsh{} )
+                let mut gmsh = Gmsh {};
+                gmsh.set_number_option("General.Terminal", 1.)?;
+                eprintln!("Gmsh {}", gmsh.get_string_option("General.Version")?);
+
+                Ok(gmsh)
+
             } else {
                 Err(GmshError::Initialization)
             }
@@ -116,62 +120,149 @@ impl Gmsh {
 
     /// Make a new model using the built-in Gmsh geometry kernel
     pub fn new_native_model(&self, name: &'static str) -> GmshResult<Geo> {
-        println!("added built-in geometry model {} ", name);
+      //  println!("added built-in geometry model {} ", name);
         Geo::new(self, name)
     }
 
     /// Make a new model using the OpenCASCADE geometry kernel
     pub fn new_occ_model(&self, name: &'static str) -> GmshResult<Occ> {
-        println!("added OpenCASCADE model {} ", name);
+      //  println!("added OpenCASCADE model {} ", name);
         Occ::new(self, name)
     }
 
-    /// Set a numeric option
-    pub fn set_number_option(name: &str, value: f64) -> GmshResult<()> {
+    /// Get a numeric option.
+    pub fn get_number_option(&self, name: &str) -> GmshResult<f64> {
         let cname = get_cstring(name)?;
+        let mut value: f64 = 0.;
+        let mut ierr: c_int = 0;
         unsafe {
-            let mut ierr: c_int = 0;
+            gmsh_sys::gmshOptionGetNumber(cname.as_ptr(), &mut value, &mut ierr);
+        }
+        check_option_error!(ierr, value)
+    }
+
+    /// Set a numeric option.
+    pub fn set_number_option(&mut self, name: &str, value: f64) -> GmshResult<()> {
+        let cname = get_cstring(name)?;
+        let mut ierr: c_int = 0;
+        unsafe {
             gmsh_sys::gmshOptionSetNumber(cname.as_ptr(), value, &mut ierr);
-            match ierr {
-                0 => Ok(()),
-               -1 => Err(GmshError::Initialization),
-                1 => Err(GmshError::UnknownOption),
-                _ => Err(GmshError::Execution),
+        }
+        check_option_error!(ierr, ())
+    }
+
+    /// Get a string option.
+    pub fn get_string_option(&self, name: &str) -> GmshResult<String> {
+        let cname = get_cstring(name)?;
+        let mut ierr: c_int = 0;
+        // make a raw pointer from a CString
+        // I don't know if I should be allocating more memory here?
+        let buffer = CString::new("").unwrap();
+        let mut p_buffer = buffer.into_raw();
+        unsafe {
+            gmsh_sys::gmshOptionGetString(cname.as_ptr(), &mut p_buffer, &mut ierr);
+            // buffer length is recalculated from the modified pointer
+            let str_value = CString::from_raw(p_buffer).into_string();
+            match str_value {
+                Ok(val) => check_option_error!(ierr, val),
+                Err(_) => Err(GmshError::CInterface),
             }
         }
     }
 
-    /// Set a string option
-    pub fn set_string_option(name: &str, value: &str) -> GmshResult<()> {
+    /// Set a string option.
+    pub fn set_string_option(&mut self, name: &str, value: &str) -> GmshResult<()> {
         let cname = get_cstring(name)?;
         let cvalue = get_cstring(value)?;
+        let mut ierr: c_int = 0;
         unsafe {
-            let mut ierr: c_int = 0;
             gmsh_sys::gmshOptionSetString(cname.as_ptr(), cvalue.as_ptr(), &mut ierr);
-            match ierr {
-                0 => Ok(()),
-                _ => Err(GmshError::UnknownOption),
-            }
         }
+        check_option_error!(ierr, ())
     }
 }
 
 impl Drop for Gmsh {
     fn drop(&mut self) {
-        println!("finalizing Gmsh...");
+       // println!("finalizing Gmsh...");
         unsafe {
-           // don't check finalization errors
+            // don't check finalization errors
             let mut ierr: c_int = 0;
             gmsh_sys::gmshFinalize(&mut ierr);
         }
     }
 }
 
-
+/// Tests must be run with `--test-threads=1` since they depend on the shared Gmsh state.
 #[cfg(test)]
 mod tests {
 
     // import all names from the outer scope
     use super::*;
+    use crate::model::*;
+
+    // Will SIGSEGV if run in parallel
+    /// Check multiple models can be made and follow the same numbering rules
+    #[test]
+    pub fn multiple_models() -> GmshResult<()> {
+        let gmsh = Gmsh::initialize()?;
+        let mut occ_geom = gmsh.new_occ_model("box")?;
+        let p1 = occ_geom.add_point(0.,0.,0.)?;
+
+        let mut native_geom = gmsh.new_native_model("bella")?;
+        let p2 = native_geom.add_point(1., 1., 1.)?;
+
+        let mut another_native_geom = gmsh.new_native_model("plane")?;
+        let p3 = another_native_geom.add_point(2., 2., 2.)?;
+
+        assert!((p1 == p2) && (p1 == p3));
+        Ok(())
+    }
+
+    #[test]
+    pub fn catch_unknown_options() -> GmshResult<()> {
+        let mut gmsh = Gmsh::initialize()?;
+        let geom = gmsh.new_occ_model("model")?;
+        let bad_opt = "Bad.Option";
+
+        let get_num_err = gmsh.get_number_option(bad_opt);
+        let get_str_err = gmsh.get_string_option(bad_opt);
+        let set_num_err = gmsh.set_number_option(bad_opt, 1.);
+        let set_str_err = gmsh.set_string_option(bad_opt, "Garbo");
+
+        macro_rules! is_unknown_err {
+            ($err:ident) => {
+                match $err {
+                    Err(GmshError::UnknownOption) => (),
+                    _ => panic!(),
+                }
+            }
+        }
+
+        is_unknown_err!(get_num_err);
+        is_unknown_err!(get_str_err);
+        is_unknown_err!(set_num_err);
+        is_unknown_err!(set_str_err);
+
+        Ok(())
+    }
+
+    #[test]
+    pub fn set_and_return_opts() -> GmshResult<()> {
+        let mut gmsh = Gmsh::initialize()?;
+        let geom = gmsh.new_occ_model("model")?;
+
+        let opt = "Solver.Name0";
+        // has default value of GetDP
+        let str_val = "TEST_NAME_1";
+        gmsh.set_string_option(opt, str_val)?;
+        assert!(str_val == gmsh.get_string_option(opt)?);
+
+        // has default value of 0
+        gmsh.set_number_option("General.Axes", 5.)?;
+        assert!(5. == gmsh.get_number_option("General.Axes")?);
+
+        Ok(())
+    }
 
 }

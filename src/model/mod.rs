@@ -222,7 +222,7 @@
 //!   using tags from one model in another.
 //!
 
-use crate::{Gmsh, GmshError, GmshResult, get_cstring};
+use crate::{Gmsh, GmshError, GmshResult, get_cstring, check_main_error, check_model_error, check_option_error};
 
 pub use std::os::raw::c_int;
 pub use std::ffi::{CString, CStr};
@@ -299,15 +299,7 @@ pub trait Kernel {
         unsafe {
             let mut ierr: c_int = 0;
             gmsh_sys::gmshModelMeshGenerate(dim, &mut ierr);
-            match ierr {
-                0 => Ok(()),
-                -1 => Err(GmshError::Initialization),
-                1  => Err(GmshError::ModelMutation),
-                2  => Err(GmshError::ModelLookup),
-                3  => Err(GmshError::ModelBadInput),
-                4  => Err(GmshError::ModelParallelMeshQuery),
-                _  => Err(GmshError::Execution),
-            }
+            check_model_error!(ierr, ())
         }
     }
 }
