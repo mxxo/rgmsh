@@ -1,6 +1,6 @@
-//! Interface to the low-level gmsh_sys crate.
+//! Interface to the low-level `gmsh_sys` crate.
 
-/// The set of OpenCASCADE kernel functions.
+/// The set of `OpenCASCADE` kernel functions.
 pub mod occ {
 
     // unique functions

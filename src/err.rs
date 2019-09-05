@@ -28,7 +28,7 @@ pub enum GmshError {
     UnknownError,
 }
 
-/// Type alias for Result using GmshErrors.
+/// Type alias for Result using `GmshError`.
 pub type GmshResult<T> = Result<T, GmshError>;
 
 /// Handle error codes from top-level Gmsh functions.

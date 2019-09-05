@@ -87,7 +87,7 @@ pub fn get_cstring(istr: &str) -> GmshResult<CString> {
 //    }
 
 impl Gmsh {
-    pub fn initialize() -> GmshResult<Gmsh> {
+    pub fn initialize() -> GmshResult<Self> {
         // println!("opening Gmsh...");
 
         unsafe {
@@ -105,7 +105,7 @@ impl Gmsh {
 
             if ierr == 0 {
                 // send logs to terminal
-                let mut gmsh = Gmsh {};
+                let mut gmsh = Self {};
                 gmsh.set_number_option("General.Terminal", 1.)?;
                 eprintln!("Gmsh {}", gmsh.get_string_option("General.Version")?);
 
@@ -130,35 +130,35 @@ impl Gmsh {
 
     /// Get a numeric option.
     pub fn get_number_option(&self, name: &str) -> GmshResult<f64> {
-        let cname = get_cstring(name)?;
+        let c_name = get_cstring(name)?;
         let mut value: f64 = 0.;
         let mut ierr: c_int = 0;
         unsafe {
-            gmsh_sys::gmshOptionGetNumber(cname.as_ptr(), &mut value, &mut ierr);
+            gmsh_sys::gmshOptionGetNumber(c_name.as_ptr(), &mut value, &mut ierr);
         }
         check_option_error!(ierr, value)
     }
 
     /// Set a numeric option.
     pub fn set_number_option(&mut self, name: &str, value: f64) -> GmshResult<()> {
-        let cname = get_cstring(name)?;
+        let c_name = get_cstring(name)?;
         let mut ierr: c_int = 0;
         unsafe {
-            gmsh_sys::gmshOptionSetNumber(cname.as_ptr(), value, &mut ierr);
+            gmsh_sys::gmshOptionSetNumber(c_name.as_ptr(), value, &mut ierr);
         }
         check_option_error!(ierr, ())
     }
 
     /// Get a string option.
     pub fn get_string_option(&self, name: &str) -> GmshResult<String> {
-        let cname = get_cstring(name)?;
+        let c_name = get_cstring(name)?;
         let mut ierr: c_int = 0;
         // make a raw pointer from a CString
         // I don't know if I should be allocating more memory here?
         let buffer = CString::new("").unwrap();
         let mut p_buffer = buffer.into_raw();
         unsafe {
-            gmsh_sys::gmshOptionGetString(cname.as_ptr(), &mut p_buffer, &mut ierr);
+            gmsh_sys::gmshOptionGetString(c_name.as_ptr(), &mut p_buffer, &mut ierr);
             // buffer length is recalculated from the modified pointer
             let str_value = CString::from_raw(p_buffer).into_string();
             match str_value {
@@ -170,11 +170,11 @@ impl Gmsh {
 
     /// Set a string option.
     pub fn set_string_option(&mut self, name: &str, value: &str) -> GmshResult<()> {
-        let cname = get_cstring(name)?;
-        let cvalue = get_cstring(value)?;
+        let c_name = get_cstring(name)?;
+        let c_value = get_cstring(value)?;
         let mut ierr: c_int = 0;
         unsafe {
-            gmsh_sys::gmshOptionSetString(cname.as_ptr(), cvalue.as_ptr(), &mut ierr);
+            gmsh_sys::gmshOptionSetString(c_name.as_ptr(), c_value.as_ptr(), &mut ierr);
         }
         check_option_error!(ierr, ())
     }

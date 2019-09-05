@@ -3,15 +3,6 @@
 use super::*;
 use crate::{impl_kernel, kernel_prefix, GmshError, GmshResult};
 
-/// Interface to properly namespace built-in kernel functions.
-pub mod interface {
-
-    pub use gmsh_sys::gmshModelGeoAddLine as add_line;
-    pub use gmsh_sys::gmshModelGeoAddPoint as add_point;
-    pub use gmsh_sys::gmshModelGeoRemove as remove_point;
-    pub use gmsh_sys::gmshModelGeoSynchronize as synchronize;
-}
-
 /// An instance of the built-in kernel
 pub struct Geo<'a> {
     name: &'static str,
@@ -19,7 +10,6 @@ pub struct Geo<'a> {
     phantom: PhantomData<&'a Gmsh>,
 }
 
-//
 impl_kernel!(Geo);
 
 impl<'a> Geo<'a> {

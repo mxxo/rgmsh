@@ -1,9 +1,9 @@
-//! The OpenCASCADE geometry kernel
+//! The `OpenCASCADE` geometry kernel
 
 use super::*;
 use crate::{impl_kernel, kernel_prefix, GmshError, GmshResult, check_main_error, check_model_error};
 
-/// An instance of the OpenCASCADE kernel
+/// An instance of the `OpenCASCADE` kernel
 pub struct Occ<'a> {
     name: &'static str,
     c_name: CString,
@@ -13,7 +13,7 @@ pub struct Occ<'a> {
 impl_kernel!(Occ);
 
 impl<'a> Occ<'a> {
-    /// Make a new instance of the OpenCASCADE kernel.
+    /// Make a new instance of the `OpenCASCADE` kernel.
     // todo: fix me for the right model names
     #[must_use]
     pub fn new(_: &'a Gmsh, name: &'static str) -> GmshResult<Occ<'a>> {

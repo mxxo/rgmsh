@@ -2,7 +2,7 @@
 //!
 //! There are two CAD engines you can use:
 //! 1. The built-in Gmsh geometry kernel.
-//! 2. The OpenCASCADE geometry kernel.
+//! 2. The `OpenCASCADE` geometry kernel.
 //!
 //! The relevant [Gmsh manual section](http://gmsh.info/doc/texinfo/gmsh.html#Geometry-module)
 //! explains the differences between the two kernels:
@@ -10,13 +10,13 @@
 //! > The built-in CAD kernel provides a simple CAD engine based on a bottom-up boundary representation approach:
 //! > you need to first define points, then curves, then surfaces and finally volumes.
 //!
-//! > The OpenCASCADE kernel allows one to build models in the same bottom-up manner, or by using a
+//! > The `OpenCASCADE` kernel allows one to build models in the same bottom-up manner, or by using a
 //! > constructive solid geometry approach where solids are defined first.
 //! > Boolean operations can then be performed to modify them.
 //!
 //! Either kernel should suffice for most projects.
 //!
-//! OpenCASCADE is a widely-used CAD engine, so it's a good default choice. You can directly define larger shapes without making their smaller components first.
+//! `OpenCASCADE` is a widely-used CAD engine, so it's a good default choice. You can directly define larger shapes without making their smaller components first.
 //! You also get access to powerful Boolean geometry operations for making complex shapes.
 //!
 //! The only way to get a model is through a `Gmsh` context object.
@@ -70,8 +70,8 @@
 //!
 //! There are two ways to make geometries in Gmsh: top-down and bottom-up.
 //!
-//! ### Top-down geometry with the OpenCASCADE kernel
-//! With the OpenCASCADE kernel, you can directly specify the shape you want to make.
+//! ### Top-down geometry with the `OpenCASCADE` kernel
+//! With the `OpenCASCADE` kernel, you can directly specify the shape you want to make.
 //! ```
 //! # use gmsh::{Gmsh, GmshResult};
 //! # use gmsh::model::{Kernel, PointTag, CurveTag};
@@ -92,7 +92,7 @@
 //! # }
 //! ```
 //!
-//! ### Bottom-up geometries with either the OpenCASCADE or built-in kernel
+//! ### Bottom-up geometries with either the `OpenCASCADE` or built-in kernel
 //!
 //! ## Geometry tags
 //! Geometry tags are used for:
@@ -452,12 +452,11 @@ pub struct CurveTag(i32);
 
 /// Curves have a direction from start to end.
 impl Neg for CurveTag {
-    type Output = CurveTag;
-
+    type Output = Self;
     /// Reverse the curve's direction.
-    fn neg(self) -> CurveTag {
+    fn neg(self) -> Self {
         match self {
-            CurveTag(i) => CurveTag(-i),
+            CurveTag(i) => Self(-i),
         }
     }
 }
