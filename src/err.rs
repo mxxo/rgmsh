@@ -13,13 +13,13 @@ pub enum GmshError {
     CInterface, // Problems from the Rust/C FFI interface
     /// A function that mutates the model couldn't complete successfully.
     /// For example, addPoint couldn't succeed because of a tag collision.
-    ModelMutation,  // 1 in a model
+    ModelMutation, // 1 in a model
     /// A data lookup getter function failed.
     /// For example, tried to work on a view that doesn't exist.
-    ModelLookup,    // 2 in a model
+    ModelLookup, // 2 in a model
     /// The function couldn't successfully use a required input parameter.
     /// For example,  a user-specified quadrature scheme couldn't be applied to the data.
-    ModelBadInput,  // 3 in a model
+    ModelBadInput, // 3 in a model
     /// A parallelizable mesh query function failed
     ModelParallelMeshQuery, // 4 in a model
     /// The given option doesn't exist in Gmsh.
@@ -36,12 +36,12 @@ pub type GmshResult<T> = Result<T, GmshError>;
 macro_rules! check_main_error {
     ($ierr:expr, $return_val: expr) => {
         match $ierr {
-             0 => Ok($return_val),
+            0 => Ok($return_val),
             -1 => Err(GmshError::Initialization),
-             1 => Err(GmshError::Execution),
-             _ => Err(GmshError::UnknownError),
+            1 => Err(GmshError::Execution),
+            _ => Err(GmshError::UnknownError),
         }
-    }
+    };
 }
 
 /// Handle error codes from Gmsh model functions.
@@ -49,15 +49,15 @@ macro_rules! check_main_error {
 macro_rules! check_model_error {
     ($ierr:expr, $return_val: expr) => {
         match $ierr {
-             0 => Ok($return_val),
+            0 => Ok($return_val),
             -1 => Err(GmshError::Initialization),
-             1 => Err(GmshError::ModelMutation),
-             2 => Err(GmshError::ModelLookup),
-             3 => Err(GmshError::ModelBadInput),
-             4 => Err(GmshError::ModelParallelMeshQuery),
-             _ => Err(GmshError::UnknownError),
+            1 => Err(GmshError::ModelMutation),
+            2 => Err(GmshError::ModelLookup),
+            3 => Err(GmshError::ModelBadInput),
+            4 => Err(GmshError::ModelParallelMeshQuery),
+            _ => Err(GmshError::UnknownError),
         }
-    }
+    };
 }
 
 /// Handle error codes from Gmsh option configuration functions.
@@ -65,11 +65,10 @@ macro_rules! check_model_error {
 macro_rules! check_option_error {
     ($ierr:expr, $return_val: expr) => {
         match $ierr {
-             0 => Ok($return_val),
+            0 => Ok($return_val),
             -1 => Err(GmshError::Initialization),
-             1 => Err(GmshError::UnknownOption),
-             _ => Err(GmshError::UnknownError),
+            1 => Err(GmshError::UnknownOption),
+            _ => Err(GmshError::UnknownError),
         }
-    }
+    };
 }
-

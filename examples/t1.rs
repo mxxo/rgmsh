@@ -1,22 +1,23 @@
 /// This file reimplements gmsh/tutorial/t1.geo in Rust
-
 extern crate gmsh;
 use gmsh::{Gmsh, GmshResult};
 
 use gmsh::model::{Kernel, PointTag};
 
 fn main() -> GmshResult<()> {
-
     // spin up Gmsh
-    let gmsh = Gmsh::initialize()?;
+    let mut gmsh = Gmsh::initialize()?;
+
+    let opt = "General.BuildOptions";
+    println!("{:?} = {:?}", opt, gmsh.get_string_option(opt).unwrap());
 
     // ask for a new native geometry instance
     let mut geom = gmsh.new_occ_model("hal")?;
+    let mut geom2 = gmsh.new_native_model("bella")?;
     let p: PointTag = geom.add_point(0., 0., 0.)?;
     println!("{:?}", p);
 
     // ask for another model
-    let mut geom2 = gmsh.new_native_model("bella")?;
     let p2: PointTag = geom2.add_point(0., 0., 0.)?;
     println!("{:?}", p2);
 
@@ -104,7 +105,7 @@ fn main() -> GmshResult<()> {
     let p_b = geom_b.add_point(0., 1., 1.)?;
     let p_c = geom_b.add_point(0., 1., 1.)?;
 
-    assert!(p_a == p_b, "Point tags are different!");
+    // assert!(p_a == p_b, "Point tags are different!");
 
     // let line = geom_a.add_line(p_a, p_c)?;
     println!("{:?}", line);

@@ -70,7 +70,7 @@
 //!
 //! There are two ways to make geometries in Gmsh: top-down and bottom-up.
 //!
-//! ### Top-down geometries - OpenCASCADE kernel only
+//! ### Top-down geometry with the OpenCASCADE kernel
 //! With the OpenCASCADE kernel, you can directly specify the shape you want to make.
 //! ```
 //! # use gmsh::{Gmsh, GmshResult};
@@ -92,7 +92,7 @@
 //! # }
 //! ```
 //!
-//! ### Bottom-up geometries - OpenCASCADE or built-in kernel
+//! ### Bottom-up geometries with either the OpenCASCADE or built-in kernel
 //!
 //! ## Geometry tags
 //! Geometry tags are used for:
@@ -222,13 +222,13 @@
 //!   using tags from one model in another.
 //!
 
-use crate::{Gmsh, GmshError, GmshResult, get_cstring, check_main_error, check_model_error, check_option_error};
+use crate::{check_main_error, check_model_error, get_cstring, Gmsh, GmshError, GmshResult};
 
+pub use std::ffi::{CStr, CString};
 pub use std::os::raw::c_int;
-pub use std::ffi::{CString, CStr};
 
-use std::ops::Neg;
 use std::marker::PhantomData;
+use std::ops::Neg;
 
 // gmsh_sys interface
 pub use crate::interface::{geo::*, occ::*};
@@ -263,18 +263,22 @@ pub trait Kernel {
     fn remove(self) -> GmshResult<()>;
 
     #[must_use]
-    fn add_point_gen(&mut self, coords: (f64, f64, f64), mesh_size: Option<f64>) -> GmshResult<PointTag>;
+    fn add_point_gen(
+        &mut self,
+        coords: (f64, f64, f64),
+        mesh_size: Option<f64>,
+    ) -> GmshResult<PointTag>;
 
     /// Add a point to the model by specifying its coordinates.
     #[must_use]
-    fn add_point(&mut self,  x: f64, y: f64, z: f64) -> GmshResult<PointTag> {
-        self.add_point_gen((x,y,z), None)
+    fn add_point(&mut self, x: f64, y: f64, z: f64) -> GmshResult<PointTag> {
+        self.add_point_gen((x, y, z), None)
     }
 
     /// Add a point to the model and specify a target mesh size `lc` there.
     #[must_use]
     fn add_point_with_lc(&mut self, x: f64, y: f64, z: f64, lc: f64) -> GmshResult<PointTag> {
-        self.add_point_gen((x,y,z), Some(lc))
+        self.add_point_gen((x, y, z), Some(lc))
     }
 
     /// Remove a point from the model.
@@ -287,7 +291,7 @@ pub trait Kernel {
 
     fn add_surface(&mut self, curves: &[CurveTag]) -> GmshResult<SurfaceTag>;
 
-    fn curve_or_surface_op<T: Into<CurveOrSurface>> (&mut self, gen_entity: T);
+    fn curve_or_surface_op<T: Into<CurveOrSurface>>(&mut self, gen_entity: T);
 
     /// Mesh the geometry model
     // probably should move this to a dedicated model class
@@ -310,17 +314,20 @@ pub trait Kernel {
 // https://github.com/mikkyang/rust-blas/pull/12
 /// Helper macro for calling the correct C function for the specified kernel.
 #[macro_export]
-macro_rules! prefix {
-    (Geo, $fn_name: ident) => {crate::interface::geo::$fn_name};
-    (Occ, $fn_name: ident) => {crate::interface::occ::$fn_name};
+macro_rules! kernel_prefix {
+    (Geo, $fn_name: ident) => {
+        crate::interface::geo::$fn_name
+    };
+    (Occ, $fn_name: ident) => {
+        crate::interface::occ::$fn_name
+    };
 }
 
 /// Implement kernel functions that follow a naming pattern.
 #[macro_export]
 macro_rules! impl_kernel {
-    ($kernel_name: ident) => (
+    ($kernel_name: ident) => {
         impl<'a> Kernel for $kernel_name<'a> {
-
             //-----------------------------------------------------------------
             // General kernel methods for all kernels
             //-----------------------------------------------------------------
@@ -340,10 +347,7 @@ macro_rules! impl_kernel {
                 unsafe {
                     let mut ierr: c_int = 0;
                     gmsh_sys::gmshModelRemove(&mut ierr);
-                    match ierr {
-                        0 => Ok(()),
-                        _ => Err(GmshError::Execution),
-                    }
+                    check_main_error!(ierr, ())
                 }
             }
 
@@ -356,23 +360,16 @@ macro_rules! impl_kernel {
                 self.set_to_current()?;
                 unsafe {
                     let mut ierr: c_int = 0;
-                    let sync_fn = prefix!($kernel_name, synchronize);
+                    let sync_fn = kernel_prefix!($kernel_name, synchronize);
                     sync_fn(&mut ierr);
-                    match ierr {
-                        0 => Ok(()),
-                        -1 => Err(GmshError::Initialization),
-                        1  => Err(GmshError::ModelMutation),
-                        2  => Err(GmshError::ModelLookup),
-                        3  => Err(GmshError::ModelBadInput),
-                        4  => Err(GmshError::ModelParallelMeshQuery),
-                        _  => Err(GmshError::Execution),
-                    }
+                    check_model_error!(ierr, ())
                 }
             }
 
             /// The general add_point method.
             #[must_use]
-            fn add_point_gen(&mut self,
+            fn add_point_gen(
+                &mut self,
                 coords: (f64, f64, f64),
                 mesh_size: Option<f64>,
             ) -> GmshResult<PointTag> {
@@ -382,21 +379,12 @@ macro_rules! impl_kernel {
 
                 let lc = mesh_size.unwrap_or(0.);
                 let auto_number = -1;
-                // let tag = tag.unwrap_or(-1);
 
                 unsafe {
                     let mut ierr: c_int = 0;
-                    let add_point_fn = prefix!($kernel_name, add_point);
+                    let add_point_fn = kernel_prefix!($kernel_name, add_point);
                     let out_tag = add_point_fn(x, y, z, lc, auto_number, &mut ierr);
-                    match ierr {
-                        0 => Ok(PointTag(out_tag)),
-                        -1 => Err(GmshError::Initialization),
-                        1  => Err(GmshError::ModelMutation),
-                        2  => Err(GmshError::ModelLookup),
-                        3  => Err(GmshError::ModelBadInput),
-                        4  => Err(GmshError::ModelParallelMeshQuery),
-                        _  => Err(GmshError::Execution),
-                    }
+                    check_model_error!(ierr, PointTag(out_tag))
                 }
             }
 
@@ -411,17 +399,9 @@ macro_rules! impl_kernel {
                     let vec_len = 1;
                     let is_recursive = 0;
                     let mut ierr: c_int = 0;
-                    let remove_point_fn = prefix!($kernel_name, remove_point);
+                    let remove_point_fn = kernel_prefix!($kernel_name, remove_point);
                     remove_point_fn([raw_tag].as_mut_ptr(), vec_len, is_recursive, &mut ierr);
-                    match ierr {
-                        0 => Ok(()),
-                        -1 => Err(GmshError::Initialization),
-                        1  => Err(GmshError::ModelMutation),
-                        2  => Err(GmshError::ModelLookup),
-                        3  => Err(GmshError::ModelBadInput),
-                        4  => Err(GmshError::ModelParallelMeshQuery),
-                        _  => Err(GmshError::Execution),
-                    }
+                    check_model_error!(ierr, ())
                 }
             }
 
@@ -433,18 +413,9 @@ macro_rules! impl_kernel {
                 let auto_number = -1;
                 unsafe {
                     let mut ierr: c_int = 0;
-                    let add_line_fn = prefix!($kernel_name, add_line);
+                    let add_line_fn = kernel_prefix!($kernel_name, add_line);
                     let out_tag = add_line_fn(p1.to_raw(), p2.to_raw(), auto_number, &mut ierr);
-                    // let out_tag = gmsh_sys::gmshModelGeoAddLine(p1.to_raw(), p2.to_raw(), auto_number, &mut ierr);
-                    match ierr {
-                        0 => Ok(CurveTag(out_tag)),
-                        -1 => Err(GmshError::Initialization),
-                        1  => Err(GmshError::ModelMutation),
-                        2  => Err(GmshError::ModelLookup),
-                        3  => Err(GmshError::ModelBadInput),
-                        4  => Err(GmshError::ModelParallelMeshQuery),
-                        _  => Err(GmshError::Execution),
-                    }
+                    check_model_error!(ierr, CurveTag(out_tag))
                 }
             }
 
@@ -459,20 +430,18 @@ macro_rules! impl_kernel {
             }
 
             // idea for a certain operation that only works for curves and surfaces
-            fn curve_or_surface_op<T: Into<CurveOrSurface>> (&mut self, gen_entity: T) {
+            fn curve_or_surface_op<T: Into<CurveOrSurface>>(&mut self, gen_entity: T) {
                 let entity = gen_entity.into();
                 match entity {
                     CurveOrSurface::Curve(CurveTag(ct)) => println!("Curve with tag {:?}", ct),
-                    CurveOrSurface::Surface(SurfaceTag(ct)) => println!("Surface with tag {:?}", ct),
+                    CurveOrSurface::Surface(SurfaceTag(ct)) => {
+                        println!("Surface with tag {:?}", ct)
+                    }
                 }
             }
-
-
-
         }
-    )
+    };
 }
-
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 /// A point tag. Points are used to build larger shapes. 0D.
@@ -488,7 +457,7 @@ impl Neg for CurveTag {
     /// Reverse the curve's direction.
     fn neg(self) -> CurveTag {
         match self {
-            CurveTag(i) => CurveTag(-i)
+            CurveTag(i) => CurveTag(-i),
         }
     }
 }
@@ -548,7 +517,6 @@ impl From<CurveTag> for BasicShape {
     }
 }
 
-
 /// Private module for sets of geometries passed and returned from functions.
 ///
 /// Gmsh operations can be on multiple known types. We use enums for a compile-time
@@ -604,4 +572,3 @@ impl From<SurfaceTag> for CurveOrSurface {
 /// Associated geometry information.
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 struct PhysicalGroupTag(i32);
-

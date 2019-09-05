@@ -29,13 +29,12 @@
 //! * Post-processing data sets,
 //! * Mesh refinement fields.
 
-
 // todo figure out where this import belongs
 extern crate gmsh_sys;
 
 use std::os::raw::c_int;
 
-use std::ffi::{CStr, CString};
+use std::ffi::CString;
 
 pub mod err;
 pub use err::{GmshError, GmshResult};
@@ -111,7 +110,6 @@ impl Gmsh {
                 eprintln!("Gmsh {}", gmsh.get_string_option("General.Version")?);
 
                 Ok(gmsh)
-
             } else {
                 Err(GmshError::Initialization)
             }
@@ -120,13 +118,13 @@ impl Gmsh {
 
     /// Make a new model using the built-in Gmsh geometry kernel
     pub fn new_native_model(&self, name: &'static str) -> GmshResult<Geo> {
-      //  println!("added built-in geometry model {} ", name);
+        //  println!("added built-in geometry model {} ", name);
         Geo::new(self, name)
     }
 
     /// Make a new model using the OpenCASCADE geometry kernel
     pub fn new_occ_model(&self, name: &'static str) -> GmshResult<Occ> {
-      //  println!("added OpenCASCADE model {} ", name);
+        //  println!("added OpenCASCADE model {} ", name);
         Occ::new(self, name)
     }
 
@@ -184,7 +182,7 @@ impl Gmsh {
 
 impl Drop for Gmsh {
     fn drop(&mut self) {
-       // println!("finalizing Gmsh...");
+        // println!("finalizing Gmsh...");
         unsafe {
             // don't check finalization errors
             let mut ierr: c_int = 0;
@@ -207,7 +205,7 @@ mod tests {
     pub fn multiple_models() -> GmshResult<()> {
         let gmsh = Gmsh::initialize()?;
         let mut occ_geom = gmsh.new_occ_model("box")?;
-        let p1 = occ_geom.add_point(0.,0.,0.)?;
+        let p1 = occ_geom.add_point(0., 0., 0.)?;
 
         let mut native_geom = gmsh.new_native_model("bella")?;
         let p2 = native_geom.add_point(1., 1., 1.)?;
@@ -236,7 +234,7 @@ mod tests {
                     Err(GmshError::UnknownOption) => (),
                     _ => panic!(),
                 }
-            }
+            };
         }
 
         is_unknown_err!(get_num_err);
@@ -264,5 +262,4 @@ mod tests {
 
         Ok(())
     }
-
 }
