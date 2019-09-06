@@ -31,7 +31,7 @@
 //!
 //! The model is only valid for the lifetime of `Gmsh`.
 //! ```compile_fail
-//! # use gmsh::{Gmsh, GmshResult, model::Kernel};
+//! # use gmsh::{Gmsh, GmshResult, model::GeoKernel};
 //! # fn main() -> GmshResult<()> {
 //! let gmsh = Gmsh::initialize()?;
 //! let mut geom = gmsh.new_occ_model("model")?;
@@ -51,7 +51,7 @@
 //! After defining a shape, you'll get a geometry tag to identify[^unique] it.
 //! ```
 //! # use gmsh::{Gmsh, GmshResult};
-//! # use gmsh::model::{Kernel, PointTag, CurveTag};
+//! # use gmsh::model::{GeoKernel, PointTag, CurveTag};
 //! # fn main() -> GmshResult<()> {
 //! # let gmsh = Gmsh::initialize()?;
 //! // make a model using the default geometry kernel and call it `model`.
@@ -74,7 +74,7 @@
 //! With the `OpenCASCADE` kernel, you can directly specify the shape you want to make.
 //! ```
 //! # use gmsh::{Gmsh, GmshResult};
-//! # use gmsh::model::{Kernel, PointTag, CurveTag};
+//! # use gmsh::model::{GeoKernel, PointTag, CurveTag};
 //! # fn main() -> GmshResult<()> {
 //! # let gmsh = Gmsh::initialize()?;
 //! let mut geom = gmsh.new_occ_model("model")?;
@@ -112,7 +112,7 @@
 //! use raw integers for tags.
 //! ```compile_fail
 //! # use gmsh::{Gmsh, GmshResult};
-//! # use gmsh::model::{Kernel, PointTag, CurveTag};
+//! # use gmsh::model::{GeoKernel, PointTag, CurveTag};
 //! # fn main() -> GmshResult<()> {
 //! # let gmsh = Gmsh::initialize()?;
 //! # let geom = gmsh.new_native_model("model")?;
@@ -144,7 +144,7 @@
 //! If you're lucky, using the wrong tags will cause a runtime error.
 //! ```
 //! # use gmsh::{Gmsh, GmshResult};
-//! # use gmsh::model::{Kernel};
+//! # use gmsh::model::{GeoKernel};
 //! # use std::result::Result;
 //! # fn main() -> GmshResult<()> {
 //! #  let gmsh = Gmsh::initialize()?;
@@ -170,7 +170,7 @@
 //! In the API's eyes, you've given it valid tags, and it's going to go ahead and do what you asked for.
 //! ```
 //! # use gmsh::{Gmsh, GmshResult};
-//! # use gmsh::model::{Kernel};
+//! # use gmsh::model::{GeoKernel};
 //! # use std::result::Result;
 //! # fn main() -> GmshResult<()> {
 //! #  let gmsh = Gmsh::initialize()?;
@@ -194,7 +194,7 @@
 //! You can use the `?` operator for terse error handling.
 //! ```
 //! # use gmsh::{Gmsh, GmshResult};
-//! # use gmsh::model::{Kernel};
+//! # use gmsh::model::{GeoKernel};
 //! fn main() -> GmshResult<()> {
 //!     let gmsh = Gmsh::initialize()?;
 //!     let mut geom = gmsh.new_native_model("model")?;
@@ -237,7 +237,7 @@ pub mod geo;
 pub mod occ;
 
 /// The general geometry kernel trait
-pub trait Kernel {
+pub trait GeoKernel {
     /// Get the model name
     fn get_name(&self) -> &'static str;
 
@@ -262,6 +262,7 @@ pub trait Kernel {
     // model named whatever this name is.
     fn remove(self) -> GmshResult<()>;
 
+    #[doc(hidden)]
     #[must_use]
     fn add_point_gen(
         &mut self,
@@ -310,24 +311,34 @@ pub trait Kernel {
 
 // use a prefix macro for similar functions to avoid nightly-only concat_idents! macro
 //
-// Idea adapted from the rust-blas package here:
-// https://github.com/mikkyang/rust-blas/pull/12
-/// Helper macro for calling the correct C function for the specified kernel.
-#[macro_export]
-macro_rules! kernel_prefix {
-    (Geo, $fn_name: ident) => {
-        crate::interface::geo::$fn_name
-    };
-    (Occ, $fn_name: ident) => {
-        crate::interface::occ::$fn_name
-    };
-}
+// /// Helper macro for calling the correct C function for the specified kernel.
+// #[macro_export]
+// macro_rules! kernel_prefix {
+//     (Geo, $fn_name: ident) => {
+//         crate::interface::geo::$fn_name
+//     };
+//     (Occ, $fn_name: ident) => {
+//         crate::interface::occ::$fn_name
+//     };
+// }
 
 /// Implement kernel functions that follow a naming pattern.
 #[macro_export]
 macro_rules! impl_kernel {
+
+    // internal macro rules for prefixing similar geometry kernel functions
+    // Idea adapted from the rust-blas package here:
+    // https://github.com/mikkyang/rust-blas/pull/12
+    (@kernel_prefix Geo, $fn_name: ident) => {
+        crate::interface::geo::$fn_name
+    };
+
+    (@kernel_prefix Occ, $fn_name: ident) => {
+        crate::interface::occ::$fn_name
+    };
+
     ($kernel_name: ident) => {
-        impl<'a> Kernel for $kernel_name<'a> {
+        impl<'a> GeoKernel for $kernel_name<'a> {
             //-----------------------------------------------------------------
             // General kernel methods for all kernels
             //-----------------------------------------------------------------
@@ -360,13 +371,13 @@ macro_rules! impl_kernel {
                 self.set_to_current()?;
                 unsafe {
                     let mut ierr: c_int = 0;
-                    let sync_fn = kernel_prefix!($kernel_name, synchronize);
+                    let sync_fn = impl_kernel!(@kernel_prefix $kernel_name, synchronize);
                     sync_fn(&mut ierr);
                     check_model_error!(ierr, ())
                 }
             }
 
-            /// The general add_point method.
+            #[doc(hidden)]
             #[must_use]
             fn add_point_gen(
                 &mut self,
@@ -382,7 +393,7 @@ macro_rules! impl_kernel {
 
                 unsafe {
                     let mut ierr: c_int = 0;
-                    let add_point_fn = kernel_prefix!($kernel_name, add_point);
+                    let add_point_fn = impl_kernel!(@kernel_prefix $kernel_name, add_point);
                     let out_tag = add_point_fn(x, y, z, lc, auto_number, &mut ierr);
                     check_model_error!(ierr, PointTag(out_tag))
                 }
@@ -399,7 +410,7 @@ macro_rules! impl_kernel {
                     let vec_len = 1;
                     let is_recursive = 0;
                     let mut ierr: c_int = 0;
-                    let remove_point_fn = kernel_prefix!($kernel_name, remove_point);
+                    let remove_point_fn = impl_kernel!(@kernel_prefix $kernel_name, remove_point);
                     remove_point_fn([raw_tag].as_mut_ptr(), vec_len, is_recursive, &mut ierr);
                     check_model_error!(ierr, ())
                 }
@@ -413,7 +424,7 @@ macro_rules! impl_kernel {
                 let auto_number = -1;
                 unsafe {
                     let mut ierr: c_int = 0;
-                    let add_line_fn = kernel_prefix!($kernel_name, add_line);
+                    let add_line_fn = impl_kernel!(@kernel_prefix $kernel_name, add_line);
                     let out_tag = add_line_fn(p1.to_raw(), p2.to_raw(), auto_number, &mut ierr);
                     check_model_error!(ierr, CurveTag(out_tag))
                 }

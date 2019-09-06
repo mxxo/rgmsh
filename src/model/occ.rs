@@ -1,7 +1,7 @@
 //! The `OpenCASCADE` geometry kernel
 
 use super::*;
-use crate::{impl_kernel, kernel_prefix, GmshError, GmshResult, check_main_error, check_model_error};
+use crate::{impl_kernel, GmshError, GmshResult, check_main_error, check_model_error};
 
 /// An instance of the `OpenCASCADE` kernel
 pub struct Occ<'a> {
@@ -65,6 +65,7 @@ impl<'a> Occ<'a> {
         self.add_sphere_gen(x, y, z, r, Some(polar1), Some(polar2), Some(azimuth))
     }
 
+    #[doc(hidden)]
     #[must_use]
     fn add_sphere_gen(
         &mut self,
@@ -77,7 +78,6 @@ impl<'a> Occ<'a> {
         azimuth: Option<f64>,
     ) -> GmshResult<VolumeTag> {
         self.set_to_current()?;
-        // polar angles
         let angle1 = polar1.unwrap_or(-std::f64::consts::FRAC_PI_2);
         let angle2 = polar2.unwrap_or(std::f64::consts::FRAC_PI_2);
         let angle3 = azimuth.unwrap_or(2. * std::f64::consts::PI);
@@ -124,6 +124,7 @@ impl<'a> Occ<'a> {
         self.add_torus_gen(x, y, z, r_maj, r_min, Some(angle))
     }
 
+    #[doc(hidden)]
     #[must_use]
     fn add_torus_gen(
         &mut self,

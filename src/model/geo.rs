@@ -1,7 +1,7 @@
 //! The built-in geometry kernel
 
 use super::*;
-use crate::{impl_kernel, kernel_prefix, GmshError, GmshResult};
+use crate::{impl_kernel, GmshError, GmshResult};
 
 /// An instance of the built-in kernel
 pub struct Geo<'a> {

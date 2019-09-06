@@ -2,7 +2,7 @@
 extern crate gmsh;
 use gmsh::{Gmsh, GmshResult};
 
-use gmsh::model::{Kernel, PointTag};
+use gmsh::model::{GeoKernel, PointTag};
 
 fn main() -> GmshResult<()> {
     // spin up Gmsh
