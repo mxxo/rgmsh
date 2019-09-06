@@ -12,8 +12,8 @@ fn main() -> GmshResult<()> {
     println!("{:?} = {:?}", opt, gmsh.get_string_option(opt).unwrap());
 
     // ask for a new native geometry instance
-    let mut geom = gmsh.new_occ_model("hal")?;
-    let mut geom2 = gmsh.new_native_model("bella")?;
+    let mut geom = gmsh.create_occ_model("hal")?;
+    let mut geom2 = gmsh.create_native_model("bella")?;
     let p: PointTag = geom.add_point(0., 0., 0.)?;
     println!("{:?}", p);
 
@@ -87,7 +87,7 @@ fn main() -> GmshResult<()> {
     // ? you'll get a handle to a new mesh object
     geom.generate_mesh(1)?;
 
-    let mut occ_geom = gmsh.new_occ_model("box")?;
+    let mut occ_geom = gmsh.create_occ_model("box")?;
     let b = occ_geom.add_box(0., 0., 0., 1., 1., 1.)?;
 
     println!("{:?}", b);
@@ -99,8 +99,8 @@ fn main() -> GmshResult<()> {
     // on another, but why would you do that ;)?
 
     // compare points from different models
-    let mut geom_a = gmsh.new_native_model("jimbo")?;
-    let mut geom_b = gmsh.new_native_model("aircraft-carrier")?;
+    let mut geom_a = gmsh.create_native_model("jimbo")?;
+    let mut geom_b = gmsh.create_native_model("aircraft-carrier")?;
     let p_a = geom_a.add_point(0., 0., 0.)?;
     let p_b = geom_b.add_point(0., 1., 1.)?;
     let p_c = geom_b.add_point(0., 1., 1.)?;

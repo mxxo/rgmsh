@@ -13,10 +13,10 @@ pub struct Occ<'a> {
 impl_kernel!(Occ);
 
 impl<'a> Occ<'a> {
-    /// Make a new instance of the `OpenCASCADE` kernel.
+    /// Create a new Gmsh model using the `OpenCASCADE` kernel.
     // todo: fix me for the right model names
     #[must_use]
-    pub fn new(_: &'a Gmsh, name: &'static str) -> GmshResult<Occ<'a>> {
+    pub fn create(_: &'a Gmsh, name: &'static str) -> GmshResult<Occ<'a>> {
         let mut ierr: c_int = 0;
         let c_name = get_cstring(name)?;
         unsafe {

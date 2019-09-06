@@ -117,15 +117,15 @@ impl Gmsh {
     }
 
     /// Make a new model using the built-in Gmsh geometry kernel
-    pub fn new_native_model(&self, name: &'static str) -> GmshResult<Geo> {
+    pub fn create_native_model(&self, name: &'static str) -> GmshResult<Geo> {
         //  println!("added built-in geometry model {} ", name);
-        Geo::new(self, name)
+        Geo::create(self, name)
     }
 
     /// Make a new model using the OpenCASCADE geometry kernel
-    pub fn new_occ_model(&self, name: &'static str) -> GmshResult<Occ> {
+    pub fn create_occ_model(&self, name: &'static str) -> GmshResult<Occ> {
         //  println!("added OpenCASCADE model {} ", name);
-        Occ::new(self, name)
+        Occ::create(self, name)
     }
 
     /// Get a numeric option.
@@ -204,13 +204,13 @@ mod tests {
     #[test]
     pub fn multiple_models() -> GmshResult<()> {
         let gmsh = Gmsh::initialize()?;
-        let mut occ_geom = gmsh.new_occ_model("box")?;
+        let mut occ_geom = gmsh.create_occ_model("box")?;
         let p1 = occ_geom.add_point(0., 0., 0.)?;
 
-        let mut native_geom = gmsh.new_native_model("bella")?;
+        let mut native_geom = gmsh.create_native_model("bella")?;
         let p2 = native_geom.add_point(1., 1., 1.)?;
 
-        let mut another_native_geom = gmsh.new_native_model("plane")?;
+        let mut another_native_geom = gmsh.create_native_model("plane")?;
         let p3 = another_native_geom.add_point(2., 2., 2.)?;
 
         assert!((p1 == p2) && (p1 == p3));
@@ -220,7 +220,7 @@ mod tests {
     #[test]
     pub fn catch_unknown_options() -> GmshResult<()> {
         let mut gmsh = Gmsh::initialize()?;
-        let geom = gmsh.new_occ_model("model")?;
+        let geom = gmsh.create_occ_model("model")?;
         let bad_opt = "Bad.Option";
 
         let get_num_err = gmsh.get_number_option(bad_opt);
@@ -248,7 +248,7 @@ mod tests {
     #[test]
     pub fn set_and_return_opts() -> GmshResult<()> {
         let mut gmsh = Gmsh::initialize()?;
-        let geom = gmsh.new_occ_model("model")?;
+        let geom = gmsh.create_occ_model("model")?;
 
         let opt = "Solver.Name0";
         // has default value of GetDP

@@ -13,11 +13,11 @@ pub struct Geo<'a> {
 impl_kernel!(Geo);
 
 impl<'a> Geo<'a> {
-    /// Make a new built-in geometry kernel.
+    /// Create a new Gmsh model using the built-in kernel.
     // todo: fix me for setting which model is the current one.
     // idea: keep a list of already used model names and only allow one at once
     #[must_use]
-    pub fn new(_: &'a Gmsh, name: &'static str) -> GmshResult<Geo<'a>> {
+    pub fn create(_: &'a Gmsh, name: &'static str) -> GmshResult<Geo<'a>> {
         let c_name = get_cstring(name)?;
         unsafe {
             let mut ierr: c_int = 0;

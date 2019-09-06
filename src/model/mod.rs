@@ -24,7 +24,7 @@
 //! # use gmsh::{Gmsh, GmshResult};
 //! # fn main() -> GmshResult<()> {
 //! let gmsh = Gmsh::initialize()?;
-//! let mut geom = gmsh.new_native_model("model")?;
+//! let mut geom = gmsh.create_native_model("model")?;
 //! # Ok(())
 //! # }
 //! ```
@@ -34,7 +34,7 @@
 //! # use gmsh::{Gmsh, GmshResult, model::GeoKernel};
 //! # fn main() -> GmshResult<()> {
 //! let gmsh = Gmsh::initialize()?;
-//! let mut geom = gmsh.new_occ_model("model")?;
+//! let mut geom = gmsh.create_occ_model("model")?;
 //!
 //! // -- do some stuff with geom
 //!
@@ -55,7 +55,7 @@
 //! # fn main() -> GmshResult<()> {
 //! # let gmsh = Gmsh::initialize()?;
 //! // make a model using the default geometry kernel and call it `model`.
-//! let mut geom = gmsh.new_native_model("model")?;
+//! let mut geom = gmsh.create_native_model("model")?;
 //!
 //! // make a point
 //! let p1: PointTag = geom.add_point(0., 0., 0.)?;
@@ -77,7 +77,7 @@
 //! # use gmsh::model::{GeoKernel, PointTag, CurveTag};
 //! # fn main() -> GmshResult<()> {
 //! # let gmsh = Gmsh::initialize()?;
-//! let mut geom = gmsh.new_occ_model("model")?;
+//! let mut geom = gmsh.create_occ_model("model")?;
 //!
 //! // make a box starting at (0, 0, 0) with side extents (1, 1, 1)
 //! let b = geom.add_box(0., 0., 0., 1., 1., 1.)?;
@@ -115,7 +115,7 @@
 //! # use gmsh::model::{GeoKernel, PointTag, CurveTag};
 //! # fn main() -> GmshResult<()> {
 //! # let gmsh = Gmsh::initialize()?;
-//! # let geom = gmsh.new_native_model("model")?;
+//! # let geom = gmsh.create_native_model("model")?;
 //! // try to make a point from a raw integer
 //! let p1 = PointTag(1); // won't compile
 //! // try to make a line from two raw integers
@@ -148,8 +148,8 @@
 //! # use std::result::Result;
 //! # fn main() -> GmshResult<()> {
 //! #  let gmsh = Gmsh::initialize()?;
-//! let mut geom_a = gmsh.new_occ_model("jimbo")?;
-//! let mut geom_b = gmsh.new_native_model("aircraft-carrier")?;
+//! let mut geom_a = gmsh.create_occ_model("jimbo")?;
+//! let mut geom_b = gmsh.create_native_model("aircraft-carrier")?;
 //!
 //! let p_a = geom_a.add_point(0., 0., 0.)?;
 //!
@@ -174,11 +174,11 @@
 //! # use std::result::Result;
 //! # fn main() -> GmshResult<()> {
 //! #  let gmsh = Gmsh::initialize()?;
-//! let mut geom_a = gmsh.new_occ_model("jimbo")?;
+//! let mut geom_a = gmsh.create_occ_model("jimbo")?;
 //! let p_a1 = geom_a.add_point(0., 0., 0.)?;
 //! let p_a2 = geom_a.add_point(1., 0., 0.)?;
 //!
-//! let mut geom_b = gmsh.new_native_model("aircraft-carrier")?;
+//! let mut geom_b = gmsh.create_native_model("aircraft-carrier")?;
 //! let p_b1 = geom_b.add_point(0., 1., 1.)?;
 //! let p_b2 = geom_b.add_point(0., 1., 1.)?;
 //!
@@ -197,7 +197,7 @@
 //! # use gmsh::model::{GeoKernel};
 //! fn main() -> GmshResult<()> {
 //!     let gmsh = Gmsh::initialize()?;
-//!     let mut geom = gmsh.new_native_model("model")?;
+//!     let mut geom = gmsh.create_native_model("model")?;
 //!
 //!     let p1 = geom.add_point(0., 0., 0.)?;
 //!
