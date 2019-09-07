@@ -69,8 +69,8 @@ fn main() -> GmshResult<()> {
     let l3 = geom.add_line(p1, p2)?;
     let l4 = geom.add_line(p1, p2)?;
 
-    let s = geom.add_surface(&[l1, -l2, l3, l4])?;
-    geom.curve_or_surface_op(s);
+    // let s = geom.add_surface(&[l1, -l2, l3, l4])?;
+    // geom.curve_or_surface_op(s);
 
     // lines (curves) have a direction, from start to end.
     // you can reverse that direction of a given CurveTag using a negative sign.

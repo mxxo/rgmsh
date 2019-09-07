@@ -36,7 +36,7 @@ impl<'a> Occ<'a> {
         dy: f64,
         dz: f64,
     ) -> GmshResult<VolumeTag> {
-        self.set_to_current()?;
+        self.set_current()?;
         let mut ierr: c_int = 0;
         let automatic_tag: c_int = -1;
         unsafe {
@@ -77,7 +77,7 @@ impl<'a> Occ<'a> {
         polar2: Option<f64>,
         azimuth: Option<f64>,
     ) -> GmshResult<VolumeTag> {
-        self.set_to_current()?;
+        self.set_current()?;
         let angle1 = polar1.unwrap_or(-std::f64::consts::FRAC_PI_2);
         let angle2 = polar2.unwrap_or(std::f64::consts::FRAC_PI_2);
         let angle3 = azimuth.unwrap_or(2. * std::f64::consts::PI);
@@ -135,7 +135,7 @@ impl<'a> Occ<'a> {
         r_min: f64,
         angle: Option<f64>,
     ) -> GmshResult<VolumeTag> {
-        self.set_to_current()?;
+        self.set_current()?;
         let angle = angle.unwrap_or(2. * std::f64::consts::PI);
         unsafe {
             let mut ierr: c_int = 0;

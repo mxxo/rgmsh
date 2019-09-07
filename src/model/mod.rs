@@ -239,16 +239,16 @@ pub mod occ;
 /// The general geometry kernel trait
 pub trait GeoKernel {
     /// Get the model name
-    fn get_name(&self) -> &'static str;
+    fn name(&self) -> &'static str;
 
     /// Get the model name used for the Gmsh C interface
-    fn get_c_name(&self) -> &CStr;
+    fn c_name(&self) -> &CStr;
 
     /// Set this model to be the current Gmsh model.
-    fn set_to_current(&self) -> GmshResult<()> {
+    fn set_current(&self) -> GmshResult<()> {
         unsafe {
             let mut ierr: c_int = 0;
-            gmsh_sys::gmshModelSetCurrent(self.get_c_name().as_ptr(), &mut ierr);
+            gmsh_sys::gmshModelSetCurrent(self.c_name().as_ptr(), &mut ierr);
             match ierr {
                 0 => Ok(()),
                 _ => Err(GmshError::Execution),
@@ -309,7 +309,7 @@ pub trait GeoKernel {
     // probably should move this to a dedicated model class
     // with an inner Option(Mesh) and Option(Geo)
     fn generate_mesh(&mut self, dim: i32) -> GmshResult<()> {
-        self.set_to_current()?;
+        self.set_current()?;
         // synchronize by default?
         self.synchronize()?;
         unsafe {
@@ -341,17 +341,17 @@ macro_rules! impl_kernel {
             // General kernel methods for all kernels
             //-----------------------------------------------------------------
 
-            fn get_name(&self) -> &'static str {
+            fn name(&self) -> &'static str {
                 self.name
             }
 
-            fn get_c_name(&self) -> &CStr {
+            fn c_name(&self) -> &CStr {
                 &self.c_name
             }
 
             fn remove(self) -> GmshResult<()> {
                 // first set this model to the current model.
-                self.set_to_current()?;
+                self.set_current()?;
                 // now, remove the current model
                 unsafe {
                     let mut ierr: c_int = 0;
@@ -366,7 +366,7 @@ macro_rules! impl_kernel {
 
             /// Synchronize the geometry model.
             fn synchronize(&mut self) -> GmshResult<()> {
-                self.set_to_current()?;
+                self.set_current()?;
                 unsafe {
                     let mut ierr: c_int = 0;
                     let sync_fn = impl_kernel!(@kernel_prefix $kernel_name, synchronize);
@@ -382,7 +382,7 @@ macro_rules! impl_kernel {
                 coords: (f64, f64, f64),
                 mesh_size: Option<f64>,
             ) -> GmshResult<PointTag> {
-                self.set_to_current()?;
+                self.set_current()?;
 
                 let (x, y, z) = coords;
 
@@ -400,7 +400,7 @@ macro_rules! impl_kernel {
             /// Delete a point from the Gmsh model.
             // todo: Genericize this for all GeometryTags
             fn remove_point(&mut self, p: PointTag) -> GmshResult<()> {
-                self.set_to_current()?;
+                self.set_current()?;
                 let raw_tag = p.0;
                 unsafe {
                     let vec_len = 1;
@@ -415,7 +415,7 @@ macro_rules! impl_kernel {
             /// Add a straight line between two points.
             #[must_use]
             fn add_line(&mut self, p1: PointTag, p2: PointTag) -> GmshResult<CurveTag> {
-                self.set_to_current()?;
+                self.set_current()?;
                 let auto_number = -1;
                 unsafe {
                     let mut ierr: c_int = 0;
@@ -428,7 +428,7 @@ macro_rules! impl_kernel {
             /// Add a curve loop from a closed set of curves.
             #[must_use]
             fn add_curve_loop(&mut self, curves: &[CurveTag]) -> GmshResult<WireTag> {
-                self.set_to_current()?;
+                self.set_current()?;
                 let mut raw_tags: Vec<_> = curves.iter().map(|c| c.to_raw()).collect();
                 let auto_number = -1;
                 unsafe {
@@ -453,7 +453,7 @@ macro_rules! impl_kernel {
 
             #[doc(hidden)]
             fn add_plane_surface_gen(&mut self, curves: &[WireTag]) -> GmshResult<SurfaceTag> {
-                self.set_to_current()?;
+                self.set_current()?;
                 let mut raw_tags: Vec<_> = curves.iter().map(|c| c.to_raw()).collect();
                 let auto_number = -1;
                 unsafe {
