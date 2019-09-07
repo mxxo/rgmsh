@@ -9,7 +9,9 @@ pub mod occ {
     pub use gmsh_sys::gmshModelOccAddTorus as add_torus;
 
     // shared functions
+    pub use gmsh_sys::gmshModelOccAddCurveLoop as add_curve_loop;
     pub use gmsh_sys::gmshModelOccAddLine as add_line;
+    pub use gmsh_sys::gmshModelOccAddPlaneSurface as add_plane_surface;
     pub use gmsh_sys::gmshModelOccAddPoint as add_point;
     pub use gmsh_sys::gmshModelOccRemove as remove_point;
     pub use gmsh_sys::gmshModelOccSynchronize as synchronize;
@@ -21,7 +23,9 @@ pub mod geo {
     // unique functions
 
     // shared functions
+    pub use gmsh_sys::gmshModelGeoAddCurveLoop as add_curve_loop;
     pub use gmsh_sys::gmshModelGeoAddLine as add_line;
+    pub use gmsh_sys::gmshModelGeoAddPlaneSurface as add_plane_surface;
     pub use gmsh_sys::gmshModelGeoAddPoint as add_point;
     pub use gmsh_sys::gmshModelGeoRemove as remove_point;
     pub use gmsh_sys::gmshModelGeoSynchronize as synchronize;

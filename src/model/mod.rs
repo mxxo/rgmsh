@@ -256,6 +256,9 @@ pub trait GeoKernel {
         }
     }
 
+    /// Synchronize this geometry model with the underlying CAD representation.
+    fn synchronize(&mut self) -> GmshResult<()>;
+
     /// Remove this model from the Gmsh context.
     // todo: fix this for multiple models.
     // one name may be shared among many, so this will actually remove the first
@@ -285,12 +288,20 @@ pub trait GeoKernel {
     /// Remove a point from the model.
     fn remove_point(&mut self, p: PointTag) -> GmshResult<()>;
 
-    /// Synchronize the geometry model.
-    fn synchronize(&mut self) -> GmshResult<()>;
-
+    /// Add a straight line between two points.
     fn add_line(&mut self, p1: PointTag, p2: PointTag) -> GmshResult<CurveTag>;
 
-    fn add_surface(&mut self, curves: &[CurveTag]) -> GmshResult<SurfaceTag>;
+    /// Add a curve loop from a closed set of curves.
+    fn add_curve_loop(&mut self, curves: &[CurveTag]) -> GmshResult<WireTag>;
+
+    /// Add a surface from a WireTag of a closed curve set.
+    fn add_plane_surface(&mut self, closed_curve: WireTag) -> GmshResult<SurfaceTag>;
+
+    /// Add a surface with holes from a WireTag of a boundary and a Wiretags of the holes.
+    fn add_plane_surface_with_holes(&mut self, boundary: WireTag, holes: &[WireTag]) -> GmshResult<SurfaceTag>;
+
+    #[doc(hidden)]
+    fn add_plane_surface_gen(&mut self, curves: &[WireTag]) -> GmshResult<SurfaceTag>;
 
     fn curve_or_surface_op<T: Into<CurveOrSurface>>(&mut self, gen_entity: T);
 
@@ -308,19 +319,6 @@ pub trait GeoKernel {
         }
     }
 }
-
-// use a prefix macro for similar functions to avoid nightly-only concat_idents! macro
-//
-// /// Helper macro for calling the correct C function for the specified kernel.
-// #[macro_export]
-// macro_rules! kernel_prefix {
-//     (Geo, $fn_name: ident) => {
-//         crate::interface::geo::$fn_name
-//     };
-//     (Occ, $fn_name: ident) => {
-//         crate::interface::occ::$fn_name
-//     };
-// }
 
 /// Implement kernel functions that follow a naming pattern.
 #[macro_export]
@@ -403,9 +401,7 @@ macro_rules! impl_kernel {
             // todo: Genericize this for all GeometryTags
             fn remove_point(&mut self, p: PointTag) -> GmshResult<()> {
                 self.set_to_current()?;
-
                 let raw_tag = p.0;
-
                 unsafe {
                     let vec_len = 1;
                     let is_recursive = 0;
@@ -420,7 +416,6 @@ macro_rules! impl_kernel {
             #[must_use]
             fn add_line(&mut self, p1: PointTag, p2: PointTag) -> GmshResult<CurveTag> {
                 self.set_to_current()?;
-
                 let auto_number = -1;
                 unsafe {
                     let mut ierr: c_int = 0;
@@ -430,14 +425,43 @@ macro_rules! impl_kernel {
                 }
             }
 
-            /// Add a surface from a set of closed, directed curves.
+            /// Add a curve loop from a closed set of curves.
             #[must_use]
-            fn add_surface(&mut self, curves: &[CurveTag]) -> GmshResult<SurfaceTag> {
+            fn add_curve_loop(&mut self, curves: &[CurveTag]) -> GmshResult<WireTag> {
                 self.set_to_current()?;
-                for CurveTag(i) in curves {
-                    println!("{:?}", i);
+                let mut raw_tags: Vec<_> = curves.iter().map(|c| c.to_raw()).collect();
+                let auto_number = -1;
+                unsafe {
+                    let mut ierr: c_int = 0;
+                    let add_curve_loop_fn = impl_kernel!(@kernel_prefix $kernel_name, add_curve_loop);
+                    let out_tag = add_curve_loop_fn(raw_tags.as_mut_ptr(), raw_tags.len() as usize, auto_number, &mut ierr);
+                    check_model_error!(ierr, WireTag(out_tag))
                 }
-                Ok(SurfaceTag(1))
+            }
+
+            /// Add a surface from a WireTag of a closed curve set.
+            #[must_use]
+            fn add_plane_surface(&mut self, boundary: WireTag) -> GmshResult<SurfaceTag> {
+                self.add_plane_surface_gen(&[boundary])
+            }
+
+            /// Add a surface with holes.
+            #[must_use]
+            fn add_plane_surface_with_holes(&mut self, boundary: WireTag, holes: &[WireTag]) -> GmshResult<SurfaceTag> {
+                self.add_plane_surface_gen(&[&[boundary], holes].concat())
+            }
+
+            #[doc(hidden)]
+            fn add_plane_surface_gen(&mut self, curves: &[WireTag]) -> GmshResult<SurfaceTag> {
+                self.set_to_current()?;
+                let mut raw_tags: Vec<_> = curves.iter().map(|c| c.to_raw()).collect();
+                let auto_number = -1;
+                unsafe {
+                    let mut ierr: c_int = 0;
+                    let add_plane_fn = impl_kernel!(@kernel_prefix $kernel_name, add_plane_surface);
+                    let out_tag = add_plane_fn(raw_tags.as_mut_ptr(), raw_tags.len() as usize, auto_number, &mut ierr);
+                    check_model_error!(ierr, SurfaceTag(out_tag))
+                }
             }
 
             // idea for a certain operation that only works for curves and surfaces
