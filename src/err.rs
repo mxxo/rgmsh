@@ -1,5 +1,9 @@
 //! Idiomatic Rust error handling for the Gmsh API.
 
+use std::error::Error;
+use std::fmt::Display;
+use std::fmt as fmt;
+
 /// The error type for all Gmsh API functions.
 #[derive(Debug)]
 pub enum GmshError {
@@ -30,6 +34,19 @@ pub enum GmshError {
 
 /// Type alias for Result using `GmshError`.
 pub type GmshResult<T> = Result<T, GmshError>;
+
+impl Display for GmshError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            GmshError::Initialization => {
+                write!(f, "initialization error for Gmsh or an associated library is missing")
+            },
+            _ => write!(f, "big ol error")
+        }
+    }
+}
+
+impl Error for GmshError {}
 
 /// Handle error codes from top-level Gmsh functions.
 #[macro_export]

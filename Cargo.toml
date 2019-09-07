@@ -10,4 +10,6 @@ path = "src/lib.rs"
 
 [dependencies]
 gmsh-sys = { path = "../gmsh-sys" }
-gmsh-macros = { path = "gmsh-macros" }
+
+[dev-dependencies]
+criterion = "0.2"
