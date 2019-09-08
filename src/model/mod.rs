@@ -4,8 +4,13 @@
 //! 1. The built-in Gmsh geometry kernel.
 //! 2. The `OpenCASCADE` geometry kernel.
 //!
-//! The relevant [Gmsh manual section](http://gmsh.info/doc/texinfo/gmsh.html#Geometry-module)
-//! explains the differences between the two kernels:
+//! Either kernel should suffice for most projects.
+//!
+//! `OpenCASCADE` is a widely-used CAD engine, so it's a good default choice. You can directly define larger shapes without making their smaller components first.
+//! You also get access to powerful Boolean geometry operations for making complex shapes.
+//!
+//! The [Gmsh manual](http://gmsh.info/doc/texinfo/gmsh.html#Geometry-module)
+//! has more information on the differences between the two kernels:
 //!
 //! > The built-in CAD kernel provides a simple CAD engine based on a bottom-up boundary representation approach:
 //! > you need to first define points, then curves, then surfaces and finally volumes.
@@ -13,11 +18,6 @@
 //! > The `OpenCASCADE` kernel allows one to build models in the same bottom-up manner, or by using a
 //! > constructive solid geometry approach where solids are defined first.
 //! > Boolean operations can then be performed to modify them.
-//!
-//! Either kernel should suffice for most projects.
-//!
-//! `OpenCASCADE` is a widely-used CAD engine, so it's a good default choice. You can directly define larger shapes without making their smaller components first.
-//! You also get access to powerful Boolean geometry operations for making complex shapes.
 //!
 //! The only way to get a model is through a `Gmsh` context object.
 //! ```
@@ -236,6 +236,61 @@ pub use crate::interface::{geo::*, occ::*};
 pub mod geo;
 pub mod occ;
 
+/// Add points to a geometry model inline.
+///
+/// You can use `add_points!` to create a series of points inline.
+///
+/// Both regular points and points with characteristic lengths are supported.
+///
+/// This macro returns a new `Vec<PointTag>`.
+/// ```
+/// # use gmsh::{Gmsh, GmshResult, add_points};
+/// # use gmsh::model::{GeoKernel};
+/// # fn main() -> GmshResult<()> {
+/// #   let gmsh = Gmsh::initialize()?;
+/// let mut geom = gmsh.create_occ_model("model")?;
+/// let lc = 1e-2;
+/// let rect_pts = add_points![geom,
+///                           (0., 0., 0.),      // basic point
+///                           (0.1, 0., 0., lc), // point with a target mesh size
+///                           (0.1, 0.3, 0., lc),
+///                           (0., 0.3, 0.)];
+///
+/// for pt in rect_pts.iter() {
+///     println!("{:?}", pt);
+/// }
+/// #    Ok(())
+/// # }
+/// ```
+#[macro_export]
+macro_rules! add_points {
+    // base case
+    (@accum, $kernel_name:ident, $vec:ident) => {};
+    // point without a characteristic length
+    (@accum, $kernel_name:ident, $vec:ident, ($x:expr, $y:expr, $z:expr) $(, $tail:tt)*) => {
+        {
+            $vec.push($kernel_name.add_point($x, $y, $z)?);
+            add_points!(@accum, $kernel_name, $vec $(,$tail)*);
+        }
+    };
+    // point with a characteristic length
+    (@accum, $kernel_name:ident, $vec:ident, ($x:expr, $y:expr, $z:expr, $lc:expr) $(, $tail:tt)*) => {
+        {
+            $vec.push($kernel_name.add_point_with_lc($x, $y, $z, $lc)?);
+            add_points!(@accum, $kernel_name, $vec $(,$tail)*);
+        }
+    };
+    // match one more more points
+    ($kernel_name:ident, $($points:tt),+) => {
+        {
+            let mut temp_vec = Vec::new();
+            // use internal separator comma at the front
+            add_points!(@accum, $kernel_name, temp_vec $(,$points)*);
+            temp_vec
+       }
+    }
+}
+
 /// The general geometry kernel trait
 pub trait GeoKernel {
     /// Get the model name
@@ -276,12 +331,14 @@ pub trait GeoKernel {
     /// Add a point to the model by specifying its coordinates.
     #[must_use]
     fn add_point(&mut self, x: f64, y: f64, z: f64) -> GmshResult<PointTag> {
+        println!("added basic point");
         self.add_point_gen((x, y, z), None)
     }
 
     /// Add a point to the model and specify a target mesh size `lc` there.
     #[must_use]
     fn add_point_with_lc(&mut self, x: f64, y: f64, z: f64, lc: f64) -> GmshResult<PointTag> {
+        println!("added point with lc");
         self.add_point_gen((x, y, z), Some(lc))
     }
 
@@ -320,7 +377,8 @@ pub trait GeoKernel {
     }
 }
 
-/// Implement kernel functions that follow a naming pattern.
+// Implement kernel functions that follow a naming pattern.
+#[doc(hidden)]
 #[macro_export]
 macro_rules! impl_kernel {
 

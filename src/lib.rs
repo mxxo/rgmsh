@@ -56,6 +56,8 @@ pub struct Gmsh {
     // todo add a log for used-model names
 }
 
+// make a new CString from a string slice
+#[doc(hidden)]
 pub fn get_cstring(istr: &str) -> GmshResult<CString> {
     let c_str = CString::new(String::from(istr));
     match c_str {

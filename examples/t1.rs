@@ -24,6 +24,8 @@ fn main() -> GmshResult<()> {
     let p3 = model.add_point_with_lc(0.1, 0.3, 0., lc)?;
     let p4 = model.add_point_with_lc(0., 0.3, 0., lc)?;
 
+
+
     // Curves can be built up from points
     let l1: CurveTag = model.add_line(p1, p2)?;
     let l2 = model.add_line(p3, p2)?;

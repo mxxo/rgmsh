@@ -1,7 +1,9 @@
-/// This file reimplements gmsh/tutorial/t1.geo in Rust
-extern crate gmsh;
-use gmsh::{Gmsh, GmshResult};
+///
+/// This file is a quick tour of the Gmsh API in Rust.
+///
 
+extern crate gmsh;
+use gmsh::{Gmsh, GmshResult, add_points};
 use gmsh::model::{GeoKernel, PointTag};
 
 fn main() -> GmshResult<()> {
@@ -45,6 +47,10 @@ fn main() -> GmshResult<()> {
 
     let line = geom.add_line(p1, p2)?;
     println!("{:?}", line);
+
+    // you can also declare a bunch of points at once using this shorthand
+    let pts = add_points![geom, (2., 4., 6., 0.1), (1.0, 2.0, 3.0)];
+    println!("{:?}", pts);
 
     // let line1 = geom2.add_line(p1, p2)?;
 

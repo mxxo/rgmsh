@@ -48,7 +48,8 @@ impl Display for GmshError {
 
 impl Error for GmshError {}
 
-/// Handle error codes from top-level Gmsh functions.
+// Handle error codes from top-level Gmsh functions.
+#[doc(hidden)]
 #[macro_export]
 macro_rules! check_main_error {
     ($ierr:expr, $return_val: expr) => {
@@ -61,7 +62,8 @@ macro_rules! check_main_error {
     };
 }
 
-/// Handle error codes from Gmsh model functions.
+// Handle error codes from Gmsh model functions.
+#[doc(hidden)]
 #[macro_export]
 macro_rules! check_model_error {
     ($ierr:expr, $return_val: expr) => {
@@ -77,7 +79,8 @@ macro_rules! check_model_error {
     };
 }
 
-/// Handle error codes from Gmsh option configuration functions.
+// Handle error codes from Gmsh option configuration functions.
+#[doc(hidden)]
 #[macro_export]
 macro_rules! check_option_error {
     ($ierr:expr, $return_val: expr) => {
