@@ -29,4 +29,4 @@ If it can't, you'll get large scary errors when you run `cargo test -- --test-th
 
 One way to make sure the linker can find Gmsh is copying the `.lib` and `.dll` files to your `rustup` directory, e.g.: 
 
-`.rustup\toolchains\stable-x86_64-pc-windows-gnu\lib\rustlib\x86_64-pc-windows-gnu\lib`. 
+`.rustup\toolchains\stable-x86_64-pc-windows-gnu\lib\rustlib\x86_64-pc-windows-gnu\lib`
