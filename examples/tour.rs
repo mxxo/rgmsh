@@ -94,7 +94,7 @@ fn main() -> GmshResult<()> {
     geom.generate_mesh(1)?;
 
     let mut occ_geom = gmsh.create_occ_model("box")?;
-    let b = occ_geom.add_box(0., 0., 0., 1., 1., 1.)?;
+    let b = occ_geom.add_box((0., 0., 0.), (1., 1., 1.))?;
 
     println!("{:?}", b);
 

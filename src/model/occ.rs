@@ -27,72 +27,61 @@ impl<'a> Occ<'a> {
     }
 
     #[must_use]
-    pub fn add_box(
-        &mut self,
-        x: f64,
-        y: f64,
-        z: f64,
-        dx: f64,
-        dy: f64,
-        dz: f64,
-    ) -> GmshResult<VolumeTag> {
+    pub fn add_box(&mut self, start_point: (f64, f64, f64),
+                   extents: (f64, f64, f64)) -> GmshResult<VolumeTag> {
         self.set_current()?;
         let mut ierr: c_int = 0;
         let automatic_tag: c_int = -1;
         unsafe {
             let out_tag =
-                crate::interface::occ::add_box(x, y, z, dx, dy, dz, automatic_tag, &mut ierr);
+                crate::interface::occ::add_box(start_point.0,
+                                               start_point.1,
+                                               start_point.2,
+                                               extents.0,
+                                               extents.1,
+                                               extents.2,
+                                               automatic_tag,
+                                               &mut ierr);
             check_model_error!(ierr, VolumeTag(out_tag))
         }
     }
 
     #[must_use]
-    pub fn add_sphere(&mut self, x: f64, y: f64, z: f64, r: f64) -> GmshResult<VolumeTag> {
-        self.add_sphere_gen(x, y, z, r, None, None, None)
+    pub fn add_sphere(&mut self, center: (f64, f64, f64), radius: f64) -> GmshResult<VolumeTag> {
+        let polar_min = -std::f64::consts::FRAC_PI_2;
+        let polar_max = std::f64::consts::FRAC_PI_2;
+        let azimuth = 2. * std::f64::consts::PI;
+        self.add_sphere_gen(center, radius, (polar_min, polar_max), azimuth)
     }
 
     #[must_use]
-    pub fn add_sphere_section(
-        &mut self,
-        x: f64,
-        y: f64,
-        z: f64,
-        r: f64,
-        polar1: f64,
-        polar2: f64,
-        azimuth: f64,
+    pub fn add_sphere_section(&mut self, center: (f64, f64, f64), radius: f64, polar: (f64, f64), azimuth: f64 // fx: f64, y: f64, z: f64,
     ) -> GmshResult<VolumeTag> {
-        self.add_sphere_gen(x, y, z, r, Some(polar1), Some(polar2), Some(azimuth))
+        self.add_sphere_gen(center, radius, polar, azimuth)
     }
 
     #[doc(hidden)]
     #[must_use]
     fn add_sphere_gen(
         &mut self,
-        x: f64,
-        y: f64,
-        z: f64,
-        r: f64,
-        polar1: Option<f64>,
-        polar2: Option<f64>,
-        azimuth: Option<f64>,
+        center: (f64, f64, f64),
+        radius: f64,
+        polar: (f64, f64),
+        azimuth: f64,
     ) -> GmshResult<VolumeTag> {
         self.set_current()?;
-        let angle1 = polar1.unwrap_or(-std::f64::consts::FRAC_PI_2);
-        let angle2 = polar2.unwrap_or(std::f64::consts::FRAC_PI_2);
-        let angle3 = azimuth.unwrap_or(2. * std::f64::consts::PI);
         unsafe {
             let mut ierr: c_int = 0;
             let automatic_tag: c_int = -1;
             let out_tag = crate::interface::occ::add_sphere(
-                x,
-                y,
-                z,
-                r,
+                center.0,
+                center.1,
+                center.2,
+                radius,
                 automatic_tag,
-                angle1,
-                angle2,
-                angle3,
+                polar.0,
+                polar.1,
+                azimuth,
                 &mut ierr,
             );
             check_model_error!(ierr, VolumeTag(out_tag))
@@ -101,51 +90,38 @@ impl<'a> Occ<'a> {
 
     #[must_use]
     pub fn add_torus(
-        &mut self,
-        x: f64,
-        y: f64,
-        z: f64,
-        r_maj: f64,
-        r_min: f64,
+        &mut self, center: (f64, f64, f64),
+        radii: (f64, f64)
     ) -> GmshResult<VolumeTag> {
-        self.add_torus_gen(x, y, z, r_maj, r_min, None)
+        let angle = 2. * std::f64::consts::PI;
+        self.add_torus_gen(center, radii, angle)
     }
 
     #[must_use]
     pub fn add_torus_section(
-        &mut self,
-        x: f64,
-        y: f64,
-        z: f64,
-        r_maj: f64,
-        r_min: f64,
-        angle: f64,
+        &mut self, center: (f64, f64, f64), radii: (f64, f64), angle: f64
     ) -> GmshResult<VolumeTag> {
-        self.add_torus_gen(x, y, z, r_maj, r_min, Some(angle))
+        self.add_torus_gen(center, radii, angle)
     }
 
     #[doc(hidden)]
     #[must_use]
     fn add_torus_gen(
         &mut self,
-        x: f64,
-        y: f64,
-        z: f64,
-        r_maj: f64,
-        r_min: f64,
-        angle: Option<f64>,
+        center: (f64, f64, f64),
+        radii: (f64, f64),
+        angle: f64
     ) -> GmshResult<VolumeTag> {
         self.set_current()?;
-        let angle = angle.unwrap_or(2. * std::f64::consts::PI);
         unsafe {
             let mut ierr: c_int = 0;
             let automatic_tag: c_int = -1;
             let out_tag = crate::interface::occ::add_torus(
-                x,
-                y,
-                z,
-                r_maj,
-                r_min,
+                center.0,
+                center.1,
+                center.2,
+                radii.0,
+                radii.1,
                 automatic_tag,
                 angle,
                 &mut ierr,

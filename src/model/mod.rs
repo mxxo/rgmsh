@@ -80,13 +80,13 @@
 //! let mut geom = gmsh.create_occ_model("model")?;
 //!
 //! // make a box starting at (0, 0, 0) with side extents (1, 1, 1)
-//! let b = geom.add_box(0., 0., 0., 1., 1., 1.)?;
+//! let b = geom.add_box((0., 0., 0.), (1., 1., 1.))?;
 //!
 //! // make a sphere centered at (10, 10, 10) with radius 2.5
-//! let s = geom.add_sphere(10., 10., 10., 2.5)?;
+//! let s = geom.add_sphere((10., 10., 10.), 2.5)?;
 //!
 //! // make a torus centered at (-1, -2, -3) with major radius 5 and minor radius 2
-//! let t = geom.add_torus(-1., -2., -3., 5., 2.)?;
+//! let t = geom.add_torus((-1., -2., -3.), (5., 2.))?;
 //!
 //! # Ok(())
 //! # }
