@@ -13,6 +13,9 @@ fn main() -> GmshResult<()> {
     let opt = "General.BuildOptions";
     println!("{:?} = {:?}", opt, gmsh.get_string_option(opt).unwrap());
 
+    // let opt = "General.BuildOptions";
+    // println!("{:?} = {:?}", opt, gmsh.get_string_option(opt).unwrap());
+
     // ask for a new native geometry instance
     let mut geom = gmsh.create_occ_model("hal")?;
     let mut geom2 = gmsh.create_native_model("bella")?;

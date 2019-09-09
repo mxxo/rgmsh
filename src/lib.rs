@@ -32,13 +32,13 @@
 // todo figure out where this import belongs
 extern crate gmsh_sys;
 
-use std::os::raw::c_int;
+use std::os::raw::{c_int, c_char, c_void};
 
 pub mod err;
 pub use err::{GmshError, GmshResult};
 
 pub mod interface;
-pub use std::ffi::CString;
+pub use std::ffi::{CStr, CString};
 use interface::get_cstring;
 
 pub mod model;
@@ -84,23 +84,27 @@ impl Gmsh {
 
         unsafe {
             let mut ierr: c_int = 0;
+            let gmsh_name = CString::new("gmsh").unwrap();
+            let name_arg = gmsh_name.into_raw();
             gmsh_sys::gmshInitialize(
                 // argc
                 1 as c_int,
                 // argv
-                [CString::new("gmsh").unwrap().into_raw()].as_mut_ptr(),
+                [name_arg].as_mut_ptr(),
                 // don't read configuration files
                 0,
                 // error out-parameter
                 &mut ierr,
             );
 
+            // free name_arg
+            let _ = CString::from_raw(name_arg);
+
             if ierr == 0 {
                 // send logs to terminal
                 let mut gmsh = Self {};
                 gmsh.set_number_option("General.Terminal", 1.)?;
-                eprintln!("Gmsh {}", gmsh.get_string_option("General.Version")?);
-
+                //println!("Gmsh {}", gmsh.get_string_option("General.Version")?);
                 Ok(gmsh)
             } else {
                 Err(GmshError::Initialization)
@@ -145,18 +149,19 @@ impl Gmsh {
     pub fn get_string_option(&self, name: &str) -> GmshResult<String> {
         let c_name = get_cstring(name)?;
         let mut ierr: c_int = 0;
-        // make a raw pointer from a CString
-        // I don't know if I should be allocating more memory here?
-        let buffer = CString::new("").unwrap();
-        let mut p_buffer = buffer.into_raw();
+        let mut api_val: *mut c_char = &mut 0;
         unsafe {
-            gmsh_sys::gmshOptionGetString(c_name.as_ptr(), &mut p_buffer, &mut ierr);
-            // buffer length is recalculated from the modified pointer
-            let str_value = CString::from_raw(p_buffer).into_string();
-            match str_value {
-                Ok(val) => check_option_error!(ierr, val),
+            gmsh_sys::gmshOptionGetString(c_name.as_ptr(), &mut api_val, &mut ierr);
+            // copy string value to Rust UTF8 value
+            let str_val = CStr::from_ptr(api_val as *const c_char).to_str();
+            let ret_val = match str_val {
+                Ok(val) => check_option_error!(ierr, val.to_string()), // convert to owned
                 Err(_) => Err(GmshError::CInterface),
-            }
+            };
+            // make sure to free after making an owned return value
+            gmsh_sys::gmshFree(api_val as *mut c_void);
+
+            ret_val
         }
     }
 
