@@ -34,12 +34,12 @@ extern crate gmsh_sys;
 
 use std::os::raw::c_int;
 
-use std::ffi::CString;
-
 pub mod err;
 pub use err::{GmshError, GmshResult};
 
 pub mod interface;
+pub use std::ffi::CString;
+use interface::get_cstring;
 
 pub mod model;
 use model::geo::Geo;
@@ -54,16 +54,6 @@ struct ViewTag(i64);
 /// Gmsh context object
 pub struct Gmsh {
     // todo add a log for used-model names
-}
-
-// make a new CString from a string slice
-#[doc(hidden)]
-pub fn get_cstring(istr: &str) -> GmshResult<CString> {
-    let c_str = CString::new(String::from(istr));
-    match c_str {
-        Ok(c_str) => Ok(c_str),
-        Err(_) => Err(GmshError::CInterface),
-    }
 }
 
 // gmsh {

@@ -1,5 +1,19 @@
 //! Interface to the low-level `gmsh_sys` crate.
 
+use std::ffi::CString;
+
+use crate::err::{GmshError, GmshResult};
+
+#[doc(hidden)]
+// make a new CString from a string slice
+pub fn get_cstring(istr: &str) -> GmshResult<CString> {
+    let c_str = CString::new(String::from(istr));
+    match c_str {
+        Ok(c_str) => Ok(c_str),
+        Err(_) => Err(GmshError::CInterface),
+    }
+}
+
 /// The set of `OpenCASCADE` kernel functions.
 pub mod occ {
 
