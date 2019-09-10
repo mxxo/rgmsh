@@ -158,8 +158,12 @@ impl Gmsh {
                 Ok(val) => check_option_error!(ierr, val.to_string()), // convert to owned
                 Err(_) => Err(GmshError::CInterface),
             };
-            // make sure to free after making an owned return value
-            gmsh_sys::gmshFree(api_val as *mut c_void);
+
+            // make sure to free only after making an owned return value
+ 	    // and if there were no errors 
+	    if *api_val != 0 { 
+		    gmsh_sys::gmshFree(api_val as *mut c_void);
+	    }
 
             ret_val
         }
