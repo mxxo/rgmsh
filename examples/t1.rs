@@ -45,7 +45,7 @@ fn main() -> GmshResult<()> {
     // occ_model.add_rectangle((.2, 0., 0.), (0.1, 0.3, 0.))?;
 
     // show the GUI
-    // gmsh.gui.show();
+    let gui = gmsh.run_gui()?;
 
     Ok(())
 

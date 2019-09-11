@@ -37,6 +37,8 @@ use std::os::raw::{c_int, c_char, c_void};
 pub mod err;
 pub use err::{GmshError, GmshResult};
 
+pub mod fltk;
+
 pub mod interface;
 pub use std::ffi::{CStr, CString};
 use interface::get_cstring;
@@ -155,13 +157,13 @@ impl Gmsh {
             // copy string value to Rust UTF8 value
             let str_val = CStr::from_ptr(api_val as *const c_char).to_str();
             let ret_val = match str_val {
-                Ok(val) => check_option_error!(ierr, val.to_string()), // convert to owned
+                // convert to owned string
+                Ok(val) => check_option_error!(ierr, val.to_string()),
                 Err(_) => Err(GmshError::CInterface),
             };
 
-            // make sure to free only after making an owned return value
- 	    // and if there were no errors 
-	    if *api_val != 0 { 
+        // make sure to only free valid pointers
+	    if *api_val != 0 {
 		    gmsh_sys::gmshFree(api_val as *mut c_void);
 	    }
 
@@ -200,7 +202,6 @@ mod tests {
     use super::*;
     use crate::model::*;
 
-    // Will SIGSEGV if run in parallel
     /// Check multiple models can be made and follow the same numbering rules
     #[test]
     pub fn multiple_models() -> GmshResult<()> {
@@ -252,7 +253,7 @@ mod tests {
         let geom = gmsh.create_occ_model("model")?;
 
         let opt = "Solver.Name0";
-        // has default value of GetDP
+        // Solver.Name0 has default value of GetDP
         let str_val = "TEST_NAME_1";
         gmsh.set_string_option(opt, str_val)?;
         assert!(str_val == gmsh.get_string_option(opt)?);

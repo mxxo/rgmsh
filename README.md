@@ -10,10 +10,10 @@ Gmsh ships prebuilt binary SDK libraries for Linux, MacOS, and Windows.
 
 The download server is: [http://gmsh.info/bin/](http://gmsh.info/bin/)
 
-Download a recent version and make sure the zip filename ends with `sdk`.
+Download a recent version and make sure the filename ends with `sdk`.
 
 ### Linux 
-Place all dynamic library `.so` files where the linker can find them. 
+Place all dynamic library `libgmsh.so*` files where the linker can find them. 
 
 ### Windows 
 Gmsh is built by MinGW on Windows, not the Visual Studio toolchain.
