@@ -1,5 +1,5 @@
 #![doc(html_logo_url = "https://gitlab.onelab.info/gmsh/gmsh/blob/master/utils/icons/gmsh.svg")]
-// #![deny(missing_docs)]
+#![deny(missing_docs)]
 //!
 //!
 //! Unofficial, opinionated Rust bindings for the Gmsh API.
@@ -81,6 +81,9 @@ pub struct Gmsh {
 //    }
 
 impl Gmsh {
+    /// Create the main Gmsh object. All API functions are provided through this
+    /// object.
+    // think about std::sync::Once object ?
     pub fn initialize() -> GmshResult<Self> {
         // println!("opening Gmsh...");
 

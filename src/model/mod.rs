@@ -360,6 +360,7 @@ pub trait GeoKernel {
     #[doc(hidden)]
     fn add_plane_surface_gen(&mut self, curves: &[WireTag]) -> GmshResult<SurfaceTag>;
 
+    #[doc(hidden)]
     fn curve_or_surface_op<T: Into<CurveOrSurface>>(&mut self, gen_entity: T);
 
     /// Mesh the geometry model
