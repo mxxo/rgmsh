@@ -1,9 +1,15 @@
 Run the examples using `cargo run --example <example>`
 
-Run the tests using `cargo test -- --test-threads=1`
-
 Gmsh is a shared resource, and Rust tests run in parallel by default, so `cargo test` 
 alone will crash.  
+
+Run the tests using `cargo test -- --test-threads=1`
+
+You can make an alias for this command in your `~/.cargo/config` file: 
+```toml 
+[alias]
+tt = "test -- --test-threads=1"
+```
 
 ## Linking to the Gmsh library 
 Gmsh ships prebuilt binary SDK libraries for Linux, MacOS, and Windows.
