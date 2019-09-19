@@ -1,15 +1,26 @@
 [package]
-name = "gmsh"
+name = "rgmsh"
+description = "Unofficial, opinionated Rust bindings to the Gmsh API"
+homepage = "https://github.com/mxxo/gmsh-rs"
+
 version = "0.1.0"
 authors = ["Max Orok <morok@mevex.com>"]
 edition = "2018"
+license-file = "LICENSE.txt"
+
+readme = "README.md"
+keywords = ["ffi", "Gmsh"]
+categories = ["api-bindings", "science", "simulation", "visualization"]
 
 [lib]
-name = "gmsh"
+name = "rgmsh"
 path = "src/lib.rs"
 
 [dependencies]
-gmsh-sys = { path = "../gmsh-sys" }
+gmsh-sys = "0.1" 
 
 [dev-dependencies]
 criterion = "0.2"
+
+[badges]
+maintenance = { status = "experimental" } 
