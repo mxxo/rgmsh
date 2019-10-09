@@ -44,8 +44,8 @@ pub use std::ffi::{CStr, CString};
 use interface::get_cstring;
 
 pub mod model;
-use model::geo::Geo;
-use model::occ::Occ;
+use model::GeoModel;
+use model::OccModel;
 
 // mesh
 struct FieldTag(i64);
@@ -118,15 +118,15 @@ impl Gmsh {
     }
 
     /// Make a new model using the built-in Gmsh geometry kernel
-    pub fn create_native_model(&self, name: &'static str) -> GmshResult<Geo> {
+    pub fn create_native_model(&self, name: &'static str) -> GmshResult<GeoModel> {
         //  println!("added built-in geometry model {} ", name);
-        Geo::create(self, name)
+        GeoModel::create(self, name)
     }
 
     /// Make a new model using the OpenCASCADE geometry kernel
-    pub fn create_occ_model(&self, name: &'static str) -> GmshResult<Occ> {
+    pub fn create_occ_model(&self, name: &'static str) -> GmshResult<OccModel> {
         //  println!("added OpenCASCADE model {} ", name);
-        Occ::create(self, name)
+        OccModel::create(self, name)
     }
 
     /// Get a numeric option.

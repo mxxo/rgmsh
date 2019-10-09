@@ -1,6 +1,6 @@
 //! Inspection and manipulation of Gmsh geometry models.
 //!
-//! There are two CAD engines you can use:
+//! There are two CAD engines:
 //! 1. The built-in Gmsh geometry kernel.
 //! 2. The `OpenCASCADE` geometry kernel.
 //!
@@ -21,7 +21,7 @@
 //!
 //! The only way to get a model is through a `Gmsh` context object.
 //! ```
-//! # use gmsh::{Gmsh, GmshResult};
+//! # use rgmsh::{Gmsh, GmshResult};
 //! # fn main() -> GmshResult<()> {
 //! let gmsh = Gmsh::initialize()?;
 //! let mut geom = gmsh.create_native_model("model")?;
@@ -31,7 +31,7 @@
 //!
 //! The model is only valid for the lifetime of `Gmsh`.
 //! ```compile_fail
-//! # use gmsh::{Gmsh, GmshResult, model::GeoKernel};
+//! # use rgmsh::{Gmsh, GmshResult, model::GeoKernel};
 //! # fn main() -> GmshResult<()> {
 //! let gmsh = Gmsh::initialize()?;
 //! let mut geom = gmsh.create_occ_model("model")?;
@@ -50,8 +50,8 @@
 //! You can define points, lines, 2D surfaces and 3D volumes.
 //! After defining a shape, you'll get a geometry tag to identify[^unique] it.
 //! ```
-//! # use gmsh::{Gmsh, GmshResult};
-//! # use gmsh::model::{GeoKernel, PointTag, CurveTag};
+//! # use rgmsh::{Gmsh, GmshResult};
+//! # use rgmsh::model::{GeoKernel, PointTag, CurveTag};
 //! # fn main() -> GmshResult<()> {
 //! # let gmsh = Gmsh::initialize()?;
 //! // make a model using the default geometry kernel and call it `model`.
@@ -73,8 +73,8 @@
 //! ### Top-down geometry with the `OpenCASCADE` kernel
 //! With the `OpenCASCADE` kernel, you can directly specify the shape you want to make.
 //! ```
-//! # use gmsh::{Gmsh, GmshResult};
-//! # use gmsh::model::{GeoKernel, PointTag, CurveTag};
+//! # use rgmsh::{Gmsh, GmshResult};
+//! # use rgmsh::model::{GeoKernel, PointTag, CurveTag};
 //! # fn main() -> GmshResult<()> {
 //! # let gmsh = Gmsh::initialize()?;
 //! let mut geom = gmsh.create_occ_model("model")?;
@@ -111,8 +111,8 @@
 //! Since tags can only be created from successful geometry operations, you can't
 //! use raw integers for tags.
 //! ```compile_fail
-//! # use gmsh::{Gmsh, GmshResult};
-//! # use gmsh::model::{GeoKernel, PointTag, CurveTag};
+//! # use rgmsh::{Gmsh, GmshResult};
+//! # use rgmsh::model::{GeoKernel, PointTag, CurveTag};
 //! # fn main() -> GmshResult<()> {
 //! # let gmsh = Gmsh::initialize()?;
 //! # let geom = gmsh.create_native_model("model")?;
@@ -143,8 +143,8 @@
 //!
 //! If you're lucky, using the wrong tags will cause a runtime error.
 //! ```
-//! # use gmsh::{Gmsh, GmshResult};
-//! # use gmsh::model::{GeoKernel};
+//! # use rgmsh::{Gmsh, GmshResult};
+//! # use rgmsh::model::{GeoKernel};
 //! # use std::result::Result;
 //! # fn main() -> GmshResult<()> {
 //! #  let gmsh = Gmsh::initialize()?;
@@ -169,8 +169,8 @@
 //! If you're unlucky, the tags will exist in both models, causing a silent logic error in your program.
 //! In the API's eyes, you've given it valid tags, and it's going to go ahead and do what you asked for.
 //! ```
-//! # use gmsh::{Gmsh, GmshResult};
-//! # use gmsh::model::{GeoKernel};
+//! # use rgmsh::{Gmsh, GmshResult};
+//! # use rgmsh::model::{GeoKernel};
 //! # use std::result::Result;
 //! # fn main() -> GmshResult<()> {
 //! #  let gmsh = Gmsh::initialize()?;
@@ -193,8 +193,8 @@
 //!
 //! You can use the `?` operator for terse error handling.
 //! ```
-//! # use gmsh::{Gmsh, GmshResult};
-//! # use gmsh::model::{GeoKernel};
+//! # use rgmsh::{Gmsh, GmshResult};
+//! # use rgmsh::model::{GeoKernel};
 //! fn main() -> GmshResult<()> {
 //!     let gmsh = Gmsh::initialize()?;
 //!     let mut geom = gmsh.create_native_model("model")?;
@@ -244,8 +244,8 @@ pub mod occ;
 ///
 /// This macro returns a new `Vec<PointTag>`.
 /// ```
-/// # use gmsh::{Gmsh, GmshResult, add_points};
-/// # use gmsh::model::{GeoKernel};
+/// # use rgmsh::{Gmsh, GmshResult, add_points};
+/// # use rgmsh::model::{GeoKernel};
 /// # fn main() -> GmshResult<()> {
 /// #   let gmsh = Gmsh::initialize()?;
 /// let mut geom = gmsh.create_occ_model("model")?;
@@ -291,251 +291,317 @@ macro_rules! add_points {
     }
 }
 
-/// The general geometry kernel trait
-pub trait GeoKernel {
-    /// Get the model name
-    fn name(&self) -> &'static str;
+/// An instance of the built-in geometry kernel. 
+pub struct GeoModel<'a> {
+    /// The model name 
+    pub name: &'static str,
+    /// The model name used to talk to C 
+    pub c_name: CString,
+    phantom: PhantomData<&'a Gmsh>,
+}
 
-    /// Get the model name used for the Gmsh C interface
-    fn c_name(&self) -> &CStr;
+/// An instance of the `OpenCASCADE` geometry kernel.
+pub struct OccModel<'a> {
+    /// The model name 
+    pub name: &'static str,
+    /// The model name used to talk to C
+    pub c_name: CString,
+    phantom: PhantomData<&'a Gmsh>,
+}
+
+
+impl<'a> GeoModel<'a> {
+    /// Create a new Gmsh model using the built-in kernel.
+    // todo: fix me for setting which model is the current one.
+    // idea: keep a list of already used model names and only allow one at once
+    #[must_use]
+    pub fn create(_: &'a Gmsh, name: &'static str) -> GmshResult<GeoModel<'a>> {
+        let c_name = get_cstring(name)?;
+        unsafe {
+            let mut ierr: c_int = 0;
+            // also sets the added model as the current model
+            gmsh_sys::gmshModelAdd(c_name.as_ptr(), &mut ierr);
+            let geo = GeoModel {
+                name,
+                c_name,
+                phantom: PhantomData,
+            };
+            check_main_error!(ierr, geo)
+        }
+    }
 
     /// Set this model to be the current Gmsh model.
     fn set_current(&self) -> GmshResult<()> {
         unsafe {
             let mut ierr: c_int = 0;
-            gmsh_sys::gmshModelSetCurrent(self.c_name().as_ptr(), &mut ierr);
+            gmsh_sys::gmshModelSetCurrent(self.c_name.as_ptr(), &mut ierr);
             match ierr {
                 0 => Ok(()),
                 _ => Err(GmshError::Execution),
             }
         }
     }
-
-    /// Synchronize this geometry model with the underlying CAD representation.
-    fn synchronize(&mut self) -> GmshResult<()>;
-
-    /// Remove this model from the Gmsh context.
-    // todo: fix this for multiple models.
-    // one name may be shared among many, so this will actually remove the first
-    // model named whatever this name is.
-    fn remove(self) -> GmshResult<()>;
-
-    #[doc(hidden)]
-    #[must_use]
-    fn add_point_gen(
-        &mut self,
-        coords: (f64, f64, f64),
-        mesh_size: Option<f64>,
-    ) -> GmshResult<PointTag>;
-
-    /// Add a point to the model by specifying its coordinates.
-    #[must_use]
-    fn add_point(&mut self, x: f64, y: f64, z: f64) -> GmshResult<PointTag> {
-        println!("added basic point");
-        self.add_point_gen((x, y, z), None)
-    }
-
-    /// Add a point to the model and specify a target mesh size `lc` there.
-    #[must_use]
-    fn add_point_with_lc(&mut self, x: f64, y: f64, z: f64, lc: f64) -> GmshResult<PointTag> {
-        println!("added point with lc");
-        self.add_point_gen((x, y, z), Some(lc))
-    }
-
-    /// Remove a point from the model.
-    fn remove_point(&mut self, p: PointTag) -> GmshResult<()>;
-
-    /// Add a straight line between two points.
-    fn add_line(&mut self, p1: PointTag, p2: PointTag) -> GmshResult<CurveTag>;
-
-    /// Add a curve loop from a closed set of curves.
-    fn add_curve_loop(&mut self, curves: &[CurveTag]) -> GmshResult<WireTag>;
-
-    /// Add a surface from a WireTag of a closed curve set.
-    fn add_plane_surface(&mut self, closed_curve: WireTag) -> GmshResult<SurfaceTag>;
-
-    /// Add a surface with holes from a WireTag of a boundary and a Wiretags of the holes.
-    fn add_plane_surface_with_holes(&mut self, boundary: WireTag, holes: &[WireTag]) -> GmshResult<SurfaceTag>;
-
-    #[doc(hidden)]
-    fn add_plane_surface_gen(&mut self, curves: &[WireTag]) -> GmshResult<SurfaceTag>;
-
-    #[doc(hidden)]
-    fn curve_or_surface_op<T: Into<CurveOrSurface>>(&mut self, gen_entity: T);
-
-    /// Mesh the geometry model
-    // probably should move this to a dedicated model class
-    // with an inner Option(Mesh) and Option(Geo)
-    fn generate_mesh(&mut self, dim: i32) -> GmshResult<()> {
-        self.set_current()?;
-        // synchronize by default?
-        self.synchronize()?;
-        unsafe {
-            let mut ierr: c_int = 0;
-            gmsh_sys::gmshModelMeshGenerate(dim, &mut ierr);
-            check_model_error!(ierr, ())
-        }
-    }
+    
 }
 
-// Implement kernel functions that follow a naming pattern.
-#[doc(hidden)]
-#[macro_export]
-macro_rules! impl_kernel {
+// pub enum GeoKernel { 
+//     BuiltIn(Geo), 
+//     OpenCascade(Occ), 
+// }
+// 
+// /// The general Gmsh model object. 
+// pub struct GmshModel<'a> { 
+//     name: &'static str,
+//     c_name: CString,
+//     phantom: PhantomData<&'a Gmsh>,
+//     kernel: GeoKernel, 
+// }
 
-    // internal macro rules for prefixing similar geometry kernel functions
-    // Idea adapted from the rust-blas package here:
-    // https://github.com/mikkyang/rust-blas/pull/12
-    (@kernel_prefix Geo, $fn_name: ident) => {
-        crate::interface::geo::$fn_name
-    };
+///// The general geometry kernel trait
+//pub trait GeoKernel {
+//    /// Get the model name
+//    fn name(&self) -> &'static str;
+//
+//    /// Get the model name used for the Gmsh C interface
+//    fn c_name(&self) -> &CStr;
+//
+//    /// Set this model to be the current Gmsh model.
+//    fn set_current(&self) -> GmshResult<()> {
+//        unsafe {
+//            let mut ierr: c_int = 0;
+//            gmsh_sys::gmshModelSetCurrent(self.c_name().as_ptr(), &mut ierr);
+//            match ierr {
+//                0 => Ok(()),
+//                _ => Err(GmshError::Execution),
+//            }
+//        }
+//    }
+//
+//    /// Synchronize this geometry model with the underlying CAD representation.
+//    fn synchronize(&mut self) -> GmshResult<()>;
+//
+//    /// Remove this model from the Gmsh context.
+//    // todo: fix this for multiple models.
+//    // one name may be shared among many, so this will actually remove the first
+//    // model named whatever this name is.
+//    fn remove(self) -> GmshResult<()>;
+//
+//    #[doc(hidden)]
+//    #[must_use]
+//    fn add_point_gen(
+//        &mut self,
+//        coords: (f64, f64, f64),
+//        mesh_size: Option<f64>,
+//    ) -> GmshResult<PointTag>;
+//
+//    /// Add a point to the model by specifying its coordinates.
+//    #[must_use]
+//    fn add_point(&mut self, x: f64, y: f64, z: f64) -> GmshResult<PointTag> {
+//        println!("added basic point");
+//        self.add_point_gen((x, y, z), None)
+//    }
+//
+//    /// Add a point to the model and specify a target mesh size `lc` there.
+//    #[must_use]
+//    fn add_point_with_lc(&mut self, x: f64, y: f64, z: f64, lc: f64) -> GmshResult<PointTag> {
+//        println!("added point with lc");
+//        self.add_point_gen((x, y, z), Some(lc))
+//    }
+//
+//    /// Remove a point from the model.
+//    fn remove_point(&mut self, p: PointTag) -> GmshResult<()>;
+//
+//    /// Add a straight line between two points.
+//    fn add_line(&mut self, p1: PointTag, p2: PointTag) -> GmshResult<CurveTag>;
+//
+//    /// Add a curve loop from a closed set of curves.
+//    fn add_curve_loop(&mut self, curves: &[CurveTag]) -> GmshResult<WireTag>;
+//
+//    /// Add a surface from a WireTag of a closed curve set.
+//    fn add_plane_surface(&mut self, closed_curve: WireTag) -> GmshResult<SurfaceTag>;
+//
+//    /// Add a surface with holes from a WireTag of a boundary and a Wiretags of the holes.
+//    fn add_plane_surface_with_holes(&mut self, boundary: WireTag, holes: &[WireTag]) -> GmshResult<SurfaceTag>;
+//
+//    #[doc(hidden)]
+//    fn add_plane_surface_gen(&mut self, curves: &[WireTag]) -> GmshResult<SurfaceTag>;
+//
+//    #[doc(hidden)]
+//    fn curve_or_surface_op<T: Into<CurveOrSurface>>(&mut self, gen_entity: T);
+//
+//    /// Mesh the geometry model
+//    // probably should move this to a dedicated model class
+//    // with an inner Option(Mesh) and Option(Geo)
+//    fn generate_mesh(&mut self, dim: i32) -> GmshResult<()> {
+//        self.set_current()?;
+//        // synchronize by default?
+//        self.synchronize()?;
+//        unsafe {
+//            let mut ierr: c_int = 0;
+//            gmsh_sys::gmshModelMeshGenerate(dim, &mut ierr);
+//            check_model_error!(ierr, ())
+//        }
+//    }
+//}
 
-    (@kernel_prefix Occ, $fn_name: ident) => {
-        crate::interface::occ::$fn_name
-    };
-
-    ($kernel_name: ident) => {
-        impl<'a> GeoKernel for $kernel_name<'a> {
-            //-----------------------------------------------------------------
-            // General kernel methods for all kernels
-            //-----------------------------------------------------------------
-
-            fn name(&self) -> &'static str {
-                self.name
-            }
-
-            fn c_name(&self) -> &CStr {
-                &self.c_name
-            }
-
-            fn remove(self) -> GmshResult<()> {
-                // first set this model to the current model.
-                self.set_current()?;
-                // now, remove the current model
-                unsafe {
-                    let mut ierr: c_int = 0;
-                    gmsh_sys::gmshModelRemove(&mut ierr);
-                    check_main_error!(ierr, ())
-                }
-            }
-
-            //-----------------------------------------------------------------
-            // Prefix methods with a naming pattern for each kernel
-            //-----------------------------------------------------------------
-
-            /// Synchronize the geometry model.
-            fn synchronize(&mut self) -> GmshResult<()> {
-                self.set_current()?;
-                unsafe {
-                    let mut ierr: c_int = 0;
-                    let sync_fn = impl_kernel!(@kernel_prefix $kernel_name, synchronize);
-                    sync_fn(&mut ierr);
-                    check_model_error!(ierr, ())
-                }
-            }
-
-            #[doc(hidden)]
-            #[must_use]
-            fn add_point_gen(
-                &mut self,
-                coords: (f64, f64, f64),
-                mesh_size: Option<f64>,
-            ) -> GmshResult<PointTag> {
-                self.set_current()?;
-
-                let (x, y, z) = coords;
-
-                let lc = mesh_size.unwrap_or(0.);
-                let auto_number = -1;
-
-                unsafe {
-                    let mut ierr: c_int = 0;
-                    let add_point_fn = impl_kernel!(@kernel_prefix $kernel_name, add_point);
-                    let out_tag = add_point_fn(x, y, z, lc, auto_number, &mut ierr);
-                    check_model_error!(ierr, PointTag(out_tag))
-                }
-            }
-
-            /// Delete a point from the Gmsh model.
-            // todo: Genericize this for all GeometryTags
-            fn remove_point(&mut self, p: PointTag) -> GmshResult<()> {
-                self.set_current()?;
-                let raw_tag = p.0;
-                unsafe {
-                    let vec_len = 1;
-                    let is_recursive = 0;
-                    let mut ierr: c_int = 0;
-                    let remove_point_fn = impl_kernel!(@kernel_prefix $kernel_name, remove_point);
-                    remove_point_fn([raw_tag].as_mut_ptr(), vec_len, is_recursive, &mut ierr);
-                    check_model_error!(ierr, ())
-                }
-            }
-
-            /// Add a straight line between two points.
-            #[must_use]
-            fn add_line(&mut self, p1: PointTag, p2: PointTag) -> GmshResult<CurveTag> {
-                self.set_current()?;
-                let auto_number = -1;
-                unsafe {
-                    let mut ierr: c_int = 0;
-                    let add_line_fn = impl_kernel!(@kernel_prefix $kernel_name, add_line);
-                    let out_tag = add_line_fn(p1.to_raw(), p2.to_raw(), auto_number, &mut ierr);
-                    check_model_error!(ierr, CurveTag(out_tag))
-                }
-            }
-
-            /// Add a curve loop from a closed set of curves.
-            #[must_use]
-            fn add_curve_loop(&mut self, curves: &[CurveTag]) -> GmshResult<WireTag> {
-                self.set_current()?;
-                let mut raw_tags: Vec<_> = curves.iter().map(|c| c.to_raw()).collect();
-                let auto_number = -1;
-                unsafe {
-                    let mut ierr: c_int = 0;
-                    let add_curve_loop_fn = impl_kernel!(@kernel_prefix $kernel_name, add_curve_loop);
-                    let out_tag = add_curve_loop_fn(raw_tags.as_mut_ptr(), raw_tags.len() as usize, auto_number, &mut ierr);
-                    check_model_error!(ierr, WireTag(out_tag))
-                }
-            }
-
-            /// Add a surface from a WireTag of a closed curve set.
-            #[must_use]
-            fn add_plane_surface(&mut self, boundary: WireTag) -> GmshResult<SurfaceTag> {
-                self.add_plane_surface_gen(&[boundary])
-            }
-
-            /// Add a surface with holes.
-            #[must_use]
-            fn add_plane_surface_with_holes(&mut self, boundary: WireTag, holes: &[WireTag]) -> GmshResult<SurfaceTag> {
-                self.add_plane_surface_gen(&[&[boundary], holes].concat())
-            }
-
-            #[doc(hidden)]
-            fn add_plane_surface_gen(&mut self, curves: &[WireTag]) -> GmshResult<SurfaceTag> {
-                self.set_current()?;
-                let mut raw_tags: Vec<_> = curves.iter().map(|c| c.to_raw()).collect();
-                let auto_number = -1;
-                unsafe {
-                    let mut ierr: c_int = 0;
-                    let add_plane_fn = impl_kernel!(@kernel_prefix $kernel_name, add_plane_surface);
-                    let out_tag = add_plane_fn(raw_tags.as_mut_ptr(), raw_tags.len() as usize, auto_number, &mut ierr);
-                    check_model_error!(ierr, SurfaceTag(out_tag))
-                }
-            }
-
-            // idea for a certain operation that only works for curves and surfaces
-            fn curve_or_surface_op<T: Into<CurveOrSurface>>(&mut self, gen_entity: T) {
-                let entity = gen_entity.into();
-                match entity {
-                    CurveOrSurface::Curve(CurveTag(ct)) => println!("Curve with tag {:?}", ct),
-                    CurveOrSurface::Surface(SurfaceTag(ct)) => {
-                        println!("Surface with tag {:?}", ct)
-                    }
-                }
-            }
-        }
-    };
-}
+// // Implement kernel functions that follow a naming pattern.
+// #[doc(hidden)]
+// #[macro_export]
+// macro_rules! impl_kernel {
+// 
+//     // internal macro rules for prefixing similar geometry kernel functions
+//     // Idea adapted from the rust-blas package here:
+//     // https://github.com/mikkyang/rust-blas/pull/12
+//     (@kernel_prefix Geo, $fn_name: ident) => {
+//         crate::interface::geo::$fn_name
+//     };
+// 
+//     (@kernel_prefix Occ, $fn_name: ident) => {
+//         crate::interface::occ::$fn_name
+//     };
+// 
+//     ($kernel_name: ident) => {
+//         impl<'a> GeoKernel for $kernel_name<'a> {
+//             //-----------------------------------------------------------------
+//             // General kernel methods for all kernels
+//             //-----------------------------------------------------------------
+// 
+//             fn name(&self) -> &'static str {
+//                 self.name
+//             }
+// 
+//             fn c_name(&self) -> &CStr {
+//                 &self.c_name
+//             }
+// 
+//             fn remove(self) -> GmshResult<()> {
+//                 // first set this model to the current model.
+//                 self.set_current()?;
+//                 // now, remove the current model
+//                 unsafe {
+//                     let mut ierr: c_int = 0;
+//                     gmsh_sys::gmshModelRemove(&mut ierr);
+//                     check_main_error!(ierr, ())
+//                 }
+//             }
+// 
+//             //-----------------------------------------------------------------
+//             // Prefix methods with a naming pattern for each kernel
+//             //-----------------------------------------------------------------
+// 
+//             /// Synchronize the geometry model.
+//             fn synchronize(&mut self) -> GmshResult<()> {
+//                 self.set_current()?;
+//                 unsafe {
+//                     let mut ierr: c_int = 0;
+//                     let sync_fn = impl_kernel!(@kernel_prefix $kernel_name, synchronize);
+//                     sync_fn(&mut ierr);
+//                     check_model_error!(ierr, ())
+//                 }
+//             }
+// 
+//             #[doc(hidden)]
+//             #[must_use]
+//             fn add_point_gen(
+//                 &mut self,
+//                 coords: (f64, f64, f64),
+//                 mesh_size: Option<f64>,
+//             ) -> GmshResult<PointTag> {
+//                 self.set_current()?;
+// 
+//                 let (x, y, z) = coords;
+// 
+//                 let lc = mesh_size.unwrap_or(0.);
+//                 let auto_number = -1;
+// 
+//                 unsafe {
+//                     let mut ierr: c_int = 0;
+//                     let add_point_fn = impl_kernel!(@kernel_prefix $kernel_name, add_point);
+//                     let out_tag = add_point_fn(x, y, z, lc, auto_number, &mut ierr);
+//                     check_model_error!(ierr, PointTag(out_tag))
+//                 }
+//             }
+// 
+//             /// Delete a point from the Gmsh model.
+//             // todo: Genericize this for all GeometryTags
+//             fn remove_point(&mut self, p: PointTag) -> GmshResult<()> {
+//                 self.set_current()?;
+//                 let raw_tag = p.0;
+//                 unsafe {
+//                     let vec_len = 1;
+//                     let is_recursive = 0;
+//                     let mut ierr: c_int = 0;
+//                     let remove_point_fn = impl_kernel!(@kernel_prefix $kernel_name, remove_point);
+//                     remove_point_fn([raw_tag].as_mut_ptr(), vec_len, is_recursive, &mut ierr);
+//                     check_model_error!(ierr, ())
+//                 }
+//             }
+// 
+//             /// Add a straight line between two points.
+//             #[must_use]
+//             fn add_line(&mut self, p1: PointTag, p2: PointTag) -> GmshResult<CurveTag> {
+//                 self.set_current()?;
+//                 let auto_number = -1;
+//                 unsafe {
+//                     let mut ierr: c_int = 0;
+//                     let add_line_fn = impl_kernel!(@kernel_prefix $kernel_name, add_line);
+//                     let out_tag = add_line_fn(p1.to_raw(), p2.to_raw(), auto_number, &mut ierr);
+//                     check_model_error!(ierr, CurveTag(out_tag))
+//                 }
+//             }
+// 
+//             /// Add a curve loop from a closed set of curves.
+//             #[must_use]
+//             fn add_curve_loop(&mut self, curves: &[CurveTag]) -> GmshResult<WireTag> {
+//                 self.set_current()?;
+//                 let mut raw_tags: Vec<_> = curves.iter().map(|c| c.to_raw()).collect();
+//                 let auto_number = -1;
+//                 unsafe {
+//                     let mut ierr: c_int = 0;
+//                     let add_curve_loop_fn = impl_kernel!(@kernel_prefix $kernel_name, add_curve_loop);
+//                     let out_tag = add_curve_loop_fn(raw_tags.as_mut_ptr(), raw_tags.len() as usize, auto_number, &mut ierr);
+//                     check_model_error!(ierr, WireTag(out_tag))
+//                 }
+//             }
+// 
+//             /// Add a surface from a WireTag of a closed curve set.
+//             #[must_use]
+//             fn add_plane_surface(&mut self, boundary: WireTag) -> GmshResult<SurfaceTag> {
+//                 self.add_plane_surface_gen(&[boundary])
+//             }
+// 
+//             /// Add a surface with holes.
+//             #[must_use]
+//             fn add_plane_surface_with_holes(&mut self, boundary: WireTag, holes: &[WireTag]) -> GmshResult<SurfaceTag> {
+//                 self.add_plane_surface_gen(&[&[boundary], holes].concat())
+//             }
+// 
+//             #[doc(hidden)]
+//             fn add_plane_surface_gen(&mut self, curves: &[WireTag]) -> GmshResult<SurfaceTag> {
+//                 self.set_current()?;
+//                 let mut raw_tags: Vec<_> = curves.iter().map(|c| c.to_raw()).collect();
+//                 let auto_number = -1;
+//                 unsafe {
+//                     let mut ierr: c_int = 0;
+//                     let add_plane_fn = impl_kernel!(@kernel_prefix $kernel_name, add_plane_surface);
+//                     let out_tag = add_plane_fn(raw_tags.as_mut_ptr(), raw_tags.len() as usize, auto_number, &mut ierr);
+//                     check_model_error!(ierr, SurfaceTag(out_tag))
+//                 }
+//             }
+// 
+//             // idea for a certain operation that only works for curves and surfaces
+//             fn curve_or_surface_op<T: Into<CurveOrSurface>>(&mut self, gen_entity: T) {
+//                 let entity = gen_entity.into();
+//                 match entity {
+//                     CurveOrSurface::Curve(CurveTag(ct)) => println!("Curve with tag {:?}", ct),
+//                     CurveOrSurface::Surface(SurfaceTag(ct)) => {
+//                         println!("Surface with tag {:?}", ct)
+//                     }
+//                 }
+//             }
+//         }
+//     };
+// }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
 /// A point tag. Points are used to build larger shapes. 0D.

@@ -1,31 +1,37 @@
 //! The `OpenCASCADE` geometry kernel
 
 use super::*;
-use crate::{impl_kernel, GmshError, GmshResult, check_main_error, check_model_error};
-
-/// An instance of the `OpenCASCADE` kernel
-pub struct Occ<'a> {
-    name: &'static str,
-    c_name: CString,
-    phantom: PhantomData<&'a Gmsh>,
-}
+use crate::{GmshError, GmshResult, check_main_error, check_model_error};
 
 /// All angle values are in radians, commonly given as fractions of π.
 
-impl_kernel!(Occ);
+// impl_kernel!(Occ);
 
-impl<'a> Occ<'a> {
+impl<'a> OccModel<'a> {
+
+    /// Set this model to be the current Gmsh model.
+    fn set_current(&self) -> GmshResult<()> {
+        unsafe {
+            let mut ierr: c_int = 0;
+            gmsh_sys::gmshModelSetCurrent(self.c_name.as_ptr(), &mut ierr);
+            match ierr {
+                0 => Ok(()),
+                _ => Err(GmshError::Execution),
+            }
+        }
+    }
+    
     /// Create a new Gmsh model using the `OpenCASCADE` kernel.
     // todo: fix me for the right model names
     #[must_use]
-    pub fn create(_: &'a Gmsh, name: &'static str) -> GmshResult<Occ<'a>> {
+    pub fn create(_: &'a Gmsh, name: &'static str) -> GmshResult<OccModel<'a>> {
         let mut ierr: c_int = 0;
         let c_name = get_cstring(name)?;
         unsafe {
             // also sets the added model as the current model
             gmsh_sys::gmshModelAdd(c_name.as_ptr(), &mut ierr);
         }
-        check_main_error!(ierr, Occ { name, c_name, phantom: PhantomData } )
+        check_main_error!(ierr, OccModel { name, c_name, phantom: PhantomData } )
     }
 
     /// Add a box with a starting point and side lengths from that point.

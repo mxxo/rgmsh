@@ -2,8 +2,8 @@
 ///
 /// Elementary entities and physical groups
 
-extern crate gmsh;
-use gmsh::{Gmsh, GmshResult, model::{GeoKernel, PointTag, CurveTag}};
+extern crate rgmsh;
+use rgmsh::{Gmsh, GmshResult, model::{PointTag, CurveTag}};
 
 // main function returns a Gmsh result for error handling
 fn main() -> GmshResult<()> {
