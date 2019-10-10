@@ -224,8 +224,8 @@
 
 use crate::{check_main_error, check_model_error, get_cstring, Gmsh, GmshError, GmshResult};
 
-pub use std::ffi::{CStr, CString};
-pub use std::os::raw::c_int;
+use std::ffi::{CStr, CString};
+use std::os::raw::c_int;
 
 use std::marker::PhantomData;
 use std::ops::Neg;
@@ -293,99 +293,110 @@ macro_rules! add_points {
 
 /// An instance of the built-in geometry kernel. 
 pub struct GeoModel<'a> {
-    /// The model name 
+    /// The model name. 
     pub name: &'static str,
-    /// The model name used to talk to C 
+    /// The model name used to talk to C. 
     pub c_name: CString,
     phantom: PhantomData<&'a Gmsh>,
 }
 
 /// An instance of the `OpenCASCADE` geometry kernel.
 pub struct OccModel<'a> {
-    /// The model name 
+    /// The model name. 
     pub name: &'static str,
-    /// The model name used to talk to C
+    /// The model name used to talk to C.
     pub c_name: CString,
     phantom: PhantomData<&'a Gmsh>,
 }
 
 
-impl<'a> GeoModel<'a> {
-    /// Create a new Gmsh model using the built-in kernel.
-    // todo: fix me for setting which model is the current one.
-    // idea: keep a list of already used model names and only allow one at once
-    #[must_use]
-    pub fn create(_: &'a Gmsh, name: &'static str) -> GmshResult<GeoModel<'a>> {
-        let c_name = get_cstring(name)?;
-        unsafe {
-            let mut ierr: c_int = 0;
-            // also sets the added model as the current model
-            gmsh_sys::gmshModelAdd(c_name.as_ptr(), &mut ierr);
-            let geo = GeoModel {
-                name,
-                c_name,
-                phantom: PhantomData,
-            };
-            check_main_error!(ierr, geo)
-        }
-    }
+// General model methods
+macro_rules! impl_model {
 
-    /// Set this model to be the current Gmsh model.
-    fn set_current(&self) -> GmshResult<()> {
-        unsafe {
-            let mut ierr: c_int = 0;
-            gmsh_sys::gmshModelSetCurrent(self.c_name.as_ptr(), &mut ierr);
-            match ierr {
-                0 => Ok(()),
-                _ => Err(GmshError::Execution),
+    (@kernel_prefix GeoModel, $fn_name: ident) => {
+        crate::interface::geo::$fn_name
+    }; 
+ 
+    (@kernel_prefix OccModel, $fn_name: ident) => {
+         crate::interface::occ::$fn_name
+    };
+
+    ($model_type: ident) => { 
+        impl<'a> $model_type<'a> { 
+            /// Create a new Gmsh model.
+            // todo: fix me for setting which model is the current one.
+            // idea: keep a list of already used model names and only allow one at once
+            #[must_use]
+            pub fn create(_: &'a Gmsh, name: &'static str) -> GmshResult<Self> {
+                let c_name = get_cstring(name)?;
+                unsafe {
+                    let mut ierr: c_int = 0;
+                    // also sets the added model as the current model
+                    gmsh_sys::gmshModelAdd(c_name.as_ptr(), &mut ierr);
+                    let model = $model_type {
+                        name,
+                        c_name,
+                        phantom: PhantomData,
+                    };
+                    check_main_error!(ierr, model)
+                }
+            }
+            
+            /// Remove model from Gmsh. 
+            pub fn remove(self) -> GmshResult<()> {
+                 // first set this model to the current model.
+                 self.set_current()?;
+                 // now, remove the current model
+                 unsafe {
+                     let mut ierr: c_int = 0;
+                     gmsh_sys::gmshModelRemove(&mut ierr);
+                     check_main_error!(ierr, ())
+                 }
+             }
+          
+            /// Set model to current model.
+            pub fn set_current(&self) -> GmshResult<()> {
+                unsafe {
+                    let mut ierr: c_int = 0;
+                    gmsh_sys::gmshModelSetCurrent(self.c_name.as_ptr(), &mut ierr);
+                    match ierr {
+                        0 => Ok(()),
+                        _ => Err(GmshError::Execution),
+                    }
+                }
+            } 
+
+            /// Synchronize the underlying CAD representation. 
+            pub fn synchronize(&mut self) -> GmshResult<()> {
+                self.set_current()?;
+                unsafe {
+                    let mut ierr: c_int = 0;
+                    let sync_fn = impl_model!(@kernel_prefix $model_type, synchronize);
+                    sync_fn(&mut ierr);
+                    check_model_error!(ierr, ())
+                }
+            }
+
+            /// Mesh the model. 
+            // probably should move this to a dedicated model class
+            // with an inner Option(Mesh) and Option(Geo)
+            pub fn generate_mesh(&mut self, dim: i32) -> GmshResult<()> {
+                self.set_current()?;
+                // TODO think about synchronize by default?
+                self.synchronize()?;
+                unsafe {
+                    let mut ierr: c_int = 0;
+                    gmsh_sys::gmshModelMeshGenerate(dim, &mut ierr);
+                    check_model_error!(ierr, ())
+                }
             }
         }
     }
-    
 }
 
-// pub enum GeoKernel { 
-//     BuiltIn(Geo), 
-//     OpenCascade(Occ), 
-// }
-// 
-// /// The general Gmsh model object. 
-// pub struct GmshModel<'a> { 
-//     name: &'static str,
-//     c_name: CString,
-//     phantom: PhantomData<&'a Gmsh>,
-//     kernel: GeoKernel, 
-// }
+impl_model!(GeoModel); 
+impl_model!(OccModel); 
 
-///// The general geometry kernel trait
-//pub trait GeoKernel {
-//    /// Get the model name
-//    fn name(&self) -> &'static str;
-//
-//    /// Get the model name used for the Gmsh C interface
-//    fn c_name(&self) -> &CStr;
-//
-//    /// Set this model to be the current Gmsh model.
-//    fn set_current(&self) -> GmshResult<()> {
-//        unsafe {
-//            let mut ierr: c_int = 0;
-//            gmsh_sys::gmshModelSetCurrent(self.c_name().as_ptr(), &mut ierr);
-//            match ierr {
-//                0 => Ok(()),
-//                _ => Err(GmshError::Execution),
-//            }
-//        }
-//    }
-//
-//    /// Synchronize this geometry model with the underlying CAD representation.
-//    fn synchronize(&mut self) -> GmshResult<()>;
-//
-//    /// Remove this model from the Gmsh context.
-//    // todo: fix this for multiple models.
-//    // one name may be shared among many, so this will actually remove the first
-//    // model named whatever this name is.
-//    fn remove(self) -> GmshResult<()>;
-//
 //    #[doc(hidden)]
 //    #[must_use]
 //    fn add_point_gen(
@@ -429,7 +440,7 @@ impl<'a> GeoModel<'a> {
 //    #[doc(hidden)]
 //    fn curve_or_surface_op<T: Into<CurveOrSurface>>(&mut self, gen_entity: T);
 //
-//    /// Mesh the geometry model
+//    /// Mesh the model. 
 //    // probably should move this to a dedicated model class
 //    // with an inner Option(Mesh) and Option(Geo)
 //    fn generate_mesh(&mut self, dim: i32) -> GmshResult<()> {

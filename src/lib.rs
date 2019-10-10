@@ -40,14 +40,14 @@ pub use err::{GmshError, GmshResult};
 pub mod fltk;
 
 pub mod interface;
-pub use std::ffi::{CStr, CString};
+use std::ffi::{CStr, CString};
 use interface::get_cstring;
 
 pub mod model;
-use model::GeoModel;
-use model::OccModel;
+pub use model::GeoModel;
+pub use model::OccModel;
 
-// mesh
+// mes
 struct FieldTag(i64);
 
 // post-processing

@@ -12,12 +12,17 @@ readme = "README.md"
 keywords = ["ffi", "Gmsh"]
 categories = ["api-bindings", "science", "simulation", "visualization"]
 
+# refresh api bindings 
+[[bin]]
+name = "api_gen"
+path = "src/bin/api_gen.rs"
+
 [lib]
 name = "rgmsh"
 path = "src/lib.rs"
 
 [dependencies]
-gmsh-sys = "0.1" 
+gmsh-sys = {path = "../gmsh-sys"}
 
 [dev-dependencies]
 criterion = "0.2"
