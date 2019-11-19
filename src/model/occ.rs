@@ -101,6 +101,30 @@ impl<'a> OccModel<'a> {
         }
     }
 
+    /// Add a torus to the model.
+    /// ```
+    /// # use rgmsh::{Gmsh, GmshResult};
+    /// # use rgmsh::model::shapes::*;
+    /// # use rgmsh::model::occ::*;
+    /// # fn main() -> GmshResult<()> {
+    /// # let gmsh = Gmsh::initialize()?;
+    /// # let mut geom = gmsh.create_occ_model("model")?;
+    /// let centroid = Point { x: 1.0, y: 1.0, z: 1.0 };
+    /// let torus = geom.add_torus_experimental(
+    ///     Torus {
+    ///       centroid,
+    ///       main_radius: 3.0,
+    ///       pipe_radius: 0.2
+    ///     })?;
+    /// # Ok(())
+    /// # }
+    /// ```
+ #[must_use]
+    pub fn add_torus_experimental(&mut self, torus: Torus) -> GmshResult<VolumeTag> {
+        self.add_torus((torus.centroid.x, torus.centroid.y, torus.centroid.z),
+                           (torus.main_radius, torus.pipe_radius))
+    }
+
     /// Add a torus with a centroid and radii values `(main_radius, pipe_radius)`.
     #[must_use]
     pub fn add_torus(

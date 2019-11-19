@@ -230,6 +230,9 @@ use std::ops::Neg;
 // gmsh_sys interface
 pub use crate::interface::{geo::*, occ::*};
 
+pub mod shapes;
+pub use shapes::*;
+
 pub mod geo;
 pub mod occ;
 
