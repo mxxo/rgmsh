@@ -20,7 +20,7 @@ cache: cargo
 script:
   - |
       travis-cargo build &&
-      travis-cargo test &&
+      travis-cargo test -- test-threads=1 &&
       travis-cargo --only stable doc
 
 after_success:
