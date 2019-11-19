@@ -56,6 +56,19 @@ impl<'a> OccModel<'a> {
         }
     }
 
+    /// Add a curve loop from a closed set of curves.
+    #[must_use]
+    pub fn add_curve_loop(&mut self, curves: &[CurveTag]) -> GmshResult<WireTag> {
+        self.set_current()?;
+        let mut raw_tags: Vec<_> = curves.iter().map(|c| c.to_raw()).collect();
+        let auto_number = -1;
+        unsafe {
+            let mut ierr: c_int = 0;
+            let out_tag = factory::add_curve_loop(raw_tags.as_mut_ptr(), raw_tags.len() as usize, auto_number, &mut ierr);
+            check_model_error!(ierr, WireTag(out_tag))
+        }
+    }
+
     /// Add a box with a starting point and side lengths from that point.
     #[must_use]
     pub fn add_box(&mut self, start_point: (f64, f64, f64),
