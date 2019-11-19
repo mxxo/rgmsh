@@ -1,3 +1,34 @@
+High-level bindings to the Gmsh API. 
+
+You'll need a copy of the Gmsh library, `libgmsh`, to use this crate. 
+
+## Setting up libgmsh
+This crate uses an environment variable `GMSH_LIB_DIR`. Set `GMSH_LIB_DIR` to the location of your Gmsh SDK `/lib` folder. You'll also need to adjust your `LD_LIBRARY_PATH` to be able to find the library at runtime.
+
+### `libgmsh` installation (Linux)
+
+Download the Gmsh SDK (v4.4.1) to the current folder and set your library variables accordingly.
+
+```shell
+$ wget http://gmsh.info/bin/Linux/gmsh-4.4.1-Linux64-sdk.tgz -O /tmp/gmsh-sdk.tar.gz
+$ tar -xvf /tmp/gmsh-sdk.tar.gz
+$ export GMSH_LIB_DIR=$PWD/gmsh-4.4.1-Linux64-sdk/lib/
+$ export LD_LIBRARY_PATH=$GMSH_LIB_DIR:$LD_LIBRARY_PATH
+$ cargo test -- --test-threads=1
+```
+
+Add the variables to your shell configuration file to avoid having to set them each time.
+
+```
+# in your .bashrc or similar 
+GMSH_LIB_DIR="/path/to/your/gmsh-sdk/lib"
+export GMSH_LIB_DIR
+
+LD_LIBRARY_PATH=$GMSH_LIB_DIR:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH
+```
+
+## Getting started 
 Run the examples using `cargo run --example <example>`
 
 Gmsh is a shared resource, and Rust tests run in parallel by default, so `cargo test` 
