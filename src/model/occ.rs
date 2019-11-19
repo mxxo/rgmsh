@@ -2,11 +2,12 @@
 
 use super::*;
 use crate::{GmshError, GmshResult, check_main_error, check_model_error};
+use crate::interface::occ as factory;
 
 /// All angle values are in radians, commonly given as fractions of π.
 
 impl<'a> OccModel<'a> {
-    
+
     #[must_use]
     fn add_point_gen(
          &mut self,
@@ -14,20 +15,20 @@ impl<'a> OccModel<'a> {
          mesh_size: Option<f64>,
      ) -> GmshResult<PointTag> {
          self.set_current()?;
- 
+
          let (x, y, z) = coords;
- 
+
          let lc = mesh_size.unwrap_or(0.);
          let auto_number = -1;
- 
+
          unsafe {
              let mut ierr: c_int = 0;
              //let add_point_fn = impl_kernel!(@kernel_prefix $kernel_name, add_point);
-             let out_tag = crate::interface::occ::add_point(x, y, z, lc, auto_number, &mut ierr);
+             let out_tag = factory::add_point(x, y, z, lc, auto_number, &mut ierr);
              check_model_error!(ierr, PointTag(out_tag))
          }
      }
- 
+
 
     /// Add a point to the model by specifying its coordinates.
     #[must_use]
@@ -43,32 +44,17 @@ impl<'a> OccModel<'a> {
         self.add_point_gen((x, y, z), Some(lc))
     }
 
-
-
-    ///// Set this model to be the current Gmsh model.
-    //fn set_current(&self) -> GmshResult<()> {
-    //    unsafe {
-    //        let mut ierr: c_int = 0;
-    //        gmsh_sys::gmshModelSetCurrent(self.c_name.as_ptr(), &mut ierr);
-    //        match ierr {
-    //            0 => Ok(()),
-    //            _ => Err(GmshError::Execution),
-    //        }
-    //    }
-    //}
-    
-    ///// Create a new Gmsh model using the `OpenCASCADE` kernel.
-    //// todo: fix me for the right model names
-    //#[must_use]
-    //pub fn create(_: &'a Gmsh, name: &'static str) -> GmshResult<Self> {
-    //    let mut ierr: c_int = 0;
-    //    let c_name = get_cstring(name)?;
-    //    unsafe {
-    //        // also sets the added model as the current model
-    //        gmsh_sys::gmshModelAdd(c_name.as_ptr(), &mut ierr);
-    //    }
-    //    check_main_error!(ierr, OccModel { name, c_name, phantom: PhantomData } )
-    //}
+    /// Add a straight line between two points.
+    #[must_use]
+    pub fn add_line(&mut self, p1: PointTag, p2: PointTag) -> GmshResult<CurveTag> {
+        self.set_current()?;
+        let auto_number = -1;
+        unsafe {
+            let mut ierr: c_int = 0;
+            let out_tag = factory::add_line(p1.to_raw(), p2.to_raw(), auto_number, &mut ierr);
+            check_model_error!(ierr, CurveTag(out_tag))
+        }
+    }
 
     /// Add a box with a starting point and side lengths from that point.
     #[must_use]
@@ -79,7 +65,7 @@ impl<'a> OccModel<'a> {
         let automatic_tag: c_int = -1;
         unsafe {
             let out_tag =
-                crate::interface::occ::add_box(start_point.0,
+                factory::add_box(start_point.0,
                                                start_point.1,
                                                start_point.2,
                                                extents.0,
@@ -146,7 +132,7 @@ impl<'a> OccModel<'a> {
         unsafe {
             let mut ierr: c_int = 0;
             let automatic_tag: c_int = -1;
-            let out_tag = crate::interface::occ::add_sphere(
+            let out_tag = factory::add_sphere(
                 centroid.0,
                 centroid.1,
                 centroid.2,
@@ -192,7 +178,7 @@ impl<'a> OccModel<'a> {
         unsafe {
             let mut ierr: c_int = 0;
             let automatic_tag: c_int = -1;
-            let out_tag = crate::interface::occ::add_torus(
+            let out_tag = factory::add_torus(
                 centroid.0,
                 centroid.1,
                 centroid.2,
