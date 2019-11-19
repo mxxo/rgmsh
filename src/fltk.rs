@@ -2,7 +2,7 @@
 //!
 //! Use the Gmsh GUI to check your work.
 //! ```no_run
-//! # use gmsh::{Gmsh, GmshResult};
+//! # use rgmsh::{Gmsh, GmshResult};
 //! # fn main() -> GmshResult<()> {
 //! let gmsh = Gmsh::initialize()?;
 //! let mut geom = gmsh.create_occ_model("model")?;

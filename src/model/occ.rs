@@ -44,8 +44,8 @@ impl<'a> OccModel<'a> {
     /// The polar angles are `(min, max)` relative to the x-axis on the xy-plane,
     /// and the azimuth is relative to the z-axis.
     /// ```
-    /// # use gmsh::{Gmsh, GmshResult, add_points};
-    /// # use gmsh::model::{GeoKernel, occ::*};
+    /// # use rgmsh::{Gmsh, GmshResult, add_points};
+    /// # use rgmsh::model::occ::*;
     /// # fn main() -> GmshResult<()> {
     /// # let gmsh = Gmsh::initialize()?;
     /// # let mut geom = gmsh.create_occ_model("model")?;
