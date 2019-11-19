@@ -1,4 +1,4 @@
-#![doc(html_logo_url = "https://gitlab.onelab.info/gmsh/gmsh/blob/master/utils/icons/gmsh.svg")]
+#![doc(html_logo_url = "https://gitlab.onelab.info/gmsh/gmsh/raw/master/utils/icons/gmsh.svg")]
 #![deny(missing_docs)]
 //!
 //!
@@ -35,6 +35,7 @@ extern crate gmsh_sys;
 use std::os::raw::{c_int, c_char, c_void};
 
 pub mod err;
+#[doc(inline)]
 pub use err::{GmshError, GmshResult};
 
 pub mod fltk;
@@ -44,8 +45,8 @@ use std::ffi::{CStr, CString};
 use interface::get_cstring;
 
 pub mod model;
-pub use model::GeoModel;
-pub use model::OccModel;
+#[doc(inline)]
+pub use model::{GeoModel, OccModel};
 
 // mes
 struct FieldTag(i64);
