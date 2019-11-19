@@ -2,8 +2,9 @@
 name = "rgmsh"
 description = "Unofficial, opinionated Rust bindings to the Gmsh API"
 homepage = "https://github.com/mxxo/gmsh-rs"
+documentation = "https://mxxo.github.io/rgmsh/rgmsh/index.html"
 
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Max Orok <morok@mevex.com>"]
 edition = "2018"
 license-file = "LICENSE.txt"
@@ -12,7 +13,7 @@ readme = "README.md"
 keywords = ["ffi", "Gmsh"]
 categories = ["api-bindings", "science", "simulation", "visualization"]
 
-# refresh api bindings 
+# refresh api bindings
 [[bin]]
 name = "api_gen"
 path = "src/bin/api_gen.rs"
@@ -28,4 +29,4 @@ gmsh-sys = "0.1.2"
 criterion = "0.2"
 
 [badges]
-maintenance = { status = "experimental" } 
+maintenance = { status = "experimental" }
