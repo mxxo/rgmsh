@@ -291,21 +291,21 @@ macro_rules! add_points {
 }
 
 /// An instance of the built-in geometry kernel.
-pub struct GeoModel<'a> {
+pub struct GeoModel<'gmsh> {
     /// The model name.
     pub name: &'static str,
     /// The model name used to talk to C.
     pub c_name: CString,
-    phantom: PhantomData<&'a Gmsh>,
+    phantom: PhantomData<&'gmsh Gmsh>,
 }
 
 /// An instance of the `OpenCASCADE` geometry kernel.
-pub struct OccModel<'a> {
+pub struct OccModel<'gmsh> {
     /// The model name.
     pub name: &'static str,
     /// The model name used to talk to C.
     pub c_name: CString,
-    phantom: PhantomData<&'a Gmsh>,
+    phantom: PhantomData<&'gmsh Gmsh>,
 }
 
 
@@ -321,12 +321,12 @@ macro_rules! impl_model {
     };
 
     ($model_type: ident) => {
-        impl<'a> $model_type<'a> {
+        impl<'gmsh> $model_type<'gmsh> {
             /// Create a new Gmsh model.
             // todo: fix me for setting which model is the current one.
             // idea: keep a list of already used model names and only allow one at once
             #[must_use]
-            pub fn create(_: &'a Gmsh, name: &'static str) -> GmshResult<Self> {
+            pub fn create(_: &'gmsh Gmsh, name: &'static str) -> GmshResult<Self> {
                 let c_name = get_cstring(name)?;
                 unsafe {
                     let mut ierr: c_int = 0;

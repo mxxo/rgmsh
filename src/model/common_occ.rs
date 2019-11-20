@@ -1,4 +1,4 @@
-impl<'a> OccModel<'a> {
+impl<'gmsh> OccModel<'gmsh> {
 
 #[must_use]
 fn add_point_gen(

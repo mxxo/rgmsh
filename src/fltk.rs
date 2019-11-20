@@ -20,8 +20,8 @@ use crate::{Gmsh, GmshError, GmshResult, check_main_error, c_int};
 
 /// The FLTK GUI object
 // TODO this needs more thought, because it's a multithreaded object
-pub struct Gui<'a> {
-    phantom: PhantomData<&'a Gmsh>
+pub struct Gui<'gmsh> {
+    phantom: PhantomData<&'gmsh Gmsh>
 }
 
 impl Gmsh {
@@ -47,7 +47,7 @@ impl Gmsh {
 
 }
 
-impl<'a> Gui<'a> {
+impl<'gmsh> Gui<'gmsh> {
 
     /// Draw all the OpenGL scenes
     pub fn draw(&mut self) -> GmshResult<()> {

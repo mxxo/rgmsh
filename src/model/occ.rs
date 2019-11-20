@@ -8,7 +8,7 @@ use crate::interface::occ as factory;
 
 include!("common_occ.rs");
 
-impl<'a> OccModel<'a> {
+impl<'gmsh> OccModel<'gmsh> {
 
     /// Add a box with a starting point and side lengths from that point.
     #[must_use]
