@@ -15,17 +15,16 @@
 //! # }
 //! ```
 
+use crate::{c_int, check_main_error, Gmsh, GmshError, GmshResult};
 use std::marker::PhantomData;
-use crate::{Gmsh, GmshError, GmshResult, check_main_error, c_int};
 
 /// The FLTK GUI object
 // TODO this needs more thought, because it's a multithreaded object
 pub struct Gui<'gmsh> {
-    phantom: PhantomData<&'gmsh Gmsh>
+    phantom: PhantomData<&'gmsh Gmsh>,
 }
 
 impl Gmsh {
-
     /// Create the GUI. If successful, open the GUI for an instant before
     /// resuming execution.
     pub fn initialize_gui(&self) -> GmshResult<Gui> {
@@ -33,7 +32,12 @@ impl Gmsh {
         unsafe {
             gmsh_sys::gmshFltkInitialize(&mut ierr);
         }
-        check_main_error!(ierr, Gui {phantom: PhantomData})
+        check_main_error!(
+            ierr,
+            Gui {
+                phantom: PhantomData
+            }
+        )
     }
 
     /// Run the GUI and block the calling thread until the GUI window is closed.
@@ -42,13 +46,16 @@ impl Gmsh {
         unsafe {
             gmsh_sys::gmshFltkRun(&mut ierr);
         }
-        check_main_error!(ierr, Gui {phantom: PhantomData})
+        check_main_error!(
+            ierr,
+            Gui {
+                phantom: PhantomData
+            }
+        )
     }
-
 }
 
 impl<'gmsh> Gui<'gmsh> {
-
     /// Draw all the OpenGL scenes
     pub fn draw(&mut self) -> GmshResult<()> {
         let mut ierr: c_int = 0;

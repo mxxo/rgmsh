@@ -308,7 +308,6 @@ pub struct OccModel<'gmsh> {
     phantom: PhantomData<&'gmsh Gmsh>,
 }
 
-
 // General model methods
 macro_rules! impl_model {
 

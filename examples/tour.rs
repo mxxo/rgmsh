@@ -1,10 +1,9 @@
 ///
 /// This file is a quick tour of the Gmsh API in Rust.
 ///
-
 extern crate rgmsh;
-use rgmsh::{Gmsh, GmshResult, add_points};
-use rgmsh::model::{PointTag};
+use rgmsh::model::PointTag;
+use rgmsh::{add_points, Gmsh, GmshResult};
 
 fn main() -> GmshResult<()> {
     // spin up Gmsh

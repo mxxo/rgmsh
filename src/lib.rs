@@ -35,7 +35,7 @@
 // todo figure out where this import belongs
 extern crate gmsh_sys;
 
-use std::os::raw::{c_int, c_char, c_void};
+use std::os::raw::{c_char, c_int, c_void};
 
 pub mod err;
 #[doc(inline)]
@@ -44,8 +44,8 @@ pub use err::{GmshError, GmshResult};
 pub mod fltk;
 
 pub mod interface;
-use std::ffi::{CStr, CString};
 use interface::get_cstring;
+use std::ffi::{CStr, CString};
 
 pub mod model;
 #[doc(inline)]
@@ -171,10 +171,10 @@ impl Gmsh {
                 Err(_) => Err(GmshError::CInterface),
             };
 
-        // make sure to only free valid pointers
-	    if *api_val != 0 {
-		    gmsh_sys::gmshFree(api_val as *mut c_void);
-	    }
+            // make sure to only free valid pointers
+            if *api_val != 0 {
+                gmsh_sys::gmshFree(api_val as *mut c_void);
+            }
 
             ret_val
         }

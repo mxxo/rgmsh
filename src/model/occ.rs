@@ -1,32 +1,35 @@
 //! The `OpenCASCADE` geometry kernel
 
 use super::*;
-use crate::{GmshError, GmshResult, check_main_error, check_model_error};
 use crate::interface::occ as factory;
+use crate::{check_main_error, check_model_error, GmshError, GmshResult};
 
 /// All angle values are in radians, commonly given as fractions of π.
 
 include!("common_occ.rs");
 
 impl<'gmsh> OccModel<'gmsh> {
-
     /// Add a box with a starting point and side lengths from that point.
     #[must_use]
-    pub fn add_box(&mut self, start_point: (f64, f64, f64),
-                   extents: (f64, f64, f64)) -> GmshResult<VolumeTag> {
+    pub fn add_box(
+        &mut self,
+        start_point: (f64, f64, f64),
+        extents: (f64, f64, f64),
+    ) -> GmshResult<VolumeTag> {
         self.set_current()?;
         let mut ierr: c_int = 0;
         let automatic_tag: c_int = -1;
         unsafe {
-            let out_tag =
-                factory::add_box(start_point.0,
-                                               start_point.1,
-                                               start_point.2,
-                                               extents.0,
-                                               extents.1,
-                                               extents.2,
-                                               automatic_tag,
-                                               &mut ierr);
+            let out_tag = factory::add_box(
+                start_point.0,
+                start_point.1,
+                start_point.2,
+                extents.0,
+                extents.1,
+                extents.2,
+                automatic_tag,
+                &mut ierr,
+            );
             check_model_error!(ierr, VolumeTag(out_tag))
         }
     }
@@ -66,12 +69,15 @@ impl<'gmsh> OccModel<'gmsh> {
     /// # }
     /// ```
     #[must_use]
-    pub fn add_sphere_section(&mut self, centroid: (f64, f64, f64), radius: f64, polar: (f64, f64), azimuth: f64 // fx: f64, y: f64, z: f64,
+    pub fn add_sphere_section(
+        &mut self,
+        centroid: (f64, f64, f64),
+        radius: f64,
+        polar: (f64, f64),
+        azimuth: f64, // fx: f64, y: f64, z: f64,
     ) -> GmshResult<VolumeTag> {
         self.add_sphere_gen(centroid, radius, polar, azimuth)
     }
-
-
 
     #[doc(hidden)]
     #[must_use]
@@ -119,17 +125,20 @@ impl<'gmsh> OccModel<'gmsh> {
     /// # Ok(())
     /// # }
     /// ```
- #[must_use]
+    #[must_use]
     pub fn add_torus_experimental(&mut self, torus: Torus) -> GmshResult<VolumeTag> {
-        self.add_torus((torus.centroid.x, torus.centroid.y, torus.centroid.z),
-                           (torus.main_radius, torus.pipe_radius))
+        self.add_torus(
+            (torus.centroid.x, torus.centroid.y, torus.centroid.z),
+            (torus.main_radius, torus.pipe_radius),
+        )
     }
 
     /// Add a torus with a centroid and radii values `(main_radius, pipe_radius)`.
     #[must_use]
     pub fn add_torus(
-        &mut self, centroid: (f64, f64, f64),
-        radii: (f64, f64)
+        &mut self,
+        centroid: (f64, f64, f64),
+        radii: (f64, f64),
     ) -> GmshResult<VolumeTag> {
         let angle = 2. * std::f64::consts::PI;
         self.add_torus_gen(centroid, radii, angle)
@@ -139,7 +148,10 @@ impl<'gmsh> OccModel<'gmsh> {
     /// a basic torus, set the `angle` parameter to 2π.
     #[must_use]
     pub fn add_torus_section(
-        &mut self, centroid: (f64, f64, f64), radii: (f64, f64), angle: f64
+        &mut self,
+        centroid: (f64, f64, f64),
+        radii: (f64, f64),
+        angle: f64,
     ) -> GmshResult<VolumeTag> {
         self.add_torus_gen(centroid, radii, angle)
     }
@@ -150,7 +162,7 @@ impl<'gmsh> OccModel<'gmsh> {
         &mut self,
         centroid: (f64, f64, f64),
         radii: (f64, f64),
-        angle: f64
+        angle: f64,
     ) -> GmshResult<VolumeTag> {
         self.set_current()?;
         unsafe {

@@ -1,13 +1,14 @@
 /// This file reimplements gmsh/tutorial/t1.geo in Rust
 ///
 /// Elementary entities and physical groups
-
 extern crate rgmsh;
-use rgmsh::{Gmsh, GmshResult, model::{PointTag, CurveTag}};
+use rgmsh::{
+    model::{CurveTag, PointTag},
+    Gmsh, GmshResult,
+};
 
 // main function returns a Gmsh result for error handling
 fn main() -> GmshResult<()> {
-
     // spin up Gmsh
     let mut gmsh = Gmsh::initialize()?;
 
@@ -20,7 +21,7 @@ fn main() -> GmshResult<()> {
 
     // Point tags are a dedicated type and are assigned automatically
     let p1: PointTag = model.add_point_with_lc(0., 0., 0., lc)?;
-    let p2 = model.add_point_with_lc(0.1, 0.,  0., lc)?;
+    let p2 = model.add_point_with_lc(0.1, 0., 0., lc)?;
     let p3 = model.add_point_with_lc(0.1, 0.3, 0., lc)?;
     let p4 = model.add_point_with_lc(0., 0.3, 0., lc)?;
 
