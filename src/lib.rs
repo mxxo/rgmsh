@@ -11,6 +11,9 @@
 //!
 //! The full Gmsh reference manual is available at: [http://gmsh.info/doc/texinfo/gmsh.html](http://gmsh.info/doc/texinfo/gmsh.html)
 //!
+//! ## Examples
+//! See the [`examples`](crate::examples) module.
+//!
 //! ## The Gmsh API
 //!
 //! Gmsh has four main modules:
@@ -47,6 +50,8 @@ use interface::get_cstring;
 pub mod model;
 #[doc(inline)]
 pub use model::{GeoModel, OccModel};
+
+pub mod examples;
 
 // mes
 struct FieldTag(i64);

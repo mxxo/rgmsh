@@ -1,4 +1,4 @@
-//! Inspection and manipulation of Gmsh geometry models.
+//! Inspection and manipulation of geometry models.
 //!
 //! There are two CAD engines:
 //! 1. The built-in Gmsh geometry kernel.

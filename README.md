@@ -2,6 +2,8 @@ High-level bindings to the Gmsh API.
 
 You'll need a copy of the Gmsh library, `libgmsh`, to use this crate. 
 
+Check out the documentation [here](https://mxxo.github.io/rgmsh/rgmsh/index.html). 
+
 ## Setting up libgmsh
 This crate uses an environment variable `GMSH_LIB_DIR`. Set `GMSH_LIB_DIR` to the location of your Gmsh SDK `/lib` folder. You'll also need to adjust your `LD_LIBRARY_PATH` to be able to find the library at runtime.
 
