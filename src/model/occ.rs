@@ -4,10 +4,10 @@ use super::*;
 use crate::interface::occ as factory;
 use crate::{check_main_error, check_model_error, GmshError, GmshResult};
 
-/// All angle values are in radians, commonly given as fractions of π.
 
 include!("common_occ.rs");
 
+/// All angle values are in radians, commonly given as fractions of π.
 impl<'gmsh> OccModel<'gmsh> {
     /// Add a box with a starting point and side lengths from that point.
     #[must_use]
@@ -48,7 +48,7 @@ impl<'gmsh> OccModel<'gmsh> {
     /// and the azimuth is relative to the z-axis.
     /// ```
     /// # use rgmsh::{Gmsh, GmshResult, add_points};
-    /// # use rgmsh::model::occ::*;
+    /// # use rgmsh::model::OccModel;
     /// # fn main() -> GmshResult<()> {
     /// # let gmsh = Gmsh::initialize()?;
     /// # let mut geom = gmsh.create_occ_model("model")?;
@@ -111,7 +111,7 @@ impl<'gmsh> OccModel<'gmsh> {
     /// ```
     /// # use rgmsh::{Gmsh, GmshResult};
     /// # use rgmsh::model::shapes::*;
-    /// # use rgmsh::model::occ::*;
+    /// # use rgmsh::model::OccModel;
     /// # fn main() -> GmshResult<()> {
     /// # let gmsh = Gmsh::initialize()?;
     /// # let mut geom = gmsh.create_occ_model("model")?;

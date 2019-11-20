@@ -1,6 +1,6 @@
 //! Models and geometry basics.
 //!
-//! This file reimplements `gmsh/tutorial/t1.geo` in Rust
+//! This file reimplements `gmsh/tutorial/t1.geo` in Rust.
 //!
 //! ```
 //! extern crate rgmsh;

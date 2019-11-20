@@ -16,7 +16,7 @@
 //!
 //! ## The Gmsh API
 //!
-//! Gmsh has four main modules:
+//! Gmsh has four loosely coupled parts:
 //! 1. Geometry
 //! 2. Mesh
 //! 3. Solvers

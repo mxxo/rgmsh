@@ -1,40 +1,32 @@
 //! Inspection and manipulation of geometry models.
 //!
-//! There are two CAD engines:
-//! 1. The built-in Gmsh geometry kernel.
-//! 2. The `OpenCASCADE` geometry kernel.
+//! There are two model types:
+//! 1. [`OccModel`](crate::model::OccModel), which uses the `OpenCASCADE` geometry kernel.
+//! 2. [`GeoModel`](crate::model::GeoModel), which uses the built-in `Gmsh` geometry kernel.
 //!
-//! Either kernel should suffice for most projects.
+//! Either should suffice for most projects.
 //!
-//! `OpenCASCADE` is a widely-used CAD engine, so it's a good default choice. You can directly define larger shapes without making their smaller components first.
-//! You also get access to powerful Boolean geometry operations for making complex shapes.
+//! ## Creating a model
 //!
-//! The [Gmsh manual](http://gmsh.info/doc/texinfo/gmsh.html#Geometry-module)
-//! has more information on the differences between the two kernels:
-//!
-//! > The built-in CAD kernel provides a simple CAD engine based on a bottom-up boundary representation approach:
-//! > you need to first define points, then curves, then surfaces and finally volumes.
-//!
-//! > The `OpenCASCADE` kernel allows one to build models in the same bottom-up manner, or by using a
-//! > constructive solid geometry approach where solids are defined first.
-//! > Boolean operations can then be performed to modify them.
-//!
-//! The only way to get a model is through a `Gmsh` context object.
+//! The only way to get a model is through a [`Gmsh`](crate::Gmsh) context object.
 //! ```
-//! # use rgmsh::{Gmsh, GmshResult};
+//! # use rgmsh::{Gmsh, GmshResult, GeoModel, OccModel};
 //! # fn main() -> GmshResult<()> {
 //! let gmsh = Gmsh::initialize()?;
-//! let mut geom = gmsh.create_native_model("model")?;
+//!
+//! let mut geo: GeoModel = gmsh.create_native_model("geo")?;
+//!
+//! let mut occ: OccModel = gmsh.create_occ_model("occ")?;
 //! # Ok(())
 //! # }
 //! ```
 //!
 //! The model is only valid for the lifetime of `Gmsh`.
 //! ```compile_fail
-//! # use rgmsh::{Gmsh, GmshResult};
+//! # use rgmsh::{Gmsh, GmshResult. OccModel};
 //! # fn main() -> GmshResult<()> {
 //! let gmsh = Gmsh::initialize()?;
-//! let mut geom = gmsh.create_occ_model("model")?;
+//! let mut geom: OccModel = gmsh.create_occ_model("model")?;
 //!
 //! // -- do some stuff with geom
 //!
@@ -94,6 +86,37 @@
 //!
 //! ### Bottom-up geometries with either the `OpenCASCADE` or built-in kernel
 //!
+//!
+//! ## Differences between the CAD engines
+//! `OpenCASCADE` is a widely-used CAD engine, so it's a good default choice. You can directly define larger shapes without making their smaller components first.
+//! You also get access to powerful Boolean geometry operations for making complex shapes.
+//!
+//! The [Gmsh manual](http://gmsh.info/doc/texinfo/gmsh.html#Geometry-module)
+//! has more information on the differences between the two kernels:
+//!
+//! > The built-in CAD kernel provides a simple CAD engine based on a bottom-up boundary representation approach:
+//! > you need to first define points, then curves, then surfaces and finally volumes.
+//!
+//! > The `OpenCASCADE` kernel allows one to build models in the same bottom-up manner, or by using a
+//! > constructive solid geometry approach where solids are defined first.
+//! > Boolean operations can then be performed to modify them.
+//!
+//! ## Errors
+//! Nearly all model functions can fail. Fallible functions will result a `GmshResult`.
+//!
+//! You can use the `?` operator for terse error handling.
+//! ```
+//! # use rgmsh::{Gmsh, GmshResult};
+//! fn main() -> GmshResult<()> {
+//!     let gmsh = Gmsh::initialize()?;
+//!     let mut geom = gmsh.create_native_model("model")?;
+//!
+//!     let p1 = geom.add_point(0., 0., 0.)?;
+//!
+//!     Ok(())
+//! }
+//! ```
+//!
 //! ## Geometry tags
 //! Geometry tags are used for:
 //! * accessing shape information,
@@ -107,6 +130,7 @@
 //! * `SurfaceTag`
 //! * `ShellTag`
 //! * `VolumeTag`
+//!
 //!
 //! Since tags can only be created from successful geometry operations, you can't
 //! use raw integers for tags.
@@ -136,9 +160,10 @@
 //! }
 //! ```
 //! The Rust API avoids such bugs for a single model by only making tags available through API functions.
-//! However, the Rust API has a similar issue if there are two or more models.
-//! Since two models can have identical point tag values, tags from one can be used on the other.
 //!
+//! ## Model shadowing
+//!
+//! Since two models can have identical tag values, tags from one can be used on the other.
 //! It's your responsibility to make sure tags are used with the right model.
 //!
 //! If you're lucky, using the wrong tags will cause a runtime error.
@@ -187,20 +212,6 @@
 //! # }
 //! ```
 //!
-//! Nearly all geometry functions can fail. Fallible functions will result a `GmshResult`.
-//!
-//! You can use the `?` operator for terse error handling.
-//! ```
-//! # use rgmsh::{Gmsh, GmshResult};
-//! fn main() -> GmshResult<()> {
-//!     let gmsh = Gmsh::initialize()?;
-//!     let mut geom = gmsh.create_native_model("model")?;
-//!
-//!     let p1 = geom.add_point(0., 0., 0.)?;
-//!
-//!     Ok(())
-//! }
-//! ```
 //!
 //! ## Describing shapes using Physical Groups
 //! Physical Groups are Gmsh's way to associate information with geometries.
@@ -232,9 +243,6 @@ pub use crate::interface::{geo::*, occ::*};
 
 pub mod shapes;
 pub use shapes::*;
-
-pub mod geo;
-pub mod occ;
 
 /// Add points to a geometry model inline.
 ///
@@ -394,6 +402,9 @@ macro_rules! impl_model {
 
 impl_model!(GeoModel);
 impl_model!(OccModel);
+
+mod geo;
+mod occ;
 
 //    #[doc(hidden)]
 //    #[must_use]
