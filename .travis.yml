@@ -5,6 +5,12 @@ rust:
   - beta
   - nightly
 
+env:
+  global:
+    # don't cause build errors with unknown feature `unstable`
+    - TRAVIS_CARGO_NIGHTLY_FEATURE=""
+
+
 before_install:
   - sudo apt-get -y install libglu1-mesa
 
