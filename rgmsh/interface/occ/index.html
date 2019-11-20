@@ -1,0 +1,42 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `occ` mod in crate `rgmsh`."><meta name="keywords" content="rust, rustlang, rust-lang, occ"><title>rgmsh::interface::occ - Rust</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../rgmsh/index.html'><div class='logo-container'><img src='https://gitlab.onelab.info/gmsh/gmsh/raw/master/utils/icons/gmsh.svg' alt='logo'></div></a><p class='location'>Module occ</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#functions">Functions</a></li></ul></div><p class='location'><a href='../../index.html'>rgmsh</a>::<wbr><a href='../index.html'>interface</a></p><script>window.sidebarCurrent = {name: 'occ', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../../../src/rgmsh/interface.rs.html#18-32' title='goto source code'>[src]</a></span><span class='in-band'>Module <a href='../../index.html'>rgmsh</a>::<wbr><a href='../index.html'>interface</a>::<wbr><a class="mod" href=''>occ</a></span></h1><div class='docblock'><p>The set of <code>OpenCASCADE</code> kernel functions.</p>
+</div><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table><tr class='module-item'><td><a class="fn" href="fn.add_box.html" title='rgmsh::interface::occ::add_box fn'>add_box</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a parallelepipedic box defined by a point (<code>x</code>, <code>y</code>, <code>z</code>) and the
+extents along the x-, y- and z-axes. If <code>tag</code> is positive, set the tag
+explicitly; otherwise a new tag is selected automatically. Return the tag
+of the box.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.add_curve_loop.html" title='rgmsh::interface::occ::add_curve_loop fn'>add_curve_loop</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a curve loop (a closed wire) formed by the curves <code>curveTags</code>.
+<code>curveTags</code> should contain tags of curves forming a closed loop. Note that
+an OpenCASCADE curve loop can be made of curves that share geometrically
+identical (but topologically different) points. If <code>tag</code> is positive, set
+the tag explicitly; otherwise a new tag is selected automatically. Return
+the tag of the curve loop.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.add_line.html" title='rgmsh::interface::occ::add_line fn'>add_line</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a straight line segment between the two points with tags <code>startTag</code> and
+<code>endTag</code>. If <code>tag</code> is positive, set the tag explicitly; otherwise a new tag
+is selected automatically. Return the tag of the line.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.add_plane_surface.html" title='rgmsh::interface::occ::add_plane_surface fn'>add_plane_surface</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a plane surface defined by one or more curve loops (or closed wires)
+<code>wireTags</code>. The first curve loop defines the exterior contour; additional
+curve loop define holes. If <code>tag</code> is positive, set the tag explicitly;
+otherwise a new tag is selected automatically. Return the tag of the
+surface.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.add_point.html" title='rgmsh::interface::occ::add_point fn'>add_point</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a geometrical point in the OpenCASCADE CAD representation, at
+coordinates (<code>x</code>, <code>y</code>, <code>z</code>). If <code>meshSize</code> is &gt; 0, add a meshing constraint
+at that point. If <code>tag</code> is positive, set the tag explicitly; otherwise a
+new tag is selected automatically. Return the tag of the point. (Note that
+the point will be added in the current model only after <code>synchronize</code> is
+called. This behavior holds for all the entities added in the occ module.)</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.add_sphere.html" title='rgmsh::interface::occ::add_sphere fn'>add_sphere</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a sphere of center (<code>xc</code>, <code>yc</code>, <code>zc</code>) and radius <code>r</code>. The optional
+<code>angle1</code> and <code>angle2</code> arguments define the polar angle opening (from -Pi/2
+to Pi/2). The optional <code>angle3</code> argument defines the azimuthal opening
+(from 0 to 2*Pi). If <code>tag</code> is positive, set the tag explicitly; otherwise a
+new tag is selected automatically. Return the tag of the sphere.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.add_torus.html" title='rgmsh::interface::occ::add_torus fn'>add_torus</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a torus, defined by its center (<code>x</code>, <code>y</code>, <code>z</code>) and its 2 radii <code>r</code> and
+<code>r2</code>. If <code>tag</code> is positive, set the tag explicitly; otherwise a new tag is
+selected automatically. The optional argument <code>angle</code> defines the angular
+opening (from 0 to 2*Pi). Return the tag of the wedge.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.remove_point.html" title='rgmsh::interface::occ::remove_point fn'>remove_point</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Remove the entities <code>dimTags</code>. If <code>recursive</code> is true, remove all the
+entities on their boundaries, down to dimension 0.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.synchronize.html" title='rgmsh::interface::occ::synchronize fn'>synchronize</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Synchronize the OpenCASCADE CAD representation with the current Gmsh model.
+This can be called at any time, but since it involves a non trivial amount
+of processing, the number of synchronization points should normally be
+minimized.</p>
+</td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "rgmsh";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script defer src="../../../search-index.js"></script></body></html>

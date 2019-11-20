@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["geo","The set of built-in kernel functions."],["occ","The set of `OpenCASCADE` kernel functions."]]});

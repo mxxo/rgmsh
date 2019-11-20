@@ -1,0 +1,191 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/model/geo.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>geo.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../rgmsh/index.html'><div class='logo-container'><img src='https://gitlab.onelab.info/gmsh/gmsh/raw/master/utils/icons/gmsh.svg' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1"> 1</span>
+<span id="2"> 2</span>
+<span id="3"> 3</span>
+<span id="4"> 4</span>
+<span id="5"> 5</span>
+<span id="6"> 6</span>
+<span id="7"> 7</span>
+<span id="8"> 8</span>
+<span id="9"> 9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
+<span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
+<span id="94">94</span>
+</pre><div class="example-wrap"><pre class="rust ">
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">model</span>::<span class="kw-2">*</span>, <span class="ident">GmshError</span>, <span class="ident">GmshResult</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">interface</span>::<span class="ident">geo</span> <span class="kw">as</span> <span class="ident">factory</span>;
+
+<span class="macro">include</span><span class="macro">!</span>(<span class="string">&quot;common_geo.rs&quot;</span>);
+<span class="comment">// impl&lt;&#39;a&gt; GeoModel&lt;&#39;a&gt; {</span>
+<span class="comment">//</span>
+<span class="comment">//     #[must_use]</span>
+<span class="comment">//     fn add_point_gen(</span>
+<span class="comment">//          &amp;mut self,</span>
+<span class="comment">//          coords: (f64, f64, f64),</span>
+<span class="comment">//          mesh_size: Option&lt;f64&gt;,</span>
+<span class="comment">//      ) -&gt; GmshResult&lt;PointTag&gt; {</span>
+<span class="comment">//          self.set_current()?;</span>
+<span class="comment">//</span>
+<span class="comment">//          let (x, y, z) = coords;</span>
+<span class="comment">//</span>
+<span class="comment">//          let lc = mesh_size.unwrap_or(0.);</span>
+<span class="comment">//          let auto_number = -1;</span>
+<span class="comment">//</span>
+<span class="comment">//          unsafe {</span>
+<span class="comment">//              let mut ierr: c_int = 0;</span>
+<span class="comment">//              let out_tag = factory::add_point(x, y, z, lc, auto_number, &amp;mut ierr);</span>
+<span class="comment">//              check_model_error!(ierr, PointTag(out_tag))</span>
+<span class="comment">//          }</span>
+<span class="comment">//      }</span>
+<span class="comment">//</span>
+<span class="comment">//</span>
+<span class="comment">//     /// Add a point to the model by specifying its coordinates.</span>
+<span class="comment">//     #[must_use]</span>
+<span class="comment">//     pub fn add_point(&amp;mut self, x: f64, y: f64, z: f64) -&gt; GmshResult&lt;PointTag&gt; {</span>
+<span class="comment">//         println!(&quot;added basic point&quot;);</span>
+<span class="comment">//         self.add_point_gen((x, y, z), None)</span>
+<span class="comment">//     }</span>
+<span class="comment">//</span>
+<span class="comment">//     /// Add a point to the model and specify a target mesh size `lc` there.</span>
+<span class="comment">//     #[must_use]</span>
+<span class="comment">//     pub fn add_point_with_lc(&amp;mut self, x: f64, y: f64, z: f64, lc: f64) -&gt; GmshResult&lt;PointTag&gt; {</span>
+<span class="comment">//         println!(&quot;added point with lc&quot;);</span>
+<span class="comment">//         self.add_point_gen((x, y, z), Some(lc))</span>
+<span class="comment">//     }</span>
+<span class="comment">//</span>
+<span class="comment">//</span>
+<span class="comment">//     /// Add a straight line between two points.</span>
+<span class="comment">//     #[must_use]</span>
+<span class="comment">//     pub fn add_line(&amp;mut self, p1: PointTag, p2: PointTag) -&gt; GmshResult&lt;CurveTag&gt; {</span>
+<span class="comment">//         self.set_current()?;</span>
+<span class="comment">//         let auto_number = -1;</span>
+<span class="comment">//         unsafe {</span>
+<span class="comment">//             let mut ierr: c_int = 0;</span>
+<span class="comment">//             let out_tag = factory::add_line(p1.to_raw(), p2.to_raw(), auto_number, &amp;mut ierr);</span>
+<span class="comment">//             check_model_error!(ierr, CurveTag(out_tag))</span>
+<span class="comment">//         }</span>
+<span class="comment">//     }</span>
+<span class="comment">//</span>
+<span class="comment">//</span>
+<span class="comment">//     /// Add a curve loop from a closed set of curves.</span>
+<span class="comment">//     #[must_use]</span>
+<span class="comment">//     pub fn add_curve_loop(&amp;mut self, curves: &amp;[CurveTag]) -&gt; GmshResult&lt;WireTag&gt; {</span>
+<span class="comment">//         self.set_current()?;</span>
+<span class="comment">//         let mut raw_tags: Vec&lt;_&gt; = curves.iter().map(|c| c.to_raw()).collect();</span>
+<span class="comment">//         let auto_number = -1;</span>
+<span class="comment">//         unsafe {</span>
+<span class="comment">//             let mut ierr: c_int = 0;</span>
+<span class="comment">//             let out_tag = factory::add_curve_loop(raw_tags.as_mut_ptr(), raw_tags.len() as usize, auto_number, &amp;mut ierr);</span>
+<span class="comment">//             check_model_error!(ierr, WireTag(out_tag))</span>
+<span class="comment">//         }</span>
+<span class="comment">//     }</span>
+<span class="comment">//</span>
+<span class="comment">//     /// Add a surface from a WireTag of a closed curve set.</span>
+<span class="comment">//     #[must_use]</span>
+<span class="comment">//     pub fn add_plane_surface(&amp;mut self, boundary: WireTag) -&gt; GmshResult&lt;SurfaceTag&gt; {</span>
+<span class="comment">//         self.add_plane_surface_gen(&amp;[boundary])</span>
+<span class="comment">//     }</span>
+<span class="comment">//</span>
+<span class="comment">//     /// Add a surface with holes.</span>
+<span class="comment">//     #[must_use]</span>
+<span class="comment">//     pub fn add_plane_surface_with_holes(&amp;mut self, boundary: WireTag, holes: &amp;[WireTag]) -&gt; GmshResult&lt;SurfaceTag&gt; {</span>
+<span class="comment">//         self.add_plane_surface_gen(&amp;[&amp;[boundary], holes].concat())</span>
+<span class="comment">//     }</span>
+<span class="comment">//</span>
+<span class="comment">//     #[doc(hidden)]</span>
+<span class="comment">//     fn add_plane_surface_gen(&amp;mut self, curves: &amp;[WireTag]) -&gt; GmshResult&lt;SurfaceTag&gt; {</span>
+<span class="comment">//         self.set_current()?;</span>
+<span class="comment">//         let mut raw_tags: Vec&lt;_&gt; = curves.iter().map(|c| c.to_raw()).collect();</span>
+<span class="comment">//         let auto_number = -1;</span>
+<span class="comment">//         unsafe {</span>
+<span class="comment">//             let mut ierr: c_int = 0;</span>
+<span class="comment">//             let out_tag = factory::add_plane_surface(raw_tags.as_mut_ptr(), raw_tags.len() as usize, auto_number, &amp;mut ierr);</span>
+<span class="comment">//             check_model_error!(ierr, SurfaceTag(out_tag))</span>
+<span class="comment">//         }</span>
+<span class="comment">//     }</span>
+<span class="comment">//</span>
+<span class="comment">//</span>
+<span class="comment">// }</span>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "rgmsh";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>

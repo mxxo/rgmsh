@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["GmshError","The error type for all Gmsh API functions."]],"type":[["GmshResult","Type alias for Result using `GmshError`."]]});

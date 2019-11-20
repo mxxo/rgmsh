@@ -1,0 +1,861 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `gmsh_sys` crate."><meta name="keywords" content="rust, rustlang, rust-lang, gmsh_sys"><title>gmsh_sys - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../dark.css"><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script src="../storage.js"></script><noscript><link rel="stylesheet" href="../noscript.css"></noscript><link rel="shortcut icon" href="../favicon.ico"><style type="text/css">#crate-search{background-image:url("../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../gmsh_sys/index.html'><div class='logo-container'><img src='../rust-logo.png' alt='logo'></div></a><p class='location'>Crate gmsh_sys</p><div class="sidebar-elems"><a id='all-types' href='all.html'><p>See all gmsh_sys's items</p></a><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#constants">Constants</a></li><li><a href="#functions">Functions</a></li><li><a href="#types">Type Definitions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'gmsh_sys', ty: 'mod', relpath: '../'};</script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/gmsh_sys/lib.rs.html#1-37' title='goto source code'>[src]</a></span><span class='in-band'>Crate <a class="mod" href=''>gmsh_sys</a></span></h1><div class='docblock'><p>Low-level bindings to the Gmsh SDK. </p>
+<p>Gmsh C API bindings (v4.4.1)</p>
+<p>Gmsh is copyright (C) 1997-2019 by C. Geuzaine and J.-F. Remacle</p>
+<p>By design, the Gmsh C API is purely functional, and only uses elementary types.  </p>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table><tr class='module-item'><td><a class="struct" href="struct.max_align_t.html" title='gmsh_sys::max_align_t struct'>max_align_t</a></td><td class='docblock-short'></td></tr></table><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
+<table><tr class='module-item'><td><a class="constant" href="constant.GMSH_API_VERSION.html" title='gmsh_sys::GMSH_API_VERSION constant'>GMSH_API_VERSION</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="constant" href="constant.GMSH_API_VERSION_MAJOR.html" title='gmsh_sys::GMSH_API_VERSION_MAJOR constant'>GMSH_API_VERSION_MAJOR</a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="constant" href="constant.GMSH_API_VERSION_MINOR.html" title='gmsh_sys::GMSH_API_VERSION_MINOR constant'>GMSH_API_VERSION_MINOR</a></td><td class='docblock-short'></td></tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+<table><tr class='module-item'><td><a class="fn" href="fn.gmshClear.html" title='gmsh_sys::gmshClear fn'>gmshClear</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Clear all loaded models and post-processing data, and add a new empty
+model.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshFinalize.html" title='gmsh_sys::gmshFinalize fn'>gmshFinalize</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Finalize Gmsh. This must be called when you are done using the Gmsh API.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshFltkAwake.html" title='gmsh_sys::gmshFltkAwake fn'>gmshFltkAwake</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Awake the main user interface thread and process pending events, and
+optionally perform an action (currently the only <code>action</code> allowed is
+&quot;update&quot;).</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshFltkInitialize.html" title='gmsh_sys::gmshFltkInitialize fn'>gmshFltkInitialize</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Create the FLTK graphical user interface. Can only be called in the main
+thread.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshFltkLock.html" title='gmsh_sys::gmshFltkLock fn'>gmshFltkLock</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Block the current thread until it can safely modify the user interface.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshFltkRun.html" title='gmsh_sys::gmshFltkRun fn'>gmshFltkRun</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Run the event loop of the graphical user interface, i.e. repeatedly call
+<code>wait()</code>. First automatically create the user interface if it has not yet
+been initialized. Can only be called in the main thread.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshFltkSelectElements.html" title='gmsh_sys::gmshFltkSelectElements fn'>gmshFltkSelectElements</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Select elements in the user interface.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshFltkSelectEntities.html" title='gmsh_sys::gmshFltkSelectEntities fn'>gmshFltkSelectEntities</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Select entities in the user interface. If <code>dim</code> is &gt;= 0, return only the
+entities of the specified dimension (e.g. points if <code>dim</code> == 0).</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshFltkSelectViews.html" title='gmsh_sys::gmshFltkSelectViews fn'>gmshFltkSelectViews</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Select views in the user interface.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshFltkUnlock.html" title='gmsh_sys::gmshFltkUnlock fn'>gmshFltkUnlock</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Release the lock that was set using lock.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshFltkUpdate.html" title='gmsh_sys::gmshFltkUpdate fn'>gmshFltkUpdate</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Update the user interface (potentially creating new widgets and windows).
+First automatically create the user interface if it has not yet been
+initialized. Can only be called in the main thread: use <code>awake(&quot;update&quot;)</code>
+to trigger an update of the user interface from another thread.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshFltkWait.html" title='gmsh_sys::gmshFltkWait fn'>gmshFltkWait</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Wait at most <code>time</code> seconds for user interface events and return. If <code>time</code>
+&lt; 0, wait indefinitely. First automatically create the user interface if it
+has not yet been initialized. Can only be called in the main thread.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshFree.html" title='gmsh_sys::gmshFree fn'>gmshFree</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshGraphicsDraw.html" title='gmsh_sys::gmshGraphicsDraw fn'>gmshGraphicsDraw</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Draw all the OpenGL scenes.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshInitialize.html" title='gmsh_sys::gmshInitialize fn'>gmshInitialize</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Initialize Gmsh. This must be called before any call to the other functions
+in the API. If <code>argc</code> and <code>argv</code> (or just <code>argv</code> in Python or Julia) are
+provided, they will be handled in the same way as the command line
+arguments in the Gmsh app. If <code>readConfigFiles</code> is set, read system Gmsh
+configuration files (gmshrc and gmsh-options).</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshLoggerCputime.html" title='gmsh_sys::gmshLoggerCputime fn'>gmshLoggerCputime</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Return CPU time.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshLoggerGet.html" title='gmsh_sys::gmshLoggerGet fn'>gmshLoggerGet</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get logged messages.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshLoggerStart.html" title='gmsh_sys::gmshLoggerStart fn'>gmshLoggerStart</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Start logging messages.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshLoggerStop.html" title='gmsh_sys::gmshLoggerStop fn'>gmshLoggerStop</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Stop logging messages.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshLoggerTime.html" title='gmsh_sys::gmshLoggerTime fn'>gmshLoggerTime</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Return wall clock time.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshLoggerWrite.html" title='gmsh_sys::gmshLoggerWrite fn'>gmshLoggerWrite</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Write a <code>message</code>. <code>level</code> can be &quot;info&quot;, &quot;warning&quot; or &quot;error&quot;.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshMalloc.html" title='gmsh_sys::gmshMalloc fn'>gmshMalloc</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'></td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshMerge.html" title='gmsh_sys::gmshMerge fn'>gmshMerge</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Merge a file. Equivalent to the <code>File-&gt;Merge</code> menu in the Gmsh app.
+Handling of the file depends on its extension and/or its contents. Merging
+a file with model data will add the data to the current model.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelAdd.html" title='gmsh_sys::gmshModelAdd fn'>gmshModelAdd</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a new model, with name <code>name</code>, and set it as the current model.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelAddDiscreteEntity.html" title='gmsh_sys::gmshModelAddDiscreteEntity fn'>gmshModelAddDiscreteEntity</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a discrete model entity (defined by a mesh) of dimension <code>dim</code> in the
+current model. Return the tag of the new discrete entity, equal to <code>tag</code> if
+<code>tag</code> is positive, or a new tag if <code>tag</code> &lt; 0. <code>boundary</code> specifies the tags
+of the entities on the boundary of the discrete entity, if any. Specifying
+<code>boundary</code> allows Gmsh to construct the topology of the overall model.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelAddPhysicalGroup.html" title='gmsh_sys::gmshModelAddPhysicalGroup fn'>gmshModelAddPhysicalGroup</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a physical group of dimension <code>dim</code>, grouping the model entities with
+tags <code>tags</code>. Return the tag of the physical group, equal to <code>tag</code> if <code>tag</code>
+is positive, or a new tag if <code>tag</code> &lt; 0.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoAddBSpline.html" title='gmsh_sys::gmshModelGeoAddBSpline fn'>gmshModelGeoAddBSpline</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a cubic b-spline curve with <code>pointTags</code> control points. If <code>tag</code> is
+positive, set the tag explicitly; otherwise a new tag is selected
+automatically. Creates a periodic curve if the first and last points are
+the same. Return the tag of the b-spline curve.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoAddBezier.html" title='gmsh_sys::gmshModelGeoAddBezier fn'>gmshModelGeoAddBezier</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a Bezier curve with <code>pointTags</code> control points. If <code>tag</code> is positive,
+set the tag explicitly; otherwise a new tag is selected automatically.
+Return the tag of the Bezier curve.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoAddCircleArc.html" title='gmsh_sys::gmshModelGeoAddCircleArc fn'>gmshModelGeoAddCircleArc</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a circle arc (strictly smaller than Pi) between the two points with
+tags <code>startTag</code> and <code>endTag</code>, with center <code>centertag</code>. If <code>tag</code> is
+positive, set the tag explicitly; otherwise a new tag is selected
+automatically. If (<code>nx</code>, <code>ny</code>, <code>nz</code>) != (0,0,0), explicitly set the plane
+of the circle arc. Return the tag of the circle arc.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoAddCurveLoop.html" title='gmsh_sys::gmshModelGeoAddCurveLoop fn'>gmshModelGeoAddCurveLoop</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a curve loop (a closed wire) formed by the curves <code>curveTags</code>.
+<code>curveTags</code> should contain (signed) tags of model enties of dimension 1
+forming a closed loop: a negative tag signifies that the underlying curve
+is considered with reversed orientation. If <code>tag</code> is positive, set the tag
+explicitly; otherwise a new tag is selected automatically. Return the tag
+of the curve loop.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoAddEllipseArc.html" title='gmsh_sys::gmshModelGeoAddEllipseArc fn'>gmshModelGeoAddEllipseArc</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add an ellipse arc (strictly smaller than Pi) between the two points
+<code>startTag</code> and <code>endTag</code>, with center <code>centerTag</code> and major axis point
+<code>majorTag</code>. If <code>tag</code> is positive, set the tag explicitly; otherwise a new
+tag is selected automatically. If (<code>nx</code>, <code>ny</code>, <code>nz</code>) != (0,0,0), explicitly
+set the plane of the circle arc. Return the tag of the ellipse arc.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoAddLine.html" title='gmsh_sys::gmshModelGeoAddLine fn'>gmshModelGeoAddLine</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a straight line segment between the two points with tags <code>startTag</code> and
+<code>endTag</code>. If <code>tag</code> is positive, set the tag explicitly; otherwise a new tag
+is selected automatically. Return the tag of the line.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoAddPlaneSurface.html" title='gmsh_sys::gmshModelGeoAddPlaneSurface fn'>gmshModelGeoAddPlaneSurface</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a plane surface defined by one or more curve loops <code>wireTags</code>. The
+first curve loop defines the exterior contour; additional curve loop define
+holes. If <code>tag</code> is positive, set the tag explicitly; otherwise a new tag is
+selected automatically. Return the tag of the surface.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoAddPoint.html" title='gmsh_sys::gmshModelGeoAddPoint fn'>gmshModelGeoAddPoint</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a geometrical point in the built-in CAD representation, at coordinates
+(<code>x</code>, <code>y</code>, <code>z</code>). If <code>meshSize</code> is &gt; 0, add a meshing constraint at that
+point. If <code>tag</code> is positive, set the tag explicitly; otherwise a new tag is
+selected automatically. Return the tag of the point. (Note that the point
+will be added in the current model only after <code>synchronize</code> is called. This
+behavior holds for all the entities added in the geo module.)</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoAddSpline.html" title='gmsh_sys::gmshModelGeoAddSpline fn'>gmshModelGeoAddSpline</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a spline (Catmull-Rom) curve going through the points <code>pointTags</code>. If
+<code>tag</code> is positive, set the tag explicitly; otherwise a new tag is selected
+automatically. Create a periodic curve if the first and last points are the
+same. Return the tag of the spline curve.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoAddSurfaceFilling.html" title='gmsh_sys::gmshModelGeoAddSurfaceFilling fn'>gmshModelGeoAddSurfaceFilling</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a surface filling the curve loops in <code>wireTags</code>. Currently only a
+single curve loop is supported; this curve loop should be composed by 3 or
+4 curves only. If <code>tag</code> is positive, set the tag explicitly; otherwise a
+new tag is selected automatically. Return the tag of the surface.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoAddSurfaceLoop.html" title='gmsh_sys::gmshModelGeoAddSurfaceLoop fn'>gmshModelGeoAddSurfaceLoop</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a surface loop (a closed shell) formed by <code>surfaceTags</code>.  If <code>tag</code> is
+positive, set the tag explicitly; otherwise a new tag is selected
+automatically. Return the tag of the shell.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoAddVolume.html" title='gmsh_sys::gmshModelGeoAddVolume fn'>gmshModelGeoAddVolume</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a volume (a region) defined by one or more shells <code>shellTags</code>. The
+first surface loop defines the exterior boundary; additional surface loop
+define holes. If <code>tag</code> is positive, set the tag explicitly; otherwise a new
+tag is selected automatically. Return the tag of the volume.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoCopy.html" title='gmsh_sys::gmshModelGeoCopy fn'>gmshModelGeoCopy</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Copy the entities <code>dimTags</code>; the new entities are returned in <code>outDimTags</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoDilate.html" title='gmsh_sys::gmshModelGeoDilate fn'>gmshModelGeoDilate</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Scale the model entities <code>dimTag</code> by factors <code>a</code>, <code>b</code> and <code>c</code> along the
+three coordinate axes; use (<code>x</code>, <code>y</code>, <code>z</code>) as the center of the homothetic
+transformation.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoExtrude.html" title='gmsh_sys::gmshModelGeoExtrude fn'>gmshModelGeoExtrude</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Extrude the model entities <code>dimTags</code> by translation along (<code>dx</code>, <code>dy</code>,
+<code>dz</code>). Return extruded entities in <code>outDimTags</code>. If <code>numElements</code> is not
+empty, also extrude the mesh: the entries in <code>numElements</code> give the number
+of elements in each layer. If <code>height</code> is not empty, it provides the
+(cumulative) height of the different layers, normalized to 1. If <code>dx</code> ==
+<code>dy</code> == <code>dz</code> == 0, the entities are extruded along their normal.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoMeshSetRecombine.html" title='gmsh_sys::gmshModelGeoMeshSetRecombine fn'>gmshModelGeoMeshSetRecombine</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set a recombination meshing constraint on the model entity of dimension
+<code>dim</code> and tag <code>tag</code>. Currently only entities of dimension 2 (to recombine
+triangles into quadrangles) are supported.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoMeshSetReverse.html" title='gmsh_sys::gmshModelGeoMeshSetReverse fn'>gmshModelGeoMeshSetReverse</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set a reverse meshing constraint on the model entity of dimension <code>dim</code> and
+tag <code>tag</code>. If <code>val</code> is true, the mesh orientation will be reversed with
+respect to the natural mesh orientation (i.e. the orientation consistent
+with the orientation of the geometry). If <code>val</code> is false, the mesh is left
+as-is.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoMeshSetSize.html" title='gmsh_sys::gmshModelGeoMeshSetSize fn'>gmshModelGeoMeshSetSize</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set a mesh size constraint on the model entities <code>dimTags</code>. Currently only
+entities of dimension 0 (points) are handled.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoMeshSetSmoothing.html" title='gmsh_sys::gmshModelGeoMeshSetSmoothing fn'>gmshModelGeoMeshSetSmoothing</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set a smoothing meshing constraint on the model entity of dimension <code>dim</code>
+and tag <code>tag</code>. <code>val</code> iterations of a Laplace smoother are applied.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoMeshSetTransfiniteCurve.html" title='gmsh_sys::gmshModelGeoMeshSetTransfiniteCurve fn'>gmshModelGeoMeshSetTransfiniteCurve</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set a transfinite meshing constraint on the curve <code>tag</code>, with <code>numNodes</code>
+nodes distributed according to <code>meshType</code> and <code>coef</code>. Currently supported
+types are &quot;Progression&quot; (geometrical progression with power <code>coef</code>) and
+&quot;Bump&quot; (refinement toward both extremities of the curve).</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoMeshSetTransfiniteSurface.html" title='gmsh_sys::gmshModelGeoMeshSetTransfiniteSurface fn'>gmshModelGeoMeshSetTransfiniteSurface</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set a transfinite meshing constraint on the surface <code>tag</code>. <code>arrangement</code>
+describes the arrangement of the triangles when the surface is not flagged
+as recombined: currently supported values are &quot;Left&quot;, &quot;Right&quot;,
+&quot;AlternateLeft&quot; and &quot;AlternateRight&quot;. <code>cornerTags</code> can be used to specify
+the (3 or 4) corners of the transfinite interpolation explicitly;
+specifying the corners explicitly is mandatory if the surface has more that
+3 or 4 points on its boundary.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoMeshSetTransfiniteVolume.html" title='gmsh_sys::gmshModelGeoMeshSetTransfiniteVolume fn'>gmshModelGeoMeshSetTransfiniteVolume</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set a transfinite meshing constraint on the surface <code>tag</code>. <code>cornerTags</code> can
+be used to specify the (6 or 8) corners of the transfinite interpolation
+explicitly.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoRemove.html" title='gmsh_sys::gmshModelGeoRemove fn'>gmshModelGeoRemove</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Remove the entities <code>dimTags</code>. If <code>recursive</code> is true, remove all the
+entities on their boundaries, down to dimension 0.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoRemoveAllDuplicates.html" title='gmsh_sys::gmshModelGeoRemoveAllDuplicates fn'>gmshModelGeoRemoveAllDuplicates</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Remove all duplicate entities (different entities at the same geometrical
+location).</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoRevolve.html" title='gmsh_sys::gmshModelGeoRevolve fn'>gmshModelGeoRevolve</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Extrude the model entities <code>dimTags</code> by rotation of <code>angle</code> radians around
+the axis of revolution defined by the point (<code>x</code>, <code>y</code>, <code>z</code>) and the
+direction (<code>ax</code>, <code>ay</code>, <code>az</code>). The angle should be strictly smaller than Pi.
+Return extruded entities in <code>outDimTags</code>. If <code>numElements</code> is not empty,
+also extrude the mesh: the entries in <code>numElements</code> give the number of
+elements in each layer. If <code>height</code> is not empty, it provides the
+(cumulative) height of the different layers, normalized to 1.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoRotate.html" title='gmsh_sys::gmshModelGeoRotate fn'>gmshModelGeoRotate</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Rotate the model entities <code>dimTags</code> of <code>angle</code> radians around the axis of
+revolution defined by the point (<code>x</code>, <code>y</code>, <code>z</code>) and the direction (<code>ax</code>,
+<code>ay</code>, <code>az</code>).</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoSymmetrize.html" title='gmsh_sys::gmshModelGeoSymmetrize fn'>gmshModelGeoSymmetrize</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Apply a symmetry transformation to the model entities <code>dimTag</code>, with
+respect to the plane of equation <code>a</code> * x + <code>b</code> * y + <code>c</code> * z + <code>d</code> = 0.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoSynchronize.html" title='gmsh_sys::gmshModelGeoSynchronize fn'>gmshModelGeoSynchronize</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Synchronize the built-in CAD representation with the current Gmsh model.
+This can be called at any time, but since it involves a non trivial amount
+of processing, the number of synchronization points should normally be
+minimized.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoTranslate.html" title='gmsh_sys::gmshModelGeoTranslate fn'>gmshModelGeoTranslate</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Translate the model entities <code>dimTags</code> along (<code>dx</code>, <code>dy</code>, <code>dz</code>).</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGeoTwist.html" title='gmsh_sys::gmshModelGeoTwist fn'>gmshModelGeoTwist</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Extrude the model entities <code>dimTags</code> by a combined translation and rotation
+of <code>angle</code> radians, along (<code>dx</code>, <code>dy</code>, <code>dz</code>) and around the axis of
+revolution defined by the point (<code>x</code>, <code>y</code>, <code>z</code>) and the direction (<code>ax</code>,
+<code>ay</code>, <code>az</code>). The angle should be strictly smaller than Pi. Return extruded
+entities in <code>outDimTags</code>. If <code>numElements</code> is not empty, also extrude the
+mesh: the entries in <code>numElements</code> give the number of elements in each
+layer. If <code>height</code> is not empty, it provides the (cumulative) height of the
+different layers, normalized to 1.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGetBoundary.html" title='gmsh_sys::gmshModelGetBoundary fn'>gmshModelGetBoundary</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the boundary of the model entities <code>dimTags</code>. Return in <code>outDimTags</code>
+the boundary of the individual entities (if <code>combined</code> is false) or the
+boundary of the combined geometrical shape formed by all input entities (if
+<code>combined</code> is true). Return tags multiplied by the sign of the boundary
+entity if <code>oriented</code> is true. Apply the boundary operator recursively down
+to dimension 0 (i.e. to points) if <code>recursive</code> is true.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGetBoundingBox.html" title='gmsh_sys::gmshModelGetBoundingBox fn'>gmshModelGetBoundingBox</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the bounding box (<code>xmin</code>, <code>ymin</code>, <code>zmin</code>), (<code>xmax</code>, <code>ymax</code>, <code>zmax</code>) of
+the model entity of dimension <code>dim</code> and tag <code>tag</code>. If <code>dim</code> and <code>tag</code> are
+negative, get the bounding box of the whole model.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGetColor.html" title='gmsh_sys::gmshModelGetColor fn'>gmshModelGetColor</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the color of the model entity of dimension <code>dim</code> and tag <code>tag</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGetCurvature.html" title='gmsh_sys::gmshModelGetCurvature fn'>gmshModelGetCurvature</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Evaluate the (maximum) curvature of the entity of dimension <code>dim</code> and tag
+<code>tag</code> at the parametric coordinates <code>parametricCoord</code>. Only valid for <code>dim</code>
+equal to 1 (with <code>parametricCoord</code> containing parametric coordinates on the
+curve) or 2 (with <code>parametricCoord</code> containing pairs of u, v parametric
+coordinates on the surface, concatenated: [p1u, p1v, p2u, ...]).</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGetDerivative.html" title='gmsh_sys::gmshModelGetDerivative fn'>gmshModelGetDerivative</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Evaluate the derivative of the parametrization of the entity of dimension
+<code>dim</code> and tag <code>tag</code> at the parametric coordinates <code>parametricCoord</code>. Only
+valid for <code>dim</code> equal to 1 (with <code>parametricCoord</code> containing parametric
+coordinates on the curve) or 2 (with <code>parametricCoord</code> containing pairs of
+u, v parametric coordinates on the surface, concatenated: [p1u, p1v, p2u,
+...]). For <code>dim</code> equal to 1 return the x, y, z components of the derivative
+with respect to u [d1ux, d1uy, d1uz, d2ux, ...]; for <code>dim</code> equal to 2
+return the x, y, z components of the derivate with respect to u and v:
+[d1ux, d1uy, d1uz, d1vx, d1vy, d1vz, d2ux, ...].</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGetDimension.html" title='gmsh_sys::gmshModelGetDimension fn'>gmshModelGetDimension</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the geometrical dimension of the current model.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGetEntities.html" title='gmsh_sys::gmshModelGetEntities fn'>gmshModelGetEntities</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get all the entities in the current model. If <code>dim</code> is &gt;= 0, return only
+the entities of the specified dimension (e.g. points if <code>dim</code> == 0). The
+entities are returned as a vector of (dim, tag) integer pairs.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGetEntitiesForPhysicalGroup.html" title='gmsh_sys::gmshModelGetEntitiesForPhysicalGroup fn'>gmshModelGetEntitiesForPhysicalGroup</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the tags of the model entities making up the physical group of
+dimension <code>dim</code> and tag <code>tag</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGetEntitiesInBoundingBox.html" title='gmsh_sys::gmshModelGetEntitiesInBoundingBox fn'>gmshModelGetEntitiesInBoundingBox</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the model entities in the bounding box defined by the two points
+(<code>xmin</code>, <code>ymin</code>, <code>zmin</code>) and (<code>xmax</code>, <code>ymax</code>, <code>zmax</code>). If <code>dim</code> is &gt;= 0,
+return only the entities of the specified dimension (e.g. points if <code>dim</code>
+== 0).</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGetEntityName.html" title='gmsh_sys::gmshModelGetEntityName fn'>gmshModelGetEntityName</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the name of the entity of dimension <code>dim</code> and tag <code>tag</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGetNormal.html" title='gmsh_sys::gmshModelGetNormal fn'>gmshModelGetNormal</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the normal to the surface with tag <code>tag</code> at the parametric coordinates
+<code>parametricCoord</code>. <code>parametricCoord</code> are given by pairs of u and v
+coordinates, concatenated: [p1u, p1v, p2u, ...]. <code>normals</code> are returned as
+triplets of x, y, z components, concatenated: [n1x, n1y, n1z, n2x, ...].</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGetParent.html" title='gmsh_sys::gmshModelGetParent fn'>gmshModelGetParent</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>In a partitioned model, get the parent of the entity of dimension <code>dim</code> and
+tag <code>tag</code>, i.e. from which the entity is a part of, if any. <code>parentDim</code> and
+<code>parentTag</code> are set to -1 if the entity has no parent.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGetPartitions.html" title='gmsh_sys::gmshModelGetPartitions fn'>gmshModelGetPartitions</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>In a partitioned model, return the tags of the partition(s) to which the
+entity belongs.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGetPhysicalGroups.html" title='gmsh_sys::gmshModelGetPhysicalGroups fn'>gmshModelGetPhysicalGroups</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get all the physical groups in the current model. If <code>dim</code> is &gt;= 0, return
+only the entities of the specified dimension (e.g. physical points if <code>dim</code>
+== 0). The entities are returned as a vector of (dim, tag) integer pairs.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGetPhysicalGroupsForEntity.html" title='gmsh_sys::gmshModelGetPhysicalGroupsForEntity fn'>gmshModelGetPhysicalGroupsForEntity</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the tags of the physical groups (if any) to which the model entity of
+dimension <code>dim</code> and tag <code>tag</code> belongs.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGetPhysicalName.html" title='gmsh_sys::gmshModelGetPhysicalName fn'>gmshModelGetPhysicalName</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the name of the physical group of dimension <code>dim</code> and tag <code>tag</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGetPrincipalCurvatures.html" title='gmsh_sys::gmshModelGetPrincipalCurvatures fn'>gmshModelGetPrincipalCurvatures</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Evaluate the principal curvatures of the surface with tag <code>tag</code> at the
+parametric coordinates <code>parametricCoord</code>, as well as their respective
+directions. <code>parametricCoord</code> are given by pair of u and v coordinates,
+concatenated: [p1u, p1v, p2u, ...].</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGetType.html" title='gmsh_sys::gmshModelGetType fn'>gmshModelGetType</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the type of the entity of dimension <code>dim</code> and tag <code>tag</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGetValue.html" title='gmsh_sys::gmshModelGetValue fn'>gmshModelGetValue</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Evaluate the parametrization of the entity of dimension <code>dim</code> and tag <code>tag</code>
+at the parametric coordinates <code>parametricCoord</code>. Only valid for <code>dim</code> equal
+to 0 (with empty <code>parametricCoord</code>), 1 (with <code>parametricCoord</code> containing
+parametric coordinates on the curve) or 2 (with <code>parametricCoord</code>
+containing pairs of u, v parametric coordinates on the surface,
+concatenated: [p1u, p1v, p2u, ...]). Return triplets of x, y, z coordinates
+in <code>points</code>, concatenated: [p1x, p1y, p1z, p2x, ...].</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelGetVisibility.html" title='gmsh_sys::gmshModelGetVisibility fn'>gmshModelGetVisibility</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the visibility of the model entity of dimension <code>dim</code> and tag <code>tag</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelList.html" title='gmsh_sys::gmshModelList fn'>gmshModelList</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>List the names of all models.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshAddElements.html" title='gmsh_sys::gmshModelMeshAddElements fn'>gmshModelMeshAddElements</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add elements classified on the entity of dimension <code>dim</code> and tag <code>tag</code>.
+<code>types</code> contains the MSH types of the elements (e.g. <code>2</code> for 3-node
+triangles: see the Gmsh reference manual). <code>elementTags</code> is a vector of the
+same length as <code>types</code>; each entry is a vector containing the tags (unique,
+strictly positive identifiers) of the elements of the corresponding type.
+<code>nodeTags</code> is also a vector of the same length as <code>types</code>; each entry is a
+vector of length equal to the number of elements of the given type times
+the number N of nodes per element, that contains the node tags of all the
+elements of the given type, concatenated: [e1n1, e1n2, ..., e1nN, e2n1,
+...].</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshAddElementsByType.html" title='gmsh_sys::gmshModelMeshAddElementsByType fn'>gmshModelMeshAddElementsByType</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add elements of type <code>elementType</code> classified on the entity of tag <code>tag</code>.
+<code>elementTags</code> contains the tags (unique, strictly positive identifiers) of
+the elements of the corresponding type. <code>nodeTags</code> is a vector of length
+equal to the number of elements times the number N of nodes per element,
+that contains the node tags of all the elements, concatenated: [e1n1, e1n2,
+..., e1nN, e2n1, ...]. If the <code>elementTag</code> vector is empty, new tags are
+automatically assigned to the elements.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshAddNodes.html" title='gmsh_sys::gmshModelMeshAddNodes fn'>gmshModelMeshAddNodes</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add nodes classified on the model entity of dimension <code>dim</code> and tag <code>tag</code>.
+<code>nodeTags</code> contains the node tags (their unique, strictly positive
+identification numbers). <code>coord</code> is a vector of length 3 times the length
+of <code>nodeTags</code> that contains the x, y, z coordinates of the nodes,
+concatenated: [n1x, n1y, n1z, n2x, ...]. The optional <code>parametricCoord</code>
+vector contains the parametric coordinates of the nodes, if any. The length
+of <code>parametricCoord</code> can be 0 or <code>dim</code> times the length of <code>nodeTags</code>. If
+the <code>nodeTags</code> vector is empty, new tags are automatically assigned to the
+nodes.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshClassifySurfaces.html" title='gmsh_sys::gmshModelMeshClassifySurfaces fn'>gmshModelMeshClassifySurfaces</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Classify (&quot;color&quot;) the surface mesh based on the angle threshold <code>angle</code>
+(in radians), and create new discrete surfaces, curves and points
+accordingly. If <code>boundary</code> is set, also create discrete curves on the
+boundary if the surface is open. If <code>forReparametrization</code> is set, create
+edges and surfaces that can be reparametrized using a single map.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshClear.html" title='gmsh_sys::gmshModelMeshClear fn'>gmshModelMeshClear</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Clear the mesh, i.e. delete all the nodes and elements.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshComputeCohomology.html" title='gmsh_sys::gmshModelMeshComputeCohomology fn'>gmshModelMeshComputeCohomology</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Compute a basis representation for cohomology spaces after a mesh has been
+generated. The computation domain is given in a list of physical group tags
+<code>domainTags</code>; if empty, the whole mesh is the domain. The computation
+subdomain for relative cohomology computation is given in a list of
+physical group tags <code>subdomainTags</code>; if empty, absolute cohomology is
+computed. The dimensions homology bases to be computed are given in the
+list <code>dim</code>; if empty, all bases are computed. Resulting basis
+representation cochains are stored as physical groups in the mesh.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshComputeHomology.html" title='gmsh_sys::gmshModelMeshComputeHomology fn'>gmshModelMeshComputeHomology</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Compute a basis representation for homology spaces after a mesh has been
+generated. The computation domain is given in a list of physical group tags
+<code>domainTags</code>; if empty, the whole mesh is the domain. The computation
+subdomain for relative homology computation is given in a list of physical
+group tags <code>subdomainTags</code>; if empty, absolute homology is computed. The
+dimensions homology bases to be computed are given in the list <code>dim</code>; if
+empty, all bases are computed. Resulting basis representation chains are
+stored as physical groups in the mesh.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshCreateGeometry.html" title='gmsh_sys::gmshModelMeshCreateGeometry fn'>gmshModelMeshCreateGeometry</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Create a parametrization for discrete curves and surfaces (i.e. curves and
+surfaces represented solely by a mesh, without an underlying CAD
+description), assuming that each can be parametrized with a single map.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshCreateTopology.html" title='gmsh_sys::gmshModelMeshCreateTopology fn'>gmshModelMeshCreateTopology</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Create a boundary representation from the mesh if the model does not have
+one (e.g. when imported from mesh file formats with no BRep representation
+of the underlying model).</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshEmbed.html" title='gmsh_sys::gmshModelMeshEmbed fn'>gmshModelMeshEmbed</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Embed the model entities of dimension <code>dim</code> and tags <code>tags</code> in the
+(<code>inDim</code>, <code>inTag</code>) model entity. The dimension <code>dim</code> can 0, 1 or 2 and must
+be strictly smaller than <code>inDim</code>, which must be either 2 or 3. The embedded
+entities should not be part of the boundary of the entity <code>inTag</code>, whose
+mesh will conform to the mesh of the embedded entities.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshFieldAdd.html" title='gmsh_sys::gmshModelMeshFieldAdd fn'>gmshModelMeshFieldAdd</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a new mesh size field of type <code>fieldType</code>. If <code>tag</code> is positive, assign
+the tag explicitly; otherwise a new tag is assigned automatically. Return
+the field tag.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshFieldRemove.html" title='gmsh_sys::gmshModelMeshFieldRemove fn'>gmshModelMeshFieldRemove</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Remove the field with tag <code>tag</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshFieldSetAsBackgroundMesh.html" title='gmsh_sys::gmshModelMeshFieldSetAsBackgroundMesh fn'>gmshModelMeshFieldSetAsBackgroundMesh</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set the field <code>tag</code> as the background mesh size field.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshFieldSetAsBoundaryLayer.html" title='gmsh_sys::gmshModelMeshFieldSetAsBoundaryLayer fn'>gmshModelMeshFieldSetAsBoundaryLayer</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set the field <code>tag</code> as a boundary layer size field.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshFieldSetNumber.html" title='gmsh_sys::gmshModelMeshFieldSetNumber fn'>gmshModelMeshFieldSetNumber</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set the numerical option <code>option</code> to value <code>value</code> for field <code>tag</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshFieldSetNumbers.html" title='gmsh_sys::gmshModelMeshFieldSetNumbers fn'>gmshModelMeshFieldSetNumbers</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set the numerical list option <code>option</code> to value <code>value</code> for field <code>tag</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshFieldSetString.html" title='gmsh_sys::gmshModelMeshFieldSetString fn'>gmshModelMeshFieldSetString</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set the string option <code>option</code> to value <code>value</code> for field <code>tag</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGenerate.html" title='gmsh_sys::gmshModelMeshGenerate fn'>gmshModelMeshGenerate</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Generate a mesh of the current model, up to dimension <code>dim</code> (0, 1, 2 or 3).</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetBarycenters.html" title='gmsh_sys::gmshModelMeshGetBarycenters fn'>gmshModelMeshGetBarycenters</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the barycenters of all elements of type <code>elementType</code> classified on the
+entity of tag <code>tag</code>. If <code>primary</code> is set, only the primary nodes of the
+elements are taken into account for the barycenter calculation. If <code>fast</code>
+is set, the function returns the sum of the primary node coordinates
+(without normalizing by the number of nodes). If <code>tag</code> &lt; 0, get the
+barycenters for all entities. If <code>numTasks</code> &gt; 1, only compute and return
+the part of the data indexed by <code>task</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetBasisFunctions.html" title='gmsh_sys::gmshModelMeshGetBasisFunctions fn'>gmshModelMeshGetBasisFunctions</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the basis functions of the element of type <code>elementType</code> at the
+integration points <code>integrationPoints</code> (given as concatenated triplets of
+coordinates in the reference element [g1u, g1v, g1w, ..., gGu, gGv, gGw]),
+for the function space <code>functionSpaceType</code> (e.g. &quot;Lagrange&quot; or
+&quot;GradLagrange&quot; for Lagrange basis functions or their gradient, in the u, v,
+w coordinates of the reference element). <code>numComponents</code> returns the number
+C of components of a basis function. <code>basisFunctions</code> returns the value of
+the N basis functions at the integration points, i.e. [g1f1, g1f2, ...,
+g1fN, g2f1, ...] when C == 1 or [g1f1u, g1f1v, g1f1w, g1f2u, ..., g1fNw,
+g2f1u, ...] when C == 3.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetBasisFunctionsForElements.html" title='gmsh_sys::gmshModelMeshGetBasisFunctionsForElements fn'>gmshModelMeshGetBasisFunctionsForElements</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the element-dependent basis functions of the elements of type
+<code>elementType</code> in the entity of tag <code>tag</code>at the integration points
+<code>integrationPoints</code> (given as concatenated triplets of coordinates in the
+reference element [g1u, g1v, g1w, ..., gGu, gGv, gGw]), for the function
+space <code>functionSpaceType</code> (e.g. &quot;H1Legendre3&quot; or &quot;GradH1Legendre3&quot; for 3rd
+order hierarchical H1 Legendre functions or their gradient, in the u, v, w
+coordinates of the reference elements). <code>numComponents</code> returns the number
+C of components of a basis function. <code>numBasisFunctions</code> returns the number
+N of basis functions per element. <code>basisFunctions</code> returns the value of the
+basis functions at the integration points for each element: [e1g1f1,...,
+e1g1fN, e1g2f1,..., e2g1f1, ...] when C == 1 or [e1g1f1u, e1g1f1v,...,
+e1g1fNw, e1g2f1u,..., e2g1f1u, ...]. Warning: this is an experimental
+feature and will probably change in a future release.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetElement.html" title='gmsh_sys::gmshModelMeshGetElement fn'>gmshModelMeshGetElement</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the type and node tags of the element with tag <code>tag</code>. This is a
+sometimes useful but inefficient way of accessing elements, as it relies on
+a cache stored in the model. For large meshes all the elements in the model
+should be numbered in a continuous sequence of tags from 1 to N to maintain
+reasonable performance (in this case the internal cache is based on a
+vector; otherwise it uses a map).</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetElementByCoordinates.html" title='gmsh_sys::gmshModelMeshGetElementByCoordinates fn'>gmshModelMeshGetElementByCoordinates</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Search the mesh for an element located at coordinates (<code>x</code>, <code>y</code>, <code>z</code>). This
+is a sometimes useful but inefficient way of accessing elements, as it
+relies on a search in a spatial octree. If an element is found, return its
+tag, type and node tags, as well as the local coordinates (<code>u</code>, <code>v</code>, <code>w</code>)
+within the element corresponding to search location. If <code>dim</code> is &gt;= 0, only
+search for elements of the given dimension. If <code>strict</code> is not set, use a
+tolerance to find elements near the search location.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetElementEdgeNodes.html" title='gmsh_sys::gmshModelMeshGetElementEdgeNodes fn'>gmshModelMeshGetElementEdgeNodes</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the nodes on the edges of all elements of type <code>elementType</code> classified
+on the entity of tag <code>tag</code>. <code>nodeTags</code> contains the node tags of the edges
+for all the elements: [e1a1n1, e1a1n2, e1a2n1, ...]. Data is returned by
+element, with elements in the same order as in <code>getElements</code> and
+<code>getElementsByType</code>. If <code>primary</code> is set, only the primary (begin/end)
+nodes of the edges are returned. If <code>tag</code> &lt; 0, get the edge nodes for all
+entities. If <code>numTasks</code> &gt; 1, only compute and return the part of the data
+indexed by <code>task</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetElementFaceNodes.html" title='gmsh_sys::gmshModelMeshGetElementFaceNodes fn'>gmshModelMeshGetElementFaceNodes</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the nodes on the faces of type <code>faceType</code> (3 for triangular faces, 4
+for quadrangular faces) of all elements of type <code>elementType</code> classified on
+the entity of tag <code>tag</code>. <code>nodeTags</code> contains the node tags of the faces for
+all elements: [e1f1n1, ..., e1f1nFaceType, e1f2n1, ...]. Data is returned
+by element, with elements in the same order as in <code>getElements</code> and
+<code>getElementsByType</code>. If <code>primary</code> is set, only the primary (corner) nodes
+of the faces are returned. If <code>tag</code> &lt; 0, get the face nodes for all
+entities. If <code>numTasks</code> &gt; 1, only compute and return the part of the data
+indexed by <code>task</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetElementProperties.html" title='gmsh_sys::gmshModelMeshGetElementProperties fn'>gmshModelMeshGetElementProperties</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the properties of an element of type <code>elementType</code>: its name
+(<code>elementName</code>), dimension (<code>dim</code>), order (<code>order</code>), number of nodes
+(<code>numNodes</code>) and coordinates of the nodes in the reference element
+(<code>nodeCoord</code> vector, of length <code>dim</code> times <code>numNodes</code>).</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetElementType.html" title='gmsh_sys::gmshModelMeshGetElementType fn'>gmshModelMeshGetElementType</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Return an element type given its family name <code>familyName</code> (&quot;point&quot;, &quot;line&quot;,
+&quot;triangle&quot;, &quot;quadrangle&quot;, &quot;tetrahedron&quot;, &quot;pyramid&quot;, &quot;prism&quot;, &quot;hexahedron&quot;)
+and polynomial order <code>order</code>. If <code>serendip</code> is true, return the
+corresponding serendip element type (element without interior nodes).</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetElementTypes.html" title='gmsh_sys::gmshModelMeshGetElementTypes fn'>gmshModelMeshGetElementTypes</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the types of elements in the entity of dimension <code>dim</code> and tag <code>tag</code>.
+If <code>tag</code> &lt; 0, get the types for all entities of dimension <code>dim</code>. If <code>dim</code>
+and <code>tag</code> are negative, get all the types in the mesh.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetElements.html" title='gmsh_sys::gmshModelMeshGetElements fn'>gmshModelMeshGetElements</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the elements classified on the entity of dimension <code>dim</code> and tag <code>tag</code>.
+If <code>tag</code> &lt; 0, get the elements for all entities of dimension <code>dim</code>. If
+<code>dim</code> and <code>tag</code> are negative, get all the elements in the mesh.
+<code>elementTypes</code> contains the MSH types of the elements (e.g. <code>2</code> for 3-node
+triangles: see <code>getElementProperties</code> to obtain the properties for a given
+element type). <code>elementTags</code> is a vector of the same length as
+<code>elementTypes</code>; each entry is a vector containing the tags (unique,
+strictly positive identifiers) of the elements of the corresponding type.
+<code>nodeTags</code> is also a vector of the same length as <code>elementTypes</code>; each
+entry is a vector of length equal to the number of elements of the given
+type times the number N of nodes for this type of element, that contains
+the node tags of all the elements of the given type, concatenated: [e1n1,
+e1n2, ..., e1nN, e2n1, ...].</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetElementsByType.html" title='gmsh_sys::gmshModelMeshGetElementsByType fn'>gmshModelMeshGetElementsByType</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the elements of type <code>elementType</code> classified on the entity of tag
+<code>tag</code>. If <code>tag</code> &lt; 0, get the elements for all entities. <code>elementTags</code> is a
+vector containing the tags (unique, strictly positive identifiers) of the
+elements of the corresponding type. <code>nodeTags</code> is a vector of length equal
+to the number of elements of the given type times the number N of nodes for
+this type of element, that contains the node tags of all the elements of
+the given type, concatenated: [e1n1, e1n2, ..., e1nN, e2n1, ...]. If
+<code>numTasks</code> &gt; 1, only compute and return the part of the data indexed by
+<code>task</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetGhostElements.html" title='gmsh_sys::gmshModelMeshGetGhostElements fn'>gmshModelMeshGetGhostElements</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the ghost elements <code>elementTags</code> and their associated <code>partitions</code>
+stored in the ghost entity of dimension <code>dim</code> and tag <code>tag</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetInformationForElements.html" title='gmsh_sys::gmshModelMeshGetInformationForElements fn'>gmshModelMeshGetInformationForElements</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get information about the <code>keys</code>. <code>infoKeys</code> returns information about the
+functions associated with the <code>keys</code>. <code>infoKeys[0].first</code> describes the
+type of function (0 for  vertex function, 1 for edge function, 2 for face
+function and 3 for bubble function). <code>infoKeys[0].second</code> gives the order
+of the function associated with the key. Warning: this is an experimental
+feature and will probably change in a future release.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetIntegrationPoints.html" title='gmsh_sys::gmshModelMeshGetIntegrationPoints fn'>gmshModelMeshGetIntegrationPoints</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the numerical quadrature information for the given element type
+<code>elementType</code> and integration rule <code>integrationType</code> (e.g. &quot;Gauss4&quot; for a
+Gauss quadrature suited for integrating 4th order polynomials).
+<code>integrationPoints</code> contains the u, v, w coordinates of the G integration
+points in the reference element: [g1u, g1v, g1w, ..., gGu, gGv, gGw].
+<code>integrationWeigths</code> contains the associated weights: [g1q, ..., gGq].</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetJacobians.html" title='gmsh_sys::gmshModelMeshGetJacobians fn'>gmshModelMeshGetJacobians</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the Jacobians of all the elements of type <code>elementType</code> classified on
+the entity of tag <code>tag</code>, at the G integration points <code>integrationPoints</code>
+given as concatenated triplets of coordinates in the reference element
+[g1u, g1v, g1w, ..., gGu, gGv, gGw]. Data is returned by element, with
+elements in the same order as in <code>getElements</code> and <code>getElementsByType</code>.
+<code>jacobians</code> contains for each element the 9 entries of the 3x3 Jacobian
+matrix at each integration point. The matrix is returned by column:
+[e1g1Jxu, e1g1Jyu, e1g1Jzu, e1g1Jxv, ..., e1g1Jzw, e1g2Jxu, ..., e1gGJzw,
+e2g1Jxu, ...], with Jxu=dx/du, Jyu=dy/du, etc. <code>determinants</code> contains for
+each element the determinant of the Jacobian matrix at each integration
+point: [e1g1, e1g2, ... e1gG, e2g1, ...]. <code>points</code> contains for each
+element the x, y, z coordinates of the integration points. If <code>tag</code> &lt; 0,
+get the Jacobian data for all entities. If <code>numTasks</code> &gt; 1, only compute and
+return the part of the data indexed by <code>task</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetKeysForElements.html" title='gmsh_sys::gmshModelMeshGetKeysForElements fn'>gmshModelMeshGetKeysForElements</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Generate the <code>keys</code> for the elements of type <code>elementType</code> in the entity of
+tag <code>tag</code>, for the <code>functionSpaceType</code> function space. Each key uniquely
+identifies a basis function in the function space. If <code>returnCoord</code> is set,
+the <code>coord</code> vector contains the x, y, z coordinates locating basis
+functions for sorting purposes. Warning: this is an experimental feature
+and will probably change in a future release.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetLastEntityError.html" title='gmsh_sys::gmshModelMeshGetLastEntityError fn'>gmshModelMeshGetLastEntityError</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the last entities (if any) where a meshing error occurred. Currently
+only populated by the new 3D meshing algorithms.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetLastNodeError.html" title='gmsh_sys::gmshModelMeshGetLastNodeError fn'>gmshModelMeshGetLastNodeError</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the last nodes (if any) where a meshing error occurred. Currently only
+populated by the new 3D meshing algorithms.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetNode.html" title='gmsh_sys::gmshModelMeshGetNode fn'>gmshModelMeshGetNode</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the coordinates and the parametric coordinates (if any) of the node
+with tag <code>tag</code>. This is a sometimes useful but inefficient way of accessing
+nodes, as it relies on a cache stored in the model. For large meshes all
+the nodes in the model should be numbered in a continuous sequence of tags
+from 1 to N to maintain reasonable performance (in this case the internal
+cache is based on a vector; otherwise it uses a map).</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetNodes.html" title='gmsh_sys::gmshModelMeshGetNodes fn'>gmshModelMeshGetNodes</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the nodes classified on the entity of dimension <code>dim</code> and tag <code>tag</code>. If
+<code>tag</code> &lt; 0, get the nodes for all entities of dimension <code>dim</code>. If <code>dim</code> and
+<code>tag</code> are negative, get all the nodes in the mesh. <code>nodeTags</code> contains the
+node tags (their unique, strictly positive identification numbers). <code>coord</code>
+is a vector of length 3 times the length of <code>nodeTags</code> that contains the x,
+y, z coordinates of the nodes, concatenated: [n1x, n1y, n1z, n2x, ...]. If
+<code>dim</code> &gt;= 0 and <code>returnParamtricCoord</code> is set, <code>parametricCoord</code> contains
+the parametric coordinates ([u1, u2, ...] or [u1, v1, u2, ...]) of the
+nodes, if available. The length of <code>parametricCoord</code> can be 0 or <code>dim</code>
+times the length of <code>nodeTags</code>. If <code>includeBoundary</code> is set, also return
+the nodes classified on the boundary of the entity (which will be
+reparametrized on the entity if <code>dim</code> &gt;= 0 in order to compute their
+parametric coordinates).</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetNodesByElementType.html" title='gmsh_sys::gmshModelMeshGetNodesByElementType fn'>gmshModelMeshGetNodesByElementType</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the nodes classified on the entity of tag <code>tag</code>, for all the elements
+of type <code>elementType</code>. The other arguments are treated as in <code>getNodes</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetNodesForPhysicalGroup.html" title='gmsh_sys::gmshModelMeshGetNodesForPhysicalGroup fn'>gmshModelMeshGetNodesForPhysicalGroup</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the nodes from all the elements belonging to the physical group of
+dimension <code>dim</code> and tag <code>tag</code>. <code>nodeTags</code> contains the node tags; <code>coord</code>
+is a vector of length 3 times the length of <code>nodeTags</code> that contains the x,
+y, z coordinates of the nodes, concatenated: [n1x, n1y, n1z, n2x, ...].</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshGetPeriodicNodes.html" title='gmsh_sys::gmshModelMeshGetPeriodicNodes fn'>gmshModelMeshGetPeriodicNodes</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the master entity <code>tagMaster</code>, the node tags <code>nodeTags</code> and their
+corresponding master node tags <code>nodeTagsMaster</code>, and the affine transform
+<code>affineTransform</code> for the entity of dimension <code>dim</code> and tag <code>tag</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshOptimize.html" title='gmsh_sys::gmshModelMeshOptimize fn'>gmshModelMeshOptimize</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Optimize the mesh of the current model using <code>method</code> (empty for default
+tetrahedral mesh optimizer, &quot;Netgen&quot; for Netgen optimizer, &quot;HighOrder&quot; for
+direct high-order mesh optimizer, &quot;HighOrderElastic&quot; for high-order elastic
+smoother). If <code>force</code> is set apply the optimization also to discrete
+entities.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshPartition.html" title='gmsh_sys::gmshModelMeshPartition fn'>gmshModelMeshPartition</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Partition the mesh of the current model into <code>numPart</code> partitions.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshPreallocateBarycenters.html" title='gmsh_sys::gmshModelMeshPreallocateBarycenters fn'>gmshModelMeshPreallocateBarycenters</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Preallocate data before calling <code>getBarycenters</code> with <code>numTasks</code> &gt; 1. For C
+and C++ only.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshPreallocateElementsByType.html" title='gmsh_sys::gmshModelMeshPreallocateElementsByType fn'>gmshModelMeshPreallocateElementsByType</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Preallocate data before calling <code>getElementsByType</code> with <code>numTasks</code> &gt; 1.
+For C and C++ only.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshPreallocateJacobians.html" title='gmsh_sys::gmshModelMeshPreallocateJacobians fn'>gmshModelMeshPreallocateJacobians</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Preallocate data before calling <code>getJacobians</code> with <code>numTasks</code> &gt; 1. For C
+and C++ only.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshPrecomputeBasisFunctions.html" title='gmsh_sys::gmshModelMeshPrecomputeBasisFunctions fn'>gmshModelMeshPrecomputeBasisFunctions</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Precomputes the basis functions corresponding to <code>elementType</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshRebuildNodeCache.html" title='gmsh_sys::gmshModelMeshRebuildNodeCache fn'>gmshModelMeshRebuildNodeCache</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Rebuild the node cache.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshReclassifyNodes.html" title='gmsh_sys::gmshModelMeshReclassifyNodes fn'>gmshModelMeshReclassifyNodes</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Reclassify all nodes on their associated model entity, based on the
+elements. Can be used when importing nodes in bulk (e.g. by associating
+them all to a single volume), to reclassify them correctly on model
+surfaces, curves, etc. after the elements have been set.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshRecombine.html" title='gmsh_sys::gmshModelMeshRecombine fn'>gmshModelMeshRecombine</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Recombine the mesh of the current model.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshRefine.html" title='gmsh_sys::gmshModelMeshRefine fn'>gmshModelMeshRefine</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Refine the mesh of the current model by uniformly splitting the elements.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshRelocateNodes.html" title='gmsh_sys::gmshModelMeshRelocateNodes fn'>gmshModelMeshRelocateNodes</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Relocate the nodes classified on the entity of dimension <code>dim</code> and tag
+<code>tag</code> using their parametric coordinates. If <code>tag</code> &lt; 0, relocate the nodes
+for all entities of dimension <code>dim</code>. If <code>dim</code> and <code>tag</code> are negative,
+relocate all the nodes in the mesh.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshRemoveDuplicateNodes.html" title='gmsh_sys::gmshModelMeshRemoveDuplicateNodes fn'>gmshModelMeshRemoveDuplicateNodes</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Remove duplicate nodes in the mesh of the current model.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshRemoveEmbedded.html" title='gmsh_sys::gmshModelMeshRemoveEmbedded fn'>gmshModelMeshRemoveEmbedded</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Remove embedded entities from the model entities <code>dimTags</code>. if <code>dim</code> is &gt;=
+0, only remove embedded entities of the given dimension (e.g. embedded
+points if <code>dim</code> == 0).</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshRenumberElements.html" title='gmsh_sys::gmshModelMeshRenumberElements fn'>gmshModelMeshRenumberElements</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Renumber the element tags in a continuous sequence.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshRenumberNodes.html" title='gmsh_sys::gmshModelMeshRenumberNodes fn'>gmshModelMeshRenumberNodes</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Renumber the node tags in a continuous sequence.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshReorderElements.html" title='gmsh_sys::gmshModelMeshReorderElements fn'>gmshModelMeshReorderElements</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Reorder the elements of type <code>elementType</code> classified on the entity of tag
+<code>tag</code> according to <code>ordering</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshSetOrder.html" title='gmsh_sys::gmshModelMeshSetOrder fn'>gmshModelMeshSetOrder</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set the order of the elements in the mesh of the current model to <code>order</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshSetOutwardOrientation.html" title='gmsh_sys::gmshModelMeshSetOutwardOrientation fn'>gmshModelMeshSetOutwardOrientation</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set meshing constraints on the bounding surfaces of the volume of tag <code>tag</code>
+so that all surfaces are oriented with outward pointing normals. Currently
+only available with the OpenCASCADE kernel, as it relies on the STL
+triangulation.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshSetPeriodic.html" title='gmsh_sys::gmshModelMeshSetPeriodic fn'>gmshModelMeshSetPeriodic</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set the meshes of the entities of dimension <code>dim</code> and tag <code>tags</code> as
+periodic copies of the meshes of entities <code>tagsMaster</code>, using the affine
+transformation specified in <code>affineTransformation</code> (16 entries of a 4x4
+matrix, by row). Currently only available for <code>dim</code> == 1 and <code>dim</code> == 2.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshSetRecombine.html" title='gmsh_sys::gmshModelMeshSetRecombine fn'>gmshModelMeshSetRecombine</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set a recombination meshing constraint on the model entity of dimension
+<code>dim</code> and tag <code>tag</code>. Currently only entities of dimension 2 (to recombine
+triangles into quadrangles) are supported.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshSetReverse.html" title='gmsh_sys::gmshModelMeshSetReverse fn'>gmshModelMeshSetReverse</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set a reverse meshing constraint on the model entity of dimension <code>dim</code> and
+tag <code>tag</code>. If <code>val</code> is true, the mesh orientation will be reversed with
+respect to the natural mesh orientation (i.e. the orientation consistent
+with the orientation of the geometry). If <code>val</code> is false, the mesh is left
+as-is.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshSetSize.html" title='gmsh_sys::gmshModelMeshSetSize fn'>gmshModelMeshSetSize</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set a mesh size constraint on the model entities <code>dimTags</code>. Currently only
+entities of dimension 0 (points) are handled.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshSetSmoothing.html" title='gmsh_sys::gmshModelMeshSetSmoothing fn'>gmshModelMeshSetSmoothing</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set a smoothing meshing constraint on the model entity of dimension <code>dim</code>
+and tag <code>tag</code>. <code>val</code> iterations of a Laplace smoother are applied.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshSetTransfiniteCurve.html" title='gmsh_sys::gmshModelMeshSetTransfiniteCurve fn'>gmshModelMeshSetTransfiniteCurve</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set a transfinite meshing constraint on the curve <code>tag</code>, with <code>numNodes</code>
+nodes distributed according to <code>meshType</code> and <code>coef</code>. Currently supported
+types are &quot;Progression&quot; (geometrical progression with power <code>coef</code>) and
+&quot;Bump&quot; (refinement toward both extremities of the curve).</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshSetTransfiniteSurface.html" title='gmsh_sys::gmshModelMeshSetTransfiniteSurface fn'>gmshModelMeshSetTransfiniteSurface</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set a transfinite meshing constraint on the surface <code>tag</code>. <code>arrangement</code>
+describes the arrangement of the triangles when the surface is not flagged
+as recombined: currently supported values are &quot;Left&quot;, &quot;Right&quot;,
+&quot;AlternateLeft&quot; and &quot;AlternateRight&quot;. <code>cornerTags</code> can be used to specify
+the (3 or 4) corners of the transfinite interpolation explicitly;
+specifying the corners explicitly is mandatory if the surface has more that
+3 or 4 points on its boundary.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshSetTransfiniteVolume.html" title='gmsh_sys::gmshModelMeshSetTransfiniteVolume fn'>gmshModelMeshSetTransfiniteVolume</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set a transfinite meshing constraint on the surface <code>tag</code>. <code>cornerTags</code> can
+be used to specify the (6 or 8) corners of the transfinite interpolation
+explicitly.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshSmooth.html" title='gmsh_sys::gmshModelMeshSmooth fn'>gmshModelMeshSmooth</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Smooth the mesh of the current model.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshSplitQuadrangles.html" title='gmsh_sys::gmshModelMeshSplitQuadrangles fn'>gmshModelMeshSplitQuadrangles</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Split (into two triangles) all quadrangles in surface <code>tag</code> whose quality
+is lower than <code>quality</code>. If <code>tag</code> &lt; 0, split quadrangles in all surfaces.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelMeshUnpartition.html" title='gmsh_sys::gmshModelMeshUnpartition fn'>gmshModelMeshUnpartition</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Unpartition the mesh of the current model.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddBSpline.html" title='gmsh_sys::gmshModelOccAddBSpline fn'>gmshModelOccAddBSpline</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a b-spline curve of degree <code>degree</code> with <code>pointTags</code> control points. If
+<code>weights</code>, <code>knots</code> or <code>multiplicities</code> are not provided, default parameters
+are computed automatically. If <code>tag</code> is positive, set the tag explicitly;
+otherwise a new tag is selected automatically. Create a periodic curve if
+the first and last points are the same. Return the tag of the b-spline
+curve.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddBezier.html" title='gmsh_sys::gmshModelOccAddBezier fn'>gmshModelOccAddBezier</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a Bezier curve with <code>pointTags</code> control points. If <code>tag</code> is positive,
+set the tag explicitly; otherwise a new tag is selected automatically.
+Return the tag of the Bezier curve.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddBox.html" title='gmsh_sys::gmshModelOccAddBox fn'>gmshModelOccAddBox</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a parallelepipedic box defined by a point (<code>x</code>, <code>y</code>, <code>z</code>) and the
+extents along the x-, y- and z-axes. If <code>tag</code> is positive, set the tag
+explicitly; otherwise a new tag is selected automatically. Return the tag
+of the box.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddCircle.html" title='gmsh_sys::gmshModelOccAddCircle fn'>gmshModelOccAddCircle</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a circle of center (<code>x</code>, <code>y</code>, <code>z</code>) and radius <code>r</code>. If <code>tag</code> is
+positive, set the tag explicitly; otherwise a new tag is selected
+automatically. If <code>angle1</code> and <code>angle2</code> are specified, create a circle arc
+between the two angles. Return the tag of the circle.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddCircleArc.html" title='gmsh_sys::gmshModelOccAddCircleArc fn'>gmshModelOccAddCircleArc</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a circle arc between the two points with tags <code>startTag</code> and <code>endTag</code>,
+with center <code>centerTag</code>. If <code>tag</code> is positive, set the tag explicitly;
+otherwise a new tag is selected automatically. Return the tag of the circle
+arc.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddCone.html" title='gmsh_sys::gmshModelOccAddCone fn'>gmshModelOccAddCone</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a cone, defined by the center (<code>x</code>, <code>y</code>, <code>z</code>) of its first circular
+face, the 3 components of the vector (<code>dx</code>, <code>dy</code>, <code>dz</code>) defining its axis
+and the two radii <code>r1</code> and <code>r2</code> of the faces (these radii can be zero). If
+<code>tag</code> is positive, set the tag explicitly; otherwise a new tag is selected
+automatically. <code>angle</code> defines the optional angular opening (from 0 to
+2*Pi). Return the tag of the cone.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddCurveLoop.html" title='gmsh_sys::gmshModelOccAddCurveLoop fn'>gmshModelOccAddCurveLoop</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a curve loop (a closed wire) formed by the curves <code>curveTags</code>.
+<code>curveTags</code> should contain tags of curves forming a closed loop. Note that
+an OpenCASCADE curve loop can be made of curves that share geometrically
+identical (but topologically different) points. If <code>tag</code> is positive, set
+the tag explicitly; otherwise a new tag is selected automatically. Return
+the tag of the curve loop.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddCylinder.html" title='gmsh_sys::gmshModelOccAddCylinder fn'>gmshModelOccAddCylinder</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a cylinder, defined by the center (<code>x</code>, <code>y</code>, <code>z</code>) of its first circular
+face, the 3 components (<code>dx</code>, <code>dy</code>, <code>dz</code>) of the vector defining its axis
+and its radius <code>r</code>. The optional <code>angle</code> argument defines the angular
+opening (from 0 to 2*Pi). If <code>tag</code> is positive, set the tag explicitly;
+otherwise a new tag is selected automatically. Return the tag of the
+cylinder.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddDisk.html" title='gmsh_sys::gmshModelOccAddDisk fn'>gmshModelOccAddDisk</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a disk with center (<code>xc</code>, <code>yc</code>, <code>zc</code>) and radius <code>rx</code> along the x-axis
+and <code>ry</code> along the y-axis. If <code>tag</code> is positive, set the tag explicitly;
+otherwise a new tag is selected automatically. Return the tag of the disk.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddEllipse.html" title='gmsh_sys::gmshModelOccAddEllipse fn'>gmshModelOccAddEllipse</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add an ellipse of center (<code>x</code>, <code>y</code>, <code>z</code>) and radii <code>r1</code> and <code>r2</code> along the
+x- and y-axes respectively. If <code>tag</code> is positive, set the tag explicitly;
+otherwise a new tag is selected automatically. If <code>angle1</code> and <code>angle2</code> are
+specified, create an ellipse arc between the two angles. Return the tag of
+the ellipse. Note that OpenCASCADE does not allow creating ellipses with
+the major radius (along the x-axis) smaller than or equal to the minor
+radius (along the y-axis): rotate the shape or use <code>addCircle</code> in such
+cases.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddEllipseArc.html" title='gmsh_sys::gmshModelOccAddEllipseArc fn'>gmshModelOccAddEllipseArc</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add an ellipse arc between the two points <code>startTag</code> and <code>endTag</code>, with
+center <code>centerTag</code> and major axis point <code>majorTag</code>. If <code>tag</code> is positive,
+set the tag explicitly; otherwise a new tag is selected automatically.
+Return the tag of the ellipse arc. Note that OpenCASCADE does not allow
+creating ellipse arcs with the major radius smaller than the minor radius.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddLine.html" title='gmsh_sys::gmshModelOccAddLine fn'>gmshModelOccAddLine</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a straight line segment between the two points with tags <code>startTag</code> and
+<code>endTag</code>. If <code>tag</code> is positive, set the tag explicitly; otherwise a new tag
+is selected automatically. Return the tag of the line.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddPipe.html" title='gmsh_sys::gmshModelOccAddPipe fn'>gmshModelOccAddPipe</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a pipe by extruding the entities <code>dimTags</code> along the wire <code>wireTag</code>.
+Return the pipe in <code>outDimTags</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddPlaneSurface.html" title='gmsh_sys::gmshModelOccAddPlaneSurface fn'>gmshModelOccAddPlaneSurface</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a plane surface defined by one or more curve loops (or closed wires)
+<code>wireTags</code>. The first curve loop defines the exterior contour; additional
+curve loop define holes. If <code>tag</code> is positive, set the tag explicitly;
+otherwise a new tag is selected automatically. Return the tag of the
+surface.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddPoint.html" title='gmsh_sys::gmshModelOccAddPoint fn'>gmshModelOccAddPoint</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a geometrical point in the OpenCASCADE CAD representation, at
+coordinates (<code>x</code>, <code>y</code>, <code>z</code>). If <code>meshSize</code> is &gt; 0, add a meshing constraint
+at that point. If <code>tag</code> is positive, set the tag explicitly; otherwise a
+new tag is selected automatically. Return the tag of the point. (Note that
+the point will be added in the current model only after <code>synchronize</code> is
+called. This behavior holds for all the entities added in the occ module.)</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddRectangle.html" title='gmsh_sys::gmshModelOccAddRectangle fn'>gmshModelOccAddRectangle</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a rectangle with lower left corner at (<code>x</code>, <code>y</code>, <code>z</code>) and upper right
+corner at (<code>x</code> + <code>dx</code>, <code>y</code> + <code>dy</code>, <code>z</code>). If <code>tag</code> is positive, set the tag
+explicitly; otherwise a new tag is selected automatically. Round the
+corners if <code>roundedRadius</code> is nonzero. Return the tag of the rectangle.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddSphere.html" title='gmsh_sys::gmshModelOccAddSphere fn'>gmshModelOccAddSphere</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a sphere of center (<code>xc</code>, <code>yc</code>, <code>zc</code>) and radius <code>r</code>. The optional
+<code>angle1</code> and <code>angle2</code> arguments define the polar angle opening (from -Pi/2
+to Pi/2). The optional <code>angle3</code> argument defines the azimuthal opening
+(from 0 to 2*Pi). If <code>tag</code> is positive, set the tag explicitly; otherwise a
+new tag is selected automatically. Return the tag of the sphere.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddSpline.html" title='gmsh_sys::gmshModelOccAddSpline fn'>gmshModelOccAddSpline</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a spline (C2 b-spline) curve going through the points <code>pointTags</code>. If
+<code>tag</code> is positive, set the tag explicitly; otherwise a new tag is selected
+automatically. Create a periodic curve if the first and last points are the
+same. Return the tag of the spline curve.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddSurfaceFilling.html" title='gmsh_sys::gmshModelOccAddSurfaceFilling fn'>gmshModelOccAddSurfaceFilling</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a surface filling the curve loops in <code>wireTags</code>. If <code>tag</code> is positive,
+set the tag explicitly; otherwise a new tag is selected automatically.
+Return the tag of the surface. If <code>pointTags</code> are provided, force the
+surface to pass through the given points.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddSurfaceLoop.html" title='gmsh_sys::gmshModelOccAddSurfaceLoop fn'>gmshModelOccAddSurfaceLoop</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a surface loop (a closed shell) formed by <code>surfaceTags</code>.  If <code>tag</code> is
+positive, set the tag explicitly; otherwise a new tag is selected
+automatically. Return the tag of the surface loop. Setting <code>sewing</code> allows
+to build a shell made of surfaces that share geometrically identical (but
+topologically different) curves.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddThickSolid.html" title='gmsh_sys::gmshModelOccAddThickSolid fn'>gmshModelOccAddThickSolid</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a hollowed volume built from an initial volume <code>volumeTag</code> and a set of
+faces from this volume <code>excludeSurfaceTags</code>, which are to be removed. The
+remaining faces of the volume become the walls of the hollowed solid, with
+thickness <code>offset</code>. If <code>tag</code> is positive, set the tag explicitly; otherwise
+a new tag is selected automatically.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddThruSections.html" title='gmsh_sys::gmshModelOccAddThruSections fn'>gmshModelOccAddThruSections</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a volume (if the optional argument <code>makeSolid</code> is set) or surfaces
+defined through the open or closed wires <code>wireTags</code>. If <code>tag</code> is positive,
+set the tag explicitly; otherwise a new tag is selected automatically. The
+new entities are returned in <code>outDimTags</code>. If the optional argument
+<code>makeRuled</code> is set, the surfaces created on the boundary are forced to be
+ruled surfaces.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddTorus.html" title='gmsh_sys::gmshModelOccAddTorus fn'>gmshModelOccAddTorus</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a torus, defined by its center (<code>x</code>, <code>y</code>, <code>z</code>) and its 2 radii <code>r</code> and
+<code>r2</code>. If <code>tag</code> is positive, set the tag explicitly; otherwise a new tag is
+selected automatically. The optional argument <code>angle</code> defines the angular
+opening (from 0 to 2*Pi). Return the tag of the wedge.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddVolume.html" title='gmsh_sys::gmshModelOccAddVolume fn'>gmshModelOccAddVolume</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a volume (a region) defined by one or more surface loops <code>shellTags</code>.
+The first surface loop defines the exterior boundary; additional surface
+loop define holes. If <code>tag</code> is positive, set the tag explicitly; otherwise
+a new tag is selected automatically. Return the tag of the volume.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddWedge.html" title='gmsh_sys::gmshModelOccAddWedge fn'>gmshModelOccAddWedge</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a right angular wedge, defined by the right-angle point (<code>x</code>, <code>y</code>, <code>z</code>)
+and the 3 extends along the x-, y- and z-axes (<code>dx</code>, <code>dy</code>, <code>dz</code>). If <code>tag</code>
+is positive, set the tag explicitly; otherwise a new tag is selected
+automatically. The optional argument <code>ltx</code> defines the top extent along the
+x-axis. Return the tag of the wedge.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAddWire.html" title='gmsh_sys::gmshModelOccAddWire fn'>gmshModelOccAddWire</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a wire (open or closed) formed by the curves <code>curveTags</code>. Note that an
+OpenCASCADE wire can be made of curves that share geometrically identical
+(but topologically different) points. If <code>tag</code> is positive, set the tag
+explicitly; otherwise a new tag is selected automatically. Return the tag
+of the wire.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccAffineTransform.html" title='gmsh_sys::gmshModelOccAffineTransform fn'>gmshModelOccAffineTransform</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Apply a general affine transformation matrix <code>a</code> (16 entries of a 4x4
+matrix, by row; only the 12 first can be provided for convenience) to the
+model entities <code>dimTag</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccChamfer.html" title='gmsh_sys::gmshModelOccChamfer fn'>gmshModelOccChamfer</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Chamfer the volumes <code>volumeTags</code> on the curves <code>curveTags</code> with distances
+<code>distances</code> measured on surfaces <code>surfaceTags</code>. The <code>distances</code> vector can
+either contain a single distance, as many distances as <code>curveTags</code> and
+<code>surfaceTags</code>, or twice as many as <code>curveTags</code> and <code>surfaceTags</code> (in which
+case the first in each pair is measured on the corresponding surface in
+<code>surfaceTags</code>, the other on the other adjacent surface). Return the
+chamfered entities in <code>outDimTags</code>. Remove the original volume if
+<code>removeVolume</code> is set.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccCopy.html" title='gmsh_sys::gmshModelOccCopy fn'>gmshModelOccCopy</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Copy the entities <code>dimTags</code>; the new entities are returned in <code>outDimTags</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccCut.html" title='gmsh_sys::gmshModelOccCut fn'>gmshModelOccCut</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Compute the boolean difference between the entities <code>objectDimTags</code> and
+<code>toolDimTags</code>. Return the resulting entities in <code>outDimTags</code>. If <code>tag</code> is
+positive, try to set the tag explicitly (only valid if the boolean
+operation results in a single entity). Remove the object if <code>removeObject</code>
+is set. Remove the tool if <code>removeTool</code> is set.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccDilate.html" title='gmsh_sys::gmshModelOccDilate fn'>gmshModelOccDilate</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Scale the model entities <code>dimTag</code> by factors <code>a</code>, <code>b</code> and <code>c</code> along the
+three coordinate axes; use (<code>x</code>, <code>y</code>, <code>z</code>) as the center of the homothetic
+transformation.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccExtrude.html" title='gmsh_sys::gmshModelOccExtrude fn'>gmshModelOccExtrude</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Extrude the model entities <code>dimTags</code> by translation along (<code>dx</code>, <code>dy</code>,
+<code>dz</code>). Return extruded entities in <code>outDimTags</code>. If <code>numElements</code> is not
+empty, also extrude the mesh: the entries in <code>numElements</code> give the number
+of elements in each layer. If <code>height</code> is not empty, it provides the
+(cumulative) height of the different layers, normalized to 1.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccFillet.html" title='gmsh_sys::gmshModelOccFillet fn'>gmshModelOccFillet</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Fillet the volumes <code>volumeTags</code> on the curves <code>curveTags</code> with radii
+<code>radii</code>. The <code>radii</code> vector can either contain a single radius, as many
+radii as <code>curveTags</code>, or twice as many as <code>curveTags</code> (in which case
+different radii are provided for the begin and end points of the curves).
+Return the filleted entities in <code>outDimTags</code>. Remove the original volume if
+<code>removeVolume</code> is set.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccFragment.html" title='gmsh_sys::gmshModelOccFragment fn'>gmshModelOccFragment</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Compute the boolean fragments (general fuse) of the entities
+<code>objectDimTags</code> and <code>toolDimTags</code>. Return the resulting entities in
+<code>outDimTags</code>. If <code>tag</code> is positive, try to set the tag explicitly (only
+valid if the boolean operation results in a single entity). Remove the
+object if <code>removeObject</code> is set. Remove the tool if <code>removeTool</code> is set.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccFuse.html" title='gmsh_sys::gmshModelOccFuse fn'>gmshModelOccFuse</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Compute the boolean union (the fusion) of the entities <code>objectDimTags</code> and
+<code>toolDimTags</code>. Return the resulting entities in <code>outDimTags</code>. If <code>tag</code> is
+positive, try to set the tag explicitly (only valid if the boolean
+operation results in a single entity). Remove the object if <code>removeObject</code>
+is set. Remove the tool if <code>removeTool</code> is set.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccGetCenterOfMass.html" title='gmsh_sys::gmshModelOccGetCenterOfMass fn'>gmshModelOccGetCenterOfMass</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the center of mass of the model entity of dimension <code>dim</code> and tag
+<code>tag</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccGetMass.html" title='gmsh_sys::gmshModelOccGetMass fn'>gmshModelOccGetMass</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the mass of the model entity of dimension <code>dim</code> and tag <code>tag</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccGetMatrixOfInertia.html" title='gmsh_sys::gmshModelOccGetMatrixOfInertia fn'>gmshModelOccGetMatrixOfInertia</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the matrix of inertia (by row) of the model entity of dimension <code>dim</code>
+and tag <code>tag</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccHealShapes.html" title='gmsh_sys::gmshModelOccHealShapes fn'>gmshModelOccHealShapes</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Apply various healing procedures to the entities <code>dimTags</code> (or to all the
+entities in the model if <code>dimTags</code> is empty). Return the healed entities in
+<code>outDimTags</code>. Available healing options are listed in the Gmsh reference
+manual.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccImportShapes.html" title='gmsh_sys::gmshModelOccImportShapes fn'>gmshModelOccImportShapes</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Import BREP, STEP or IGES shapes from the file <code>fileName</code>. The imported
+entities are returned in <code>outDimTags</code>. If the optional argument
+<code>highestDimOnly</code> is set, only import the highest dimensional entities in
+the file. The optional argument <code>format</code> can be used to force the format of
+the file (currently &quot;brep&quot;, &quot;step&quot; or &quot;iges&quot;).</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccImportShapesNativePointer.html" title='gmsh_sys::gmshModelOccImportShapesNativePointer fn'>gmshModelOccImportShapesNativePointer</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Imports an OpenCASCADE <code>shape</code> by providing a pointer to a native
+OpenCASCADE <code>TopoDS_Shape</code> object (passed as a pointer to void). The
+imported entities are returned in <code>outDimTags</code>. If the optional argument
+<code>highestDimOnly</code> is set, only import the highest dimensional entities in
+<code>shape</code>. For C and C++ only. Warning: this function is unsafe, as providing
+an invalid pointer will lead to undefined behavior.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccIntersect.html" title='gmsh_sys::gmshModelOccIntersect fn'>gmshModelOccIntersect</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Compute the boolean intersection (the common parts) of the entities
+<code>objectDimTags</code> and <code>toolDimTags</code>. Return the resulting entities in
+<code>outDimTags</code>. If <code>tag</code> is positive, try to set the tag explicitly (only
+valid if the boolean operation results in a single entity). Remove the
+object if <code>removeObject</code> is set. Remove the tool if <code>removeTool</code> is set.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccRemove.html" title='gmsh_sys::gmshModelOccRemove fn'>gmshModelOccRemove</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Remove the entities <code>dimTags</code>. If <code>recursive</code> is true, remove all the
+entities on their boundaries, down to dimension 0.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccRemoveAllDuplicates.html" title='gmsh_sys::gmshModelOccRemoveAllDuplicates fn'>gmshModelOccRemoveAllDuplicates</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Remove all duplicate entities (different entities at the same geometrical
+location) after intersecting (using boolean fragments) all highest
+dimensional entities.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccRevolve.html" title='gmsh_sys::gmshModelOccRevolve fn'>gmshModelOccRevolve</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Extrude the model entities <code>dimTags</code> by rotation of <code>angle</code> radians around
+the axis of revolution defined by the point (<code>x</code>, <code>y</code>, <code>z</code>) and the
+direction (<code>ax</code>, <code>ay</code>, <code>az</code>). Return extruded entities in <code>outDimTags</code>. If
+<code>numElements</code> is not empty, also extrude the mesh: the entries in
+<code>numElements</code> give the number of elements in each layer. If <code>height</code> is not
+empty, it provides the (cumulative) height of the different layers,
+normalized to 1. When the mesh is extruded the angle should be strictly
+smaller than 2*Pi.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccRotate.html" title='gmsh_sys::gmshModelOccRotate fn'>gmshModelOccRotate</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Rotate the model entities <code>dimTags</code> of <code>angle</code> radians around the axis of
+revolution defined by the point (<code>x</code>, <code>y</code>, <code>z</code>) and the direction (<code>ax</code>,
+<code>ay</code>, <code>az</code>).</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccSetMeshSize.html" title='gmsh_sys::gmshModelOccSetMeshSize fn'>gmshModelOccSetMeshSize</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set a mesh size constraint on the model entities <code>dimTags</code>. Currently only
+entities of dimension 0 (points) are handled.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccSymmetrize.html" title='gmsh_sys::gmshModelOccSymmetrize fn'>gmshModelOccSymmetrize</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Apply a symmetry transformation to the model entities <code>dimTag</code>, with
+respect to the plane of equation <code>a</code> * x + <code>b</code> * y + <code>c</code> * z + <code>d</code> = 0.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccSynchronize.html" title='gmsh_sys::gmshModelOccSynchronize fn'>gmshModelOccSynchronize</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Synchronize the OpenCASCADE CAD representation with the current Gmsh model.
+This can be called at any time, but since it involves a non trivial amount
+of processing, the number of synchronization points should normally be
+minimized.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelOccTranslate.html" title='gmsh_sys::gmshModelOccTranslate fn'>gmshModelOccTranslate</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Translate the model entities <code>dimTags</code> along (<code>dx</code>, <code>dy</code>, <code>dz</code>).</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelRemove.html" title='gmsh_sys::gmshModelRemove fn'>gmshModelRemove</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Remove the current model.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelRemoveEntities.html" title='gmsh_sys::gmshModelRemoveEntities fn'>gmshModelRemoveEntities</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Remove the entities <code>dimTags</code> of the current model. If <code>recursive</code> is true,
+remove all the entities on their boundaries, down to dimension 0.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelRemoveEntityName.html" title='gmsh_sys::gmshModelRemoveEntityName fn'>gmshModelRemoveEntityName</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Remove the entity name <code>name</code> from the current model.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelRemovePhysicalGroups.html" title='gmsh_sys::gmshModelRemovePhysicalGroups fn'>gmshModelRemovePhysicalGroups</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Remove the physical groups <code>dimTags</code> of the current model. If <code>dimTags</code> is
+empty, remove all groups.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelRemovePhysicalName.html" title='gmsh_sys::gmshModelRemovePhysicalName fn'>gmshModelRemovePhysicalName</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Remove the physical name <code>name</code> from the current model.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelSetColor.html" title='gmsh_sys::gmshModelSetColor fn'>gmshModelSetColor</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set the color of the model entities <code>dimTags</code> to the RGBA value (<code>r</code>, <code>g</code>,
+<code>b</code>, <code>a</code>), where <code>r</code>, <code>g</code>, <code>b</code> and <code>a</code> should be integers between 0 and
+255. Apply the color setting recursively if <code>recursive</code> is true.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelSetCoordinates.html" title='gmsh_sys::gmshModelSetCoordinates fn'>gmshModelSetCoordinates</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set the <code>x</code>, <code>y</code>, <code>z</code> coordinates of a geometrical point.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelSetCurrent.html" title='gmsh_sys::gmshModelSetCurrent fn'>gmshModelSetCurrent</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set the current model to the model with name <code>name</code>. If several models have
+the same name, select the one that was added first.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelSetEntityName.html" title='gmsh_sys::gmshModelSetEntityName fn'>gmshModelSetEntityName</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set the name of the entity of dimension <code>dim</code> and tag <code>tag</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelSetPhysicalName.html" title='gmsh_sys::gmshModelSetPhysicalName fn'>gmshModelSetPhysicalName</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set the name of the physical group of dimension <code>dim</code> and tag <code>tag</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshModelSetVisibility.html" title='gmsh_sys::gmshModelSetVisibility fn'>gmshModelSetVisibility</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set the visibility of the model entities <code>dimTags</code> to <code>value</code>. Apply the
+visibility setting recursively if <code>recursive</code> is true.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshOnelabClear.html" title='gmsh_sys::gmshOnelabClear fn'>gmshOnelabClear</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Clear the ONELAB database, or remove a single parameter if <code>name</code> is given.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshOnelabGet.html" title='gmsh_sys::gmshOnelabGet fn'>gmshOnelabGet</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get all the parameters (or a single one if <code>name</code> is specified) from the
+ONELAB database, encoded in <code>format</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshOnelabGetNumber.html" title='gmsh_sys::gmshOnelabGetNumber fn'>gmshOnelabGetNumber</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the value of the number parameter <code>name</code> from the ONELAB database.
+Return an empty vector if the parameter does not exist.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshOnelabGetString.html" title='gmsh_sys::gmshOnelabGetString fn'>gmshOnelabGetString</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the value of the string parameter <code>name</code> from the ONELAB database.
+Return an empty vector if the parameter does not exist.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshOnelabRun.html" title='gmsh_sys::gmshOnelabRun fn'>gmshOnelabRun</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Run a ONELAB client. If <code>name</code> is provided, create a new ONELAB client with
+name <code>name</code> and executes <code>command</code>. If not, try to run a client that might
+be linked to the processed input files.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshOnelabSet.html" title='gmsh_sys::gmshOnelabSet fn'>gmshOnelabSet</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set one or more parameters in the ONELAB database, encoded in <code>format</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshOnelabSetNumber.html" title='gmsh_sys::gmshOnelabSetNumber fn'>gmshOnelabSetNumber</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set the value of the number parameter <code>name</code> in the ONELAB database. Create
+the parameter if it does not exist; update the value if the parameter
+exists.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshOnelabSetString.html" title='gmsh_sys::gmshOnelabSetString fn'>gmshOnelabSetString</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set the value of the string parameter <code>name</code> in the ONELAB database. Create
+the parameter if it does not exist; update the value if the parameter
+exists.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshOpen.html" title='gmsh_sys::gmshOpen fn'>gmshOpen</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Open a file. Equivalent to the <code>File-&gt;Open</code> menu in the Gmsh app. Handling
+of the file depends on its extension and/or its contents: opening a file
+with model data will create a new model.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshOptionGetColor.html" title='gmsh_sys::gmshOptionGetColor fn'>gmshOptionGetColor</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the <code>r</code>, <code>g</code>, <code>b</code>, <code>a</code> value of a color option. <code>name</code> is of the form
+&quot;category.option&quot; or &quot;category[num].option&quot;. Available categories and
+options are listed in the Gmsh reference manual, with the &quot;Color.&quot; middle
+string removed.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshOptionGetNumber.html" title='gmsh_sys::gmshOptionGetNumber fn'>gmshOptionGetNumber</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the <code>value</code> of a numerical option. <code>name</code> is of the form
+&quot;category.option&quot; or &quot;category[num].option&quot;. Available categories and
+options are listed in the Gmsh reference manual.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshOptionGetString.html" title='gmsh_sys::gmshOptionGetString fn'>gmshOptionGetString</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the <code>value</code> of a string option. <code>name</code> is of the form &quot;category.option&quot;
+or &quot;category[num].option&quot;. Available categories and options are listed in
+the Gmsh reference manual.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshOptionSetColor.html" title='gmsh_sys::gmshOptionSetColor fn'>gmshOptionSetColor</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set a color option to the RGBA value (<code>r</code>, <code>g</code>, <code>b</code>, <code>a</code>), where where <code>r</code>,
+<code>g</code>, <code>b</code> and <code>a</code> should be integers between 0 and 255. <code>name</code> is of the
+form &quot;category.option&quot; or &quot;category[num].option&quot;. Available categories and
+options are listed in the Gmsh reference manual, with the &quot;Color.&quot; middle
+string removed.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshOptionSetNumber.html" title='gmsh_sys::gmshOptionSetNumber fn'>gmshOptionSetNumber</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set a numerical option to <code>value</code>. <code>name</code> is of the form &quot;category.option&quot;
+or &quot;category[num].option&quot;. Available categories and options are listed in
+the Gmsh reference manual.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshOptionSetString.html" title='gmsh_sys::gmshOptionSetString fn'>gmshOptionSetString</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set a string option to <code>value</code>. <code>name</code> is of the form &quot;category.option&quot; or
+&quot;category[num].option&quot;. Available categories and options are listed in the
+Gmsh reference manual.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshPluginRun.html" title='gmsh_sys::gmshPluginRun fn'>gmshPluginRun</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Run the plugin <code>name</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshPluginSetNumber.html" title='gmsh_sys::gmshPluginSetNumber fn'>gmshPluginSetNumber</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set the numerical option <code>option</code> to the value <code>value</code> for plugin <code>name</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshPluginSetString.html" title='gmsh_sys::gmshPluginSetString fn'>gmshPluginSetString</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Set the string option <code>option</code> to the value <code>value</code> for plugin <code>name</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshViewAdd.html" title='gmsh_sys::gmshViewAdd fn'>gmshViewAdd</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a new post-processing view, with name <code>name</code>. If <code>tag</code> is positive use
+it (and remove the view with that tag if it already exists), otherwise
+associate a new tag. Return the view tag.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshViewAddAlias.html" title='gmsh_sys::gmshViewAddAlias fn'>gmshViewAddAlias</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add a post-processing view as an <code>alias</code> of the reference view with tag
+<code>refTag</code>. If <code>copyOptions</code> is set, copy the options of the reference view.
+If <code>tag</code> is positive use it (and remove the view with that tag if it
+already exists), otherwise associate a new tag. Return the view tag.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshViewAddListData.html" title='gmsh_sys::gmshViewAddListData fn'>gmshViewAddListData</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add list-based post-processing data to the view with tag <code>tag</code>. <code>dataType</code>
+identifies the data: &quot;SP&quot; for scalar points, &quot;VP&quot;, for vector points, etc.
+<code>numEle</code> gives the number of elements in the data. <code>data</code> contains the data
+for the <code>numEle</code> elements.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshViewAddModelData.html" title='gmsh_sys::gmshViewAddModelData fn'>gmshViewAddModelData</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Add model-based post-processing data to the view with tag <code>tag</code>.
+<code>modelName</code> identifies the model the data is attached to. <code>dataType</code>
+specifies the type of data, currently either &quot;NodeData&quot;, &quot;ElementData&quot; or
+&quot;ElementNodeData&quot;. <code>step</code> specifies the identifier (&gt;= 0) of the data in a
+sequence. <code>tags</code> gives the tags of the nodes or elements in the mesh to
+which the data is associated. <code>data</code> is a vector of the same length as
+<code>tags</code>: each entry is the vector of double precision numbers representing
+the data associated with the corresponding tag. The optional <code>time</code>
+argument associate a time value with the data. <code>numComponents</code> gives the
+number of data components (1 for scalar data, 3 for vector data, etc.) per
+entity; if negative, it is automatically inferred (when possible) from the
+input data. <code>partition</code> allows to specify data in several sub-sets.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshViewCombine.html" title='gmsh_sys::gmshViewCombine fn'>gmshViewCombine</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Combine elements (if <code>what</code> == &quot;elements&quot;) or steps (if <code>what</code> == &quot;steps&quot;)
+of all views (<code>how</code> == &quot;all&quot;), all visible views (<code>how</code> == &quot;visible&quot;) or
+all views having the same name (<code>how</code> == &quot;name&quot;). Remove original views if
+<code>remove</code> is set.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshViewCopyOptions.html" title='gmsh_sys::gmshViewCopyOptions fn'>gmshViewCopyOptions</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Copy the options from the view with tag <code>refTag</code> to the view with tag
+<code>tag</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshViewGetIndex.html" title='gmsh_sys::gmshViewGetIndex fn'>gmshViewGetIndex</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the index of the view with tag <code>tag</code> in the list of currently loaded
+views. This dynamic index (it can change when views are removed) is used to
+access view options.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshViewGetListData.html" title='gmsh_sys::gmshViewGetListData fn'>gmshViewGetListData</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get list-based post-processing data from the view with tag <code>tag</code>. Return
+the types <code>dataTypes</code>, the number of elements <code>numElements</code> for each data
+type and the <code>data</code> for each data type.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshViewGetModelData.html" title='gmsh_sys::gmshViewGetModelData fn'>gmshViewGetModelData</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get model-based post-processing data from the view with tag <code>tag</code> at step
+<code>step</code>. Return the <code>data</code> associated to the nodes or the elements with tags
+<code>tags</code>, as well as the <code>dataType</code> and the number of components
+<code>numComponents</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshViewGetTags.html" title='gmsh_sys::gmshViewGetTags fn'>gmshViewGetTags</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Get the tags of all views.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshViewProbe.html" title='gmsh_sys::gmshViewProbe fn'>gmshViewProbe</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Probe the view <code>tag</code> for its <code>value</code> at point (<code>x</code>, <code>y</code>, <code>z</code>). Return only
+the value at step <code>step</code> is <code>step</code> is positive. Return only values with
+<code>numComp</code> if <code>numComp</code> is positive. Return the gradient of the <code>value</code> if
+<code>gradient</code> is set. Probes with a geometrical tolerance (in the reference
+unit cube) of <code>tolerance</code> if <code>tolerance</code> is not zero. Return the result
+from the element described by its coordinates if <code>xElementCoord</code>,
+<code>yElementCoord</code> and <code>zElementCoord</code> are provided.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshViewRemove.html" title='gmsh_sys::gmshViewRemove fn'>gmshViewRemove</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Remove the view with tag <code>tag</code>.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshViewWrite.html" title='gmsh_sys::gmshViewWrite fn'>gmshViewWrite</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Write the view to a file <code>fileName</code>. The export format is determined by the
+file extension. Append to the file if <code>append</code> is set.</p>
+</td></tr><tr class='module-item'><td><a class="fn" href="fn.gmshWrite.html" title='gmsh_sys::gmshWrite fn'>gmshWrite</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td><td class='docblock-short'><p>Write a file. The export format is determined by the file extension.</p>
+</td></tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+<table><tr class='module-item'><td><a class="type" href="type.wchar_t.html" title='gmsh_sys::wchar_t type'>wchar_t</a></td><td class='docblock-short'></td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../";window.currentCrate = "gmsh_sys";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>

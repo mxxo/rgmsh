@@ -1,0 +1,71 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/examples/t2.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>t2.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="shortcut icon" href="../../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../../rgmsh/index.html'><div class='logo-container'><img src='https://gitlab.onelab.info/gmsh/gmsh/raw/master/utils/icons/gmsh.svg' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1"> 1</span>
+<span id="2"> 2</span>
+<span id="3"> 3</span>
+<span id="4"> 4</span>
+<span id="5"> 5</span>
+<span id="6"> 6</span>
+<span id="7"> 7</span>
+<span id="8"> 8</span>
+<span id="9"> 9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+</pre><div class="example-wrap"><pre class="rust ">
+<span class="doccomment">//! Geometry transformations, extrusions and physical groups.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This file reimplements `gmsh/tutorial/t2.geo` in Rust.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! extern crate rgmsh;</span>
+<span class="doccomment">//! use rgmsh::{Gmsh, GmshResult, model::{PointTag, CurveTag}};</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! fn main() -&gt; GmshResult&lt;()&gt; {</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     // TODO FIXME for command line args</span>
+<span class="doccomment">//!     let mut gmsh = Gmsh::initialize()?;</span>
+<span class="doccomment">//!     let mut model = gmsh.create_native_model(&quot;t2&quot;)?;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     // copied from t1.rs...</span>
+<span class="doccomment">//!     let lc = 1e-2;</span>
+<span class="doccomment">//!     let p1 = model.add_point_with_lc(0., 0., 0., lc)?;</span>
+<span class="doccomment">//!     let p2 = model.add_point_with_lc(0.1, 0.,  0., lc)?;</span>
+<span class="doccomment">//!     let p3 = model.add_point_with_lc(0.1, 0.3, 0., lc)?;</span>
+<span class="doccomment">//!     let p4 = model.add_point_with_lc(0., 0.3, 0., lc)?;</span>
+<span class="doccomment">//!     let l1 = model.add_line(p1, p2)?;</span>
+<span class="doccomment">//!     let l2 = model.add_line(p3, p2)?;</span>
+<span class="doccomment">//!     let l3 = model.add_line(p3, p4)?;</span>
+<span class="doccomment">//!     let l4 = model.add_line(p4, p1)?;</span>
+<span class="doccomment">//!     let cl = model.add_curve_loop(&amp;[l4, l1, -l2, l3])?;</span>
+<span class="doccomment">//!     let pl = model.add_plane_surface(cl)?;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     //let physical_curve = model.add_physical_group(&amp;[l1, l2, l4])?;</span>
+<span class="doccomment">//!     //let physical_surf = model.add_physical_group(&amp;[pl])?;</span>
+<span class="doccomment">//!     // ...end of copy</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     Ok(())</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//! ```</span>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../../";window.currentCrate = "rgmsh";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>

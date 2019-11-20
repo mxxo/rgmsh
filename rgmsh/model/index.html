@@ -1,0 +1,192 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `model` mod in crate `rgmsh`."><meta name="keywords" content="rust, rustlang, rust-lang, model"><title>rgmsh::model - Rust</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../rgmsh/index.html'><div class='logo-container'><img src='https://gitlab.onelab.info/gmsh/gmsh/raw/master/utils/icons/gmsh.svg' alt='logo'></div></a><p class='location'>Module model</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#reexports">Re-exports</a></li><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li></ul></div><p class='location'><a href='../index.html'>rgmsh</a></p><script>window.sidebarCurrent = {name: 'model', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../../src/rgmsh/model/mod.rs.html#1-753' title='goto source code'>[src]</a></span><span class='in-band'>Module <a href='../index.html'>rgmsh</a>::<wbr><a class="mod" href=''>model</a></span></h1><div class='docblock'><p>Inspection and manipulation of geometry models.</p>
+<p>There are two model types:</p>
+<ol>
+<li><a href="../../rgmsh/model/struct.OccModel.html"><code>OccModel</code></a>, which uses the <code>OpenCASCADE</code> geometry kernel.</li>
+<li><a href="../../rgmsh/model/struct.GeoModel.html"><code>GeoModel</code></a>, which uses the built-in <code>Gmsh</code> geometry kernel.</li>
+</ol>
+<p>Either should suffice for most projects.</p>
+<h2 id="creating-a-model" class="section-header"><a href="#creating-a-model">Creating a model</a></h2>
+<p>The only way to get a model is through a <a href="../../rgmsh/struct.Gmsh.html"><code>Gmsh</code></a> context object.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="kw">let</span> <span class="ident">gmsh</span> <span class="op">=</span> <span class="ident">Gmsh</span>::<span class="ident">initialize</span>()<span class="question-mark">?</span>;
+
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">geo</span>: <span class="ident">GeoModel</span> <span class="op">=</span> <span class="ident">gmsh</span>.<span class="ident">create_native_model</span>(<span class="string">&quot;geo&quot;</span>)<span class="question-mark">?</span>;
+
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">occ</span>: <span class="ident">OccModel</span> <span class="op">=</span> <span class="ident">gmsh</span>.<span class="ident">create_occ_model</span>(<span class="string">&quot;occ&quot;</span>)<span class="question-mark">?</span>;</pre></div>
+<p>The model is only valid for the lifetime of <code>Gmsh</code>.</p>
+
+<div class='information'><div class='tooltip compile_fail'>ⓘ<span class='tooltiptext'>This example deliberately fails to compile</span></div></div><div class="example-wrap"><pre class="rust rust-example-rendered compile_fail">
+<span class="kw">let</span> <span class="ident">gmsh</span> <span class="op">=</span> <span class="ident">Gmsh</span>::<span class="ident">initialize</span>()<span class="question-mark">?</span>;
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">geom</span>: <span class="ident">OccModel</span> <span class="op">=</span> <span class="ident">gmsh</span>.<span class="ident">create_occ_model</span>(<span class="string">&quot;model&quot;</span>)<span class="question-mark">?</span>;
+
+<span class="comment">// -- do some stuff with geom</span>
+
+<span class="comment">// drop the Gmsh context</span>
+<span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">drop</span>(<span class="ident">gmsh</span>);
+<span class="comment">// try to use the model afterwards</span>
+<span class="ident">geom</span>.<span class="ident">add_point</span>(<span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>)<span class="question-mark">?</span>; <span class="comment">// won&#39;t compile</span></pre></div>
+<h2 id="create-modify-and-delete-shapes" class="section-header"><a href="#create-modify-and-delete-shapes">Create, modify and delete shapes</a></h2>
+<p>You can define points, lines, 2D surfaces and 3D volumes.
+After defining a shape, you'll get a geometry tag to identify<sup id="fnref1"><a href="#fn1">1</a></sup> it.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="comment">// make a model using the default geometry kernel and call it `model`.</span>
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">geom</span> <span class="op">=</span> <span class="ident">gmsh</span>.<span class="ident">create_native_model</span>(<span class="string">&quot;model&quot;</span>)<span class="question-mark">?</span>;
+
+<span class="comment">// make a point</span>
+<span class="kw">let</span> <span class="ident">p1</span>: <span class="ident">PointTag</span> <span class="op">=</span> <span class="ident">geom</span>.<span class="ident">add_point</span>(<span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>)<span class="question-mark">?</span>;
+<span class="comment">// and another</span>
+<span class="kw">let</span> <span class="ident">p2</span>: <span class="ident">PointTag</span> <span class="op">=</span> <span class="ident">geom</span>.<span class="ident">add_point</span>(<span class="number">1.</span>, <span class="number">1.</span>, <span class="number">0.</span>)<span class="question-mark">?</span>;
+
+<span class="comment">// create a line from the two points</span>
+<span class="kw">let</span> <span class="ident">l1</span>: <span class="ident">CurveTag</span> <span class="op">=</span> <span class="ident">geom</span>.<span class="ident">add_line</span>(<span class="ident">p1</span>, <span class="ident">p2</span>)<span class="question-mark">?</span>;</pre></div>
+<p>There are two ways to make geometries in Gmsh: top-down and bottom-up.</p>
+<h3 id="top-down-geometry-with-the-opencascade-kernel" class="section-header"><a href="#top-down-geometry-with-the-opencascade-kernel">Top-down geometry with the <code>OpenCASCADE</code> kernel</a></h3>
+<p>With the <code>OpenCASCADE</code> kernel, you can directly specify the shape you want to make.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">geom</span> <span class="op">=</span> <span class="ident">gmsh</span>.<span class="ident">create_occ_model</span>(<span class="string">&quot;model&quot;</span>)<span class="question-mark">?</span>;
+
+<span class="comment">// make a box starting at (0, 0, 0) with side extents (1, 1, 1)</span>
+<span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">geom</span>.<span class="ident">add_box</span>((<span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>), (<span class="number">1.</span>, <span class="number">1.</span>, <span class="number">1.</span>))<span class="question-mark">?</span>;
+
+<span class="comment">// make a sphere centered at (10, 10, 10) with radius 2.5</span>
+<span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">geom</span>.<span class="ident">add_sphere</span>((<span class="number">10.</span>, <span class="number">10.</span>, <span class="number">10.</span>), <span class="number">2.5</span>)<span class="question-mark">?</span>;
+
+<span class="comment">// make a torus centered at (-1, -2, -3) with major radius 5 and minor radius 2</span>
+<span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="ident">geom</span>.<span class="ident">add_torus</span>((<span class="op">-</span><span class="number">1.</span>, <span class="op">-</span><span class="number">2.</span>, <span class="op">-</span><span class="number">3.</span>), (<span class="number">5.</span>, <span class="number">2.</span>))<span class="question-mark">?</span>;
+</pre></div>
+<h3 id="bottom-up-geometries-with-either-the-opencascade-or-built-in-kernel" class="section-header"><a href="#bottom-up-geometries-with-either-the-opencascade-or-built-in-kernel">Bottom-up geometries with either the <code>OpenCASCADE</code> or built-in kernel</a></h3><h2 id="differences-between-the-cad-engines" class="section-header"><a href="#differences-between-the-cad-engines">Differences between the CAD engines</a></h2>
+<p><code>OpenCASCADE</code> is a widely-used CAD engine, so it's a good default choice. You can directly define larger shapes without making their smaller components first.
+You also get access to powerful Boolean geometry operations for making complex shapes.</p>
+<p>The <a href="http://gmsh.info/doc/texinfo/gmsh.html#Geometry-module">Gmsh manual</a>
+has more information on the differences between the two kernels:</p>
+<blockquote>
+<p>The built-in CAD kernel provides a simple CAD engine based on a bottom-up boundary representation approach:
+you need to first define points, then curves, then surfaces and finally volumes.</p>
+</blockquote>
+<blockquote>
+<p>The <code>OpenCASCADE</code> kernel allows one to build models in the same bottom-up manner, or by using a
+constructive solid geometry approach where solids are defined first.
+Boolean operations can then be performed to modify them.</p>
+</blockquote>
+<h2 id="errors" class="section-header"><a href="#errors">Errors</a></h2>
+<p>Nearly all model functions can fail. Fallible functions will result a <code>GmshResult</code>.</p>
+<p>You can use the <code>?</code> operator for terse error handling.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="kw">fn</span> <span class="ident">main</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">GmshResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">gmsh</span> <span class="op">=</span> <span class="ident">Gmsh</span>::<span class="ident">initialize</span>()<span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">geom</span> <span class="op">=</span> <span class="ident">gmsh</span>.<span class="ident">create_native_model</span>(<span class="string">&quot;model&quot;</span>)<span class="question-mark">?</span>;
+
+    <span class="kw">let</span> <span class="ident">p1</span> <span class="op">=</span> <span class="ident">geom</span>.<span class="ident">add_point</span>(<span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>)<span class="question-mark">?</span>;
+
+    <span class="prelude-val">Ok</span>(())
+}</pre></div>
+<h2 id="geometry-tags" class="section-header"><a href="#geometry-tags">Geometry tags</a></h2>
+<p>Geometry tags are used for:</p>
+<ul>
+<li>accessing shape information,</li>
+<li>making more complex shapes (like a line from two points),</li>
+<li>removing a shape from the model</li>
+</ul>
+<p>The different geometry tags are:</p>
+<ul>
+<li><code>PointTag</code></li>
+<li><code>CurveTag</code></li>
+<li><code>WireTag</code></li>
+<li><code>SurfaceTag</code></li>
+<li><code>ShellTag</code></li>
+<li><code>VolumeTag</code></li>
+</ul>
+<p>Since tags can only be created from successful geometry operations, you can't
+use raw integers for tags.</p>
+
+<div class='information'><div class='tooltip compile_fail'>ⓘ<span class='tooltiptext'>This example deliberately fails to compile</span></div></div><div class="example-wrap"><pre class="rust rust-example-rendered compile_fail">
+<span class="comment">// try to make a point from a raw integer</span>
+<span class="kw">let</span> <span class="ident">p1</span> <span class="op">=</span> <span class="ident">PointTag</span>(<span class="number">1</span>); <span class="comment">// won&#39;t compile</span>
+<span class="comment">// try to make a line from two raw integers</span>
+<span class="kw">let</span> <span class="ident">l1</span> <span class="op">=</span> <span class="ident">CurveTag</span>(<span class="number">1</span>, <span class="number">2</span>); <span class="comment">// won&#39;t compile</span></pre></div>
+<p>This design differs from other Gmsh API
+implementations. For example, using the <code>C++</code> API, the following example will
+compile but cause a runtime error.</p>
+<pre><code class="language-cpp">#include &quot;gmsh.h&quot;
+int main() {
+    gmsh::initialize();
+    gmsh::model::geo::addLine(1, 2); // (!)
+    gmsh::finalize();
+}
+</code></pre>
+<p>The Rust API avoids such bugs for a single model by only making tags available through API functions.</p>
+<h2 id="model-shadowing" class="section-header"><a href="#model-shadowing">Model shadowing</a></h2>
+<p>Since two models can have identical tag values, tags from one can be used on the other.
+It's your responsibility to make sure tags are used with the right model.</p>
+<p>If you're lucky, using the wrong tags will cause a runtime error.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">geom_a</span> <span class="op">=</span> <span class="ident">gmsh</span>.<span class="ident">create_occ_model</span>(<span class="string">&quot;jimbo&quot;</span>)<span class="question-mark">?</span>;
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">geom_b</span> <span class="op">=</span> <span class="ident">gmsh</span>.<span class="ident">create_native_model</span>(<span class="string">&quot;aircraft-carrier&quot;</span>)<span class="question-mark">?</span>;
+
+<span class="kw">let</span> <span class="ident">p_a</span> <span class="op">=</span> <span class="ident">geom_a</span>.<span class="ident">add_point</span>(<span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>)<span class="question-mark">?</span>;
+
+<span class="kw">let</span> <span class="ident">p_b1</span> <span class="op">=</span> <span class="ident">geom_b</span>.<span class="ident">add_point</span>(<span class="number">0.</span>, <span class="number">1.</span>, <span class="number">0.</span>)<span class="question-mark">?</span>;
+<span class="kw">let</span> <span class="ident">p_b2</span> <span class="op">=</span> <span class="ident">geom_b</span>.<span class="ident">add_point</span>(<span class="number">1.</span>, <span class="number">1.</span>, <span class="number">0.</span>)<span class="question-mark">?</span>;
+
+<span class="comment">// points from different models can have the same value</span>
+<span class="macro">assert</span><span class="macro">!</span>(<span class="ident">p_a</span> <span class="op">=</span><span class="op">=</span> <span class="ident">p_b1</span>, <span class="string">&quot;Point tags are different!&quot;</span>);
+
+<span class="comment">// Bad! Using tags from one model with another.</span>
+<span class="kw">let</span> <span class="ident">line</span> <span class="op">=</span> <span class="ident">geom_a</span>.<span class="ident">add_line</span>(<span class="ident">p_b1</span>, <span class="ident">p_b2</span>);
+<span class="macro">assert</span><span class="macro">!</span>(<span class="ident">line</span>.<span class="ident">is_err</span>());</pre></div>
+<p>If you're unlucky, the tags will exist in both models, causing a silent logic error in your program.
+In the API's eyes, you've given it valid tags, and it's going to go ahead and do what you asked for.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">geom_a</span> <span class="op">=</span> <span class="ident">gmsh</span>.<span class="ident">create_occ_model</span>(<span class="string">&quot;jimbo&quot;</span>)<span class="question-mark">?</span>;
+<span class="kw">let</span> <span class="ident">p_a1</span> <span class="op">=</span> <span class="ident">geom_a</span>.<span class="ident">add_point</span>(<span class="number">0.</span>, <span class="number">0.</span>, <span class="number">0.</span>)<span class="question-mark">?</span>;
+<span class="kw">let</span> <span class="ident">p_a2</span> <span class="op">=</span> <span class="ident">geom_a</span>.<span class="ident">add_point</span>(<span class="number">1.</span>, <span class="number">0.</span>, <span class="number">0.</span>)<span class="question-mark">?</span>;
+
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">geom_b</span> <span class="op">=</span> <span class="ident">gmsh</span>.<span class="ident">create_native_model</span>(<span class="string">&quot;aircraft-carrier&quot;</span>)<span class="question-mark">?</span>;
+<span class="kw">let</span> <span class="ident">p_b1</span> <span class="op">=</span> <span class="ident">geom_b</span>.<span class="ident">add_point</span>(<span class="number">0.</span>, <span class="number">1.</span>, <span class="number">1.</span>)<span class="question-mark">?</span>;
+<span class="kw">let</span> <span class="ident">p_b2</span> <span class="op">=</span> <span class="ident">geom_b</span>.<span class="ident">add_point</span>(<span class="number">0.</span>, <span class="number">1.</span>, <span class="number">1.</span>)<span class="question-mark">?</span>;
+
+<span class="comment">// Very bad! A silent logic error. You&#39;re on your own debugging this one.</span>
+<span class="kw">let</span> <span class="ident">line</span> <span class="op">=</span> <span class="ident">geom_a</span>.<span class="ident">add_line</span>(<span class="ident">p_b1</span>, <span class="ident">p_b2</span>);
+<span class="macro">assert</span><span class="macro">!</span>(<span class="ident">line</span>.<span class="ident">is_ok</span>());</pre></div>
+<h2 id="describing-shapes-using-physical-groups" class="section-header"><a href="#describing-shapes-using-physical-groups">Describing shapes using Physical Groups</a></h2>
+<p>Physical Groups are Gmsh's way to associate information with geometries.
+Physical Groups only associate a name with geometry entities and it is up to client software
+to correctly interpret the Physical Group information.</p>
+<p>Some common uses for Physical Groups are:</p>
+<ul>
+<li>
+<p>Materials</p>
+</li>
+<li>
+<p>Boundary conditions</p>
+</li>
+<li>
+<p>Part names</p>
+</li>
+</ul>
+<div class="footnotes"><hr><ol><li id="fn1"><p>In most circumstances, tags are a unique identifier. There are some
+exceptions:</p>
+<ul>
+<li>If tags are removed from a model, they can be used again for other shapes.</li>
+<li>One Gmsh context can have many models. It's your responsibility to avoid
+using tags from one model in another.</li>
+</ul>
+&nbsp;<a href="#fnref1" rev="footnote">↩</a></li></ol></div></div><h2 id='reexports' class='section-header'><a href="#reexports">Re-exports</a></h2>
+<table><tr><td><code>pub use crate::interface::<a class="mod" href="../../rgmsh/interface/geo/index.html" title="mod rgmsh::interface::geo">geo</a>::*;</code></td></tr><tr><td><code>pub use crate::interface::<a class="mod" href="../../rgmsh/interface/occ/index.html" title="mod rgmsh::interface::occ">occ</a>::*;</code></td></tr><tr><td><code>pub use <a class="mod" href="../../rgmsh/model/shapes/index.html" title="mod rgmsh::model::shapes">shapes</a>::*;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table><tr class='module-item'><td><a class="mod" href="shapes/index.html" title='rgmsh::model::shapes mod'>shapes</a></td><td class='docblock-short'><p>Shape objects.</p>
+</td></tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table><tr class='module-item'><td><a class="struct" href="struct.CurveTag.html" title='rgmsh::model::CurveTag struct'>CurveTag</a></td><td class='docblock-short'><p>A curve tag, built from points. The curve type includes straight lines. 1D.</p>
+</td></tr><tr class='module-item'><td><a class="struct" href="struct.GeoModel.html" title='rgmsh::model::GeoModel struct'>GeoModel</a></td><td class='docblock-short'><p>An instance of the built-in geometry kernel.</p>
+</td></tr><tr class='module-item'><td><a class="struct" href="struct.OccModel.html" title='rgmsh::model::OccModel struct'>OccModel</a></td><td class='docblock-short'><p>An instance of the <code>OpenCASCADE</code> geometry kernel.</p>
+</td></tr><tr class='module-item'><td><a class="struct" href="struct.PointTag.html" title='rgmsh::model::PointTag struct'>PointTag</a></td><td class='docblock-short'><p>A point tag. Points are used to build larger shapes. 0D.</p>
+</td></tr><tr class='module-item'><td><a class="struct" href="struct.ShellTag.html" title='rgmsh::model::ShellTag struct'>ShellTag</a></td><td class='docblock-short'><p>A shell tag. Shells are built from surface loops. 2.5D.</p>
+</td></tr><tr class='module-item'><td><a class="struct" href="struct.SurfaceTag.html" title='rgmsh::model::SurfaceTag struct'>SurfaceTag</a></td><td class='docblock-short'><p>A surface tag. Surfaces are built from closed wires. 2D.</p>
+</td></tr><tr class='module-item'><td><a class="struct" href="struct.VolumeTag.html" title='rgmsh::model::VolumeTag struct'>VolumeTag</a></td><td class='docblock-short'><p>A volume tag. Volumes are built from closed shells. 3D.</p>
+</td></tr><tr class='module-item'><td><a class="struct" href="struct.WireTag.html" title='rgmsh::model::WireTag struct'>WireTag</a></td><td class='docblock-short'><p>A wire tag. Wires are built from curves. Wires are a path of multiple curves. 1.5D.</p>
+</td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "rgmsh";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>
